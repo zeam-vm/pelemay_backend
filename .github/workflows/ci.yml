@@ -22,9 +22,13 @@ jobs:
     name: Build and test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        working_directory: ["pelemay_backend"]
         os: [ubuntu-20.04, windows-2022]
-
+    defaults:
+      run:
+        working-directory: ${{ matrix.working_directory }}
     steps:
     - uses: actions/checkout@v3
     - name: Set up Elixir
@@ -35,12 +39,15 @@ jobs:
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
-        path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        path: ${{ github.workspace }}/${{ matrix.working_directory }}/deps
+        key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working_directory)) }}
         restore-keys: ${{ runner.os }}-mix-
     - name: Install dependencies
-      run: make setup
-    - name: Compile projects
-      run: make all
+      run: mix deps.get
+    - name: Compile and check warning
+      run: mix compile --warnings-as-errors
+    - name: Check formatting
+      if: ${{ !startsWith(runner.os, 'windows') }}
+      run: mix format --check-formatted
     - name: Run tests
-      run: make test
+      run: mix test
