@@ -42,8 +42,7 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v1
         with:
-            key: ${{ secrets.SSH_KEY }}
+            private-key: ${{ secrets.SSH_KEY }}
             name: id_rsa
-            known_hosts: ''
 
     
