@@ -8,6 +8,8 @@ Each has their own README, which you can access above to learn more.
 
 [![Elixir CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)
 
+[![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
+
 Tested Platforms by CI:
 
 * Ubuntu 22.04

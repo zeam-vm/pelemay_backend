@@ -1,0 +1,82 @@
+name: nerves-build
+
+on:
+    pull_request:
+      branches: [ "main" ]
+      paths-ignore:
+        - '*.md'
+        - '**/*.md'
+        - 'LICENSE*'
+    workflow_dispatch:
+  
+permissions:
+    contents: read
+  
+jobs:
+    build:
+  
+      name: Nerves Build on ${{ matrix.working-directory }}, ${{ matrix.target }}
+      runs-on: ubuntu-20.04
+      env:
+        MIX_ENV: prod
+        NERVES_PROJ_NAME: nerves_pelemay_backend
+        NERVES_LIVEBOOK_VER: "v0.9.1"
+        OTP_VERSION: "25.2"
+        ELIXIR_VERSION: "1.14.3"
+
+      strategy:
+        fail-fast: false
+        matrix:
+          working-directory: ["pelemay_backend"]
+          target: [rpi4, rpi3a, rpi3, rpi2, rpi0, rpi, bbb, osd32mp1, npi_imx6ull, grisp2, mangopi_mq_pro]
+      defaults:
+        run:
+          working-directory: ${{ matrix.working-directory }}
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up Elixir (Ubuntu, Windows)
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v1
+        with:
+            private-key: ${{ secrets.SSH_KEY }}
+            name: id_rsa
+      - name: Install system dependencies
+        run: |
+            sudo apt update && sudo apt install -y  build-essential automake autoconf pkg-config bc m4 unzip zip curl git libssl-dev libncurses5-dev python3 ca-certificates squashfs-tools ssh-askpass libmnl-dev
+            mix local.hex --force
+            mix local.rebar --force
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
+          key: ${{ runner.os }}-Elixir-v${{ env.ELIXIR_VERSION }}-OTP-${{ env.OTP_VERSION }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
+          restore-keys: ${{ runner.os }}-Elixir-v${{ env.ELIXIR_VERSION }}-OTP-${{ env.OTP_VERSION }}-
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Create a Nerves project
+        run: |
+            mix archive.install hex nerves_bootstrap --force || true
+            wget -k https://github.com/fwup-home/fwup/releases/download/v1.10.0/fwup_1.10.0_amd64.deb -O ./fwup_1.10.0_amd64.deb
+            sudo dpkg -i ./fwup_1.10.0_amd64.deb
+            cd ../
+            git clone https://github.com/livebook-dev/nerves_livebook.git
+            cd nerves_livebook
+            git checkout "${NERVES_LIVEBOOK_VER}"
+            git checkout mix.exs
+            LINE="$(grep -n 'toolshed' mix.exs | awk -F: '{print $1+1}')"
+            head -n "${LINE}" mix.exs > mix.exs.tmp
+            echo '      {:pelemay_backend, path: "../pelemay_backend"},' >> mix.exs.tmp
+            tail -n "+${LINE}" mix.exs >> mix.exs.tmp
+            mv mix.exs.tmp mix.exs
+            cat mix.exs
+            export MIX_TARGET=${{ matrix.target }}
+            mix deps.get
+            mix deps.update nx
+            mix deps.update kino
+            export MAKE_BUILD_FLAGS="-j$(nproc)"
+            mix deps.compile
+            mix firmware
