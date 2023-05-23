@@ -19,7 +19,7 @@ permissions:
 jobs:
   build:
 
-    name: Build and test on ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    name: Build and test on ${{ working_directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
