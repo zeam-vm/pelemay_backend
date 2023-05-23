@@ -1,0 +1,49 @@
+name: nerves-build
+
+on:
+    pull_request:
+      branches: [ "main" ]
+      paths-ignore:
+        - '*.md'
+        - '**/*.md'
+        - 'LICENSE*'
+    workflow_dispatch:
+  
+  permissions:
+    contents: read
+  
+jobs:
+    build:
+  
+      name: Nerves Build on ${{ matrix.working-directory }}, ${{ matrix.target }}
+      runs-on: ubuntu-20.04
+      env:
+        MIX_ENV: prod
+        NERVES_PROJ_NAME: nerves_pelemay_backend
+        NERVES_LIVEBOOK_VER: "v0.9.1"
+        OTP_VERSION: "25.2"
+        ELIXIR_VERSION: "1.14.3"
+
+      strategy:
+        fail-fast: false
+        matrix:
+          working-directory: ["pelemay_backend"]
+          target: [rpi4]
+      defaults:
+        run:
+          working-directory: ${{ matrix.working-directory }}
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up Elixir (Ubuntu, Windows)
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v1
+        with:
+            key: ${{ secrets.SSH_KEY }}
+            name: id_rsa
+            known_hosts: ''
+
+    
