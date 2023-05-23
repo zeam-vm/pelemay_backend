@@ -65,8 +65,8 @@ jobs:
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/${{ matrix.working_directory }}/deps
-        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working_directory)) }}
+        path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
+        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
         restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Install dependencies
       run: mix deps.get
