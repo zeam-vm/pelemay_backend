@@ -19,12 +19,12 @@ permissions:
 jobs:
   build:
 
-    name: Build and test on ${{ working_directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    name: Build and test on ${{ matrix.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        working_directory: ["pelemay_backend"]
+        working-directory: ["pelemay_backend"]
         os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         otp-version: ['24.3.4.11', '25.3.2', '26.0']
         elixir-version: ['1.14.4']
@@ -45,7 +45,7 @@ jobs:
             otp-version: '26.0'
     defaults:
       run:
-        working-directory: ${{ matrix.working_directory }}
+        working-directory: ${{ matrix.working-directory }}
     steps:
     - uses: actions/checkout@v3
     - name: Set up Elixir (Ubuntu, Windows)
