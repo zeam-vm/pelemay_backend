@@ -6,10 +6,12 @@
 name: Elixir CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+      - '**/*.md'
+      - 'LICENSE*'
   workflow_dispatch:
 
 
