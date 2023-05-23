@@ -11,7 +11,6 @@ type: software
 authors:
   - given-names: Susumu
     family-names: Yamazaki
-    name-particle: Prof. Dr.
     email: zacky@kitakyu-u.ac.jp
     affiliation: University of Kitakyushu
     orcid: 'https://orcid.org/0009-0008-3972-4141'
