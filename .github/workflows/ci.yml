@@ -47,7 +47,7 @@ jobs:
     - name: Compile and check warning
       run: mix compile --warnings-as-errors
     - name: Check formatting
-      if: runner.os != 'windows-2022'
+      if: ${{ !startsWith(runner.os, 'windows') }}
       run: mix format --check-formatted
     - name: Run tests
       run: mix test
