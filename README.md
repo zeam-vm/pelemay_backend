@@ -6,7 +6,7 @@ This repository currently holds the following projects:
 
 Each has their own README, which you can access above to learn more.
 
-CI status: [![CI](https://github-actions.40ants.com/zeam-vm/pelemay_backend/matrix.svg?only=ci)](https://github.com/zeam-vm/pelemay_backend)
+CI status: [![CI](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)
 
 Tested Platforms by CI:
 
