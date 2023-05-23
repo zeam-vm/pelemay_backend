@@ -25,17 +25,24 @@ jobs:
       fail-fast: false
       matrix:
         working_directory: ["pelemay_backend"]
-        os: [ubuntu-20.04, windows-2022]
+        os: [ubuntu-20.04, windows-2022, macos-13]
     defaults:
       run:
         working-directory: ${{ matrix.working_directory }}
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Elixir
+    - name: Set up Elixir (Ubuntu, Windows)
+      if: ${{ !startsWith(runner.os, 'macos') }}
       uses: erlef/setup-beam@v1
       with:
         elixir-version: '1.14.4' # Define the elixir version [required]
         otp-version: '24.0' # Define the OTP version [required]
+    - name: Set up Elixir (macOS)
+      if: $${{ startsWith(runner.os, 'macos') }}
+      run: |
+        brew install erlang elixir
+        mix local.hex --force
+        mix local.rebar --force
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
