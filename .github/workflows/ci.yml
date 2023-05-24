@@ -75,12 +75,12 @@ jobs:
       run: |
         brew install coreutils curl git
         git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch ${{ env.ASDF_VERSION }}
-        echo '. "$HOME/.asdf/asdf.sh"' >> $HOME/.zshrc
-        source $HOME/.zshrc
+        echo '. "$HOME/.asdf/asdf.sh"' >> $HOME/.bashrc
+        source $HOME/.bashrc
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
         brew install wxwidgets openjdk fop openssl@3
-        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> $HOME/.zshrc
-        source $HOME/.zshrc
+        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> $HOME/.bashrc
+        source $HOME/.bashrc
         echo 'setup PATH to use openjdk'
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
