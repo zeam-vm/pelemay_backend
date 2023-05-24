@@ -82,6 +82,7 @@ jobs:
       uses: asdf-vm/actions/install@v2.1.0
       with:
         before_install: |
+          brew install wxwidgets openjdk fop openssl@3
           export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
           export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
           echo 'setup CC and LDFLAGS'
