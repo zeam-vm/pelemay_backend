@@ -81,9 +81,9 @@ jobs:
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
         echo 'setup CC and LDFLAGS'
-        echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
+        echo "${{ matrix.otp-version }}" | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
         echo "OTP_MAJOR_VERSION=$OTP_MAJOR_VERSION"
-        echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
+        echo "${{ matrix.otp-version }}" | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
         echo "OTP_MINOR_VERSION=$OTP_MINOR_VERSION"
         if [ "$OTP_MAJOR_VERSION" -eq 25 ]; then 
           if [ "$OTP_MINOR_VERSION" -ge 1 ]; then
