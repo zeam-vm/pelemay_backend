@@ -75,7 +75,7 @@ jobs:
     - name: Set up Elixir (macOS)
       if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/install@v2.1.0
-      before_install: |
+      before-install: |
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
         echo 'setup CC and LDFLAGS'
