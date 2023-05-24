@@ -41,7 +41,7 @@ jobs:
         working-directory: ${{ matrix.working-directory }}
     steps:
     - uses: actions/checkout@v3
-    - uses: kenchan0130/actions-system-info@v1.2
+    - uses: kenchan0130/actions-system-info@master
       id: system-info
     - name: Set up OTP MAJOR and MINOR VERSION
       run: |
