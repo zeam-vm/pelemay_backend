@@ -68,8 +68,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: $HOME/.asdf
-        key: ${{ runner.os }}-${{ env.ASDF_VERSION }}
-        restore-keys: ${{ runner.os }}-${{ env.ASDF_VERSION }}
+        key: ${{ runner.os }}-asdf-${{ env.ASDF_VERSION }}
+        restore-keys: ${{ runner.os }}-asdf-${{ env.ASDF_VERSION }}
     - name: Set up Elixir (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
@@ -110,8 +110,10 @@ jobs:
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
-        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
+        path: |
+          ${{ github.workspace }}/${{ matrix.working-directory }}/deps
+          ${{ github.workspace }}/${{ matrix.working-directory }}/_build
+        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Install dependencies (Ubuntu, Windows)
       if: ${{ !startsWith(runner.os, 'macos') }}
