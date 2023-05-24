@@ -77,9 +77,12 @@ jobs:
         brew install wxwidgets openjdk fop openssl@3
         echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> ${{ github.workspace }}/.zshrc
         source ${{ github.workspace }}/.zshrc
+        echo 'setup PATH to use openjdk'
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include" LDFLAGS=-L$(brew --prefix unixodbc)/lib
         echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
+        echo "OTP_MAJOR_VERSION=$OTP_MAJOR_VERSION"
         echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
+        echo "OTP_MINOR_VERSION=$OTP_MINOR_VERSION"
         if [ "$OTP_MAJOR_VERSION" -eq 25 ]; then 
           if [ "$OTP_MINOR_VERSION" -ge 1 ]; then
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
@@ -91,8 +94,11 @@ jobs:
         else
           export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
         fi
+        echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+        echo "install erlang..."
         asdf install erlang ${{ matrix.otp-version }}
         asdf global erlang ${{ matrix.otp-version }}
+        echo "install erlang...done"
         export ELIXIR_VERSION="${{ matrix.elixir-version }}-otp-$OTP_MAJOR_VERSION"
         asdf install elixir $ELIXIR_VERSION
         asdf global elixir $ELIXIR_VERSION
