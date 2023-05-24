@@ -102,8 +102,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
-        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
+        key: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Set up hex and rebar (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: | 
