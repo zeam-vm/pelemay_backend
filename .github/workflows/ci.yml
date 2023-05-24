@@ -75,7 +75,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          ${{ github.workspace }}/.asdf/
+          ~/.asdf/
         key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
     - name: Set up Elixir (macOS)
       if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
