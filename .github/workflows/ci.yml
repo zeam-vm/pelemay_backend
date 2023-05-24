@@ -64,9 +64,6 @@ jobs:
     - name: Install asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/setup@v2
-    - name: Install asdf plugins (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      uses: asdf-vm/actions/plugins-add@v2
     - name: Restore .asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       id: asdf-cache
@@ -75,8 +72,8 @@ jobs:
         path: |
           $(HOME)/.asdf/
         key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
-    - name: Install CD tools from .tool-versions
-      if: steps.asdf-cache.outputs.cache-hit != 'true'
+    - name: Install CD tools from .tool-versions (macOS)
+      if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/install@v2
     - name: Set up Elixir (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
