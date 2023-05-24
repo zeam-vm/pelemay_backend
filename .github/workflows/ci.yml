@@ -32,8 +32,6 @@ jobs:
         otp-version: ['24.3.4.11', '25.3.2', '26.0']
         elixir-version: ['1.14.4', '1.15.0-rc.0']
         exclude:
-          - os: Ubuntu-22.04
-            otp-version: '26.0'
           - os: windows-2022
             otp-version: '25.3.2'
           - os: windows-2022
@@ -47,30 +45,38 @@ jobs:
       run: |
         echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
         echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\([^\.]*\).*$/\2/')" >> $GITHUB_ENV
-    - name: Set up Elixir (Ubuntu, Windows)
-      if: ${{ !startsWith(runner.os, 'macos') }}
+    - name: Set versions Elixir and OTP
+      run: |
+        echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
+    - name: Set up Elixir
+      continue-on-error: true
+      id: set_up_elixir_by_setup-beam
       uses: erlef/setup-beam@v1
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
-    - name: Install asdf (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
+    - name: Install asdf
+      continue-on-error: true
+      if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
+      id: install_asdf
       uses: asdf-vm/actions/setup@v2
-    - name: Set versions Elixir and OTP (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
-        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
-    - name: Restore .asdf (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
+    - name: Restore .asdf
+      if: ${{ steps.install_asdf.outcome == 'success' }}
       id: asdf-cache
       uses: actions/cache@v3
       with:
         path: |
           ~/.asdf/
         key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
-    - name: Set up Elixir (macOS)
-      if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
+    - name: Set up Elixir by asdf (Ubuntu)
+      if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
+      uses: asdf-vm/actions/install@v2.1.0
+      with:
+        before_install: |
+          sudo apt -y install build-essential automake autoconf git squashfs-tools ssh-askpass pkg-config curl libmnl-dev
+    - name: Set up Elixir by asdf (macOS)
+      if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/install@v2.1.0
       with:
         before_install: |
@@ -97,7 +103,7 @@ jobs:
         key: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Set up hex and rebar (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
+      if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
       run: | 
         mix local.hex --force
         mix local.rebar --force
