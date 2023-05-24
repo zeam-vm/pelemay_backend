@@ -56,8 +56,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set up OTP MAJOR and MINOR VERSION
       run: |
-        echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/")" >> $GITHUB_ENV
-        echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/") >> $GITHUB_ENV
+        echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
+        echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\([^\.]*\).*$/\2/') >> $GITHUB_ENV
     - name: Set up Elixir (Ubuntu, Windows)
       if: ${{ !startsWith(runner.os, 'macos') }}
       uses: erlef/setup-beam@v1
