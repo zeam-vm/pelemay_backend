@@ -54,6 +54,10 @@ jobs:
         working-directory: ${{ matrix.working-directory }}
     steps:
     - uses: actions/checkout@v3
+    - name: Set up OTP MAJOR and MINOR VERSION
+      run: |
+        echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/")" >> $GITHUB_ENV
+        echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/") >> $GITHUB_ENV
     - name: Set up Elixir (Ubuntu, Windows)
       if: ${{ !startsWith(runner.os, 'macos') }}
       uses: erlef/setup-beam@v1
@@ -81,17 +85,13 @@ jobs:
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
         echo 'setup CC and LDFLAGS'
-        echo "${{ matrix.otp-version }}" | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
-        echo "OTP_MAJOR_VERSION=$OTP_MAJOR_VERSION"
-        echo "${{ matrix.otp-version }}" | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
-        echo "OTP_MINOR_VERSION=$OTP_MINOR_VERSION"
-        if [ "$OTP_MAJOR_VERSION" -eq 25 ]; then 
-          if [ "$OTP_MINOR_VERSION" -ge 1 ]; then
+        if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+          if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
           else
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
           fi
-        elif [ "$OTP_MAJOR_VERSION" -ge 26 ]; then
+        elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
           export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
         else
           export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
