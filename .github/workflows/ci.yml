@@ -64,6 +64,11 @@ jobs:
     - name: Install asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/setup@v2
+    - name: Set versions Elixir and OTP (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: |
+        echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
+        echo "elixir "${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
     - name: Restore .asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       id: asdf-cache
@@ -92,8 +97,6 @@ jobs:
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
           fi
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
-          echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
-          echo "elixir "${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
     - name: Set up hex and rebar (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: | 
