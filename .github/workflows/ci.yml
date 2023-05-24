@@ -111,34 +111,12 @@ jobs:
           ${{ github.workspace }}/${{ matrix.working-directory }}/_build
         key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
-    - name: Install dependencies (Ubuntu, Windows)
-      if: ${{ !startsWith(runner.os, 'macos') }}
+    - name: Install dependencies
       run: mix deps.get
-    - name: Install dependencies (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        mix deps.get
-    - name: Compile and check warning (Ubuntu, Windows)
-      if: ${{ !startsWith(runner.os, 'macos') }}
+    - name: Compile and check warning
       run: mix compile --warnings-as-errors
-    - name: Compile and check warning (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        . "$HOME/.asdf/asdf.sh"
-        mix compile --warnings-as-errors
-    - name: Check formatting (Ubuntu)
-      if: ${{ startsWith(runner.os, 'linux') }}
+    - name: Check formatting (Ubuntu, macOS)
+      if: ${{ !startsWith(runner.os, 'windows') }}
       run: mix format --check-formatted
-    - name: Check formatting (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        . "$HOME/.asdf/asdf.sh"
-        mix format --check-formatted
-    - name: Run tests (Ubuntu, Windows)
-      if: ${{ !startsWith(runner.os, 'macos') }}
+    - name: Run tests
       run: mix test
-    - name: Run tests (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        . "$HOME/.asdf/asdf.sh"
-        mix test
