@@ -68,14 +68,14 @@ jobs:
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
         echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
-        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/$(HOME)/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
     - name: Restore .asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       id: asdf-cache
       uses: actions/cache@v3
       with:
         path: |
-          $(HOME)/.asdf/
+          ${{ github.workspace }}/.asdf/
         key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
     - name: Set up Elixir (macOS)
       if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
