@@ -24,9 +24,6 @@ jobs:
 
     name: Build and test on ${{ matrix.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
-    env:
-      ASDF_VERSION: 'v0.11.3'
-
     strategy:
       fail-fast: false
       matrix:
@@ -64,22 +61,30 @@ jobs:
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
-    - name: Restore .asdf
+    - name: Install asdf (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/setup@v2
+    - name: Install asdf plugins (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/plugins-add@v2
+    - name: Restore .asdf (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      id: asdf-cache
       uses: actions/cache@v3
       with:
-        path: $HOME/.asdf
-        key: ${{ runner.os }}-asdf-${{ env.ASDF_VERSION }}
-        restore-keys: ${{ runner.os }}-asdf-${{ env.ASDF_VERSION }}
+        path: |
+          $(HOME)/.asdf/
+        key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+    - name: Install CD tools from .tool-versions
+      if: steps.asdf-cache.outputs.cache-hit != 'true'
+      uses: asdf-vm/actions/install@v2
     - name: Set up Elixir (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
         brew install coreutils curl git
-        git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch ${{ env.ASDF_VERSION }}
-        . "$HOME/.asdf/asdf.sh"
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
         brew install wxwidgets openjdk fop openssl@3
         export PATH="$(brew --prefix openjdk)/bin:$PATH"
-        echo 'setup PATH to use openjdk'
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
         echo 'setup CC and LDFLAGS'
@@ -121,7 +126,6 @@ jobs:
     - name: Install dependencies (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
-        . "$HOME/.asdf/asdf.sh"
         mix deps.get
     - name: Compile and check warning (Ubuntu, Windows)
       if: ${{ !startsWith(runner.os, 'macos') }}
