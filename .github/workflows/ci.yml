@@ -78,7 +78,9 @@ jobs:
         echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> ${{ github.workspace }}/.zshrc
         source ${{ github.workspace }}/.zshrc
         echo 'setup PATH to use openjdk'
-        export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include" LDFLAGS=-L$(brew --prefix unixodbc)/lib
+        export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+        export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+        echo 'setup CC and LDFLAGS'
         echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
         echo "OTP_MAJOR_VERSION=$OTP_MAJOR_VERSION"
         echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
@@ -99,6 +101,8 @@ jobs:
         asdf install erlang ${{ matrix.otp-version }}
         asdf global erlang ${{ matrix.otp-version }}
         echo "install erlang...done"
+        unset CC
+        unset LDFLAGS
         export ELIXIR_VERSION="${{ matrix.elixir-version }}-otp-$OTP_MAJOR_VERSION"
         asdf install elixir $ELIXIR_VERSION
         asdf global elixir $ELIXIR_VERSION
