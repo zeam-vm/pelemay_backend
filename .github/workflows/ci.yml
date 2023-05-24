@@ -51,29 +51,69 @@ jobs:
         working-directory: ${{ matrix.working-directory }}
     steps:
     - uses: actions/checkout@v3
+    - name: Set up OTP MAJOR and MINOR VERSION
+      run: |
+        echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
+        echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\([^\.]*\).*$/\2/')" >> $GITHUB_ENV
     - name: Set up Elixir (Ubuntu, Windows)
       if: ${{ !startsWith(runner.os, 'macos') }}
       uses: erlef/setup-beam@v1
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
-    - name: Set up Elixir (macOS)
+    - name: Install asdf (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/setup@v2
+    - name: Set versions Elixir and OTP (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
-        brew install erlang elixir
-        mix local.hex --force
-        mix local.rebar --force
+        echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
+    - name: Restore .asdf (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      id: asdf-cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.asdf/
+        key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+    - name: Set up Elixir (macOS)
+      if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/install@v2.1.0
+      with:
+        before_install: |
+          brew install wxwidgets openjdk fop openssl@3
+          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+          echo 'setup CC and LDFLAGS'
+          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+            else
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+            fi
+          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+          else
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+          fi
+          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
-        key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
-        restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
+        path: ${{ github.workspace }}/deps
+        key: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
+    - name: Set up hex and rebar (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: | 
+        mix local.hex --force
+        mix local.rebar --force
     - name: Install dependencies
       run: mix deps.get
     - name: Compile and check warning
       run: mix compile --warnings-as-errors
-    - name: Check formatting
+    - name: Check formatting (Ubuntu, macOS)
       if: ${{ !startsWith(runner.os, 'windows') }}
       run: mix format --check-formatted
     - name: Run tests
