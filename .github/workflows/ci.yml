@@ -75,12 +75,10 @@ jobs:
       run: |
         brew install coreutils curl git
         git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch ${{ env.ASDF_VERSION }}
-        echo '. "$HOME/.asdf/asdf.sh"' >> $HOME/.bashrc
-        source $HOME/.bashrc
+        . "$HOME/.asdf/asdf.sh"
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
         brew install wxwidgets openjdk fop openssl@3
-        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> $HOME/.bashrc
-        source $HOME/.bashrc
+        export PATH="$(brew --prefix openjdk)/bin:$PATH"
         echo 'setup PATH to use openjdk'
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
@@ -115,12 +113,35 @@ jobs:
         path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
         key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
         restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
-    - name: Install dependencies
+    - name: Install dependencies (Ubuntu, Windows)
+      if: ${{ !startsWith(runner.os, 'macos') }}
       run: mix deps.get
-    - name: Compile and check warning
+    - name: Install dependencies (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: |
+        . "$HOME/.asdf/asdf.sh"
+        mix deps.get
+    - name: Compile and check warning (Ubuntu, Windows)
+      if: ${{ !startsWith(runner.os, 'macos') }}
       run: mix compile --warnings-as-errors
-    - name: Check formatting
-      if: ${{ !startsWith(runner.os, 'windows') }}
+    - name: Compile and check warning (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: |
+        . "$HOME/.asdf/asdf.sh"
+        mix compile --warnings-as-errors
+    - name: Check formatting (Ubuntu)
+      if: ${{ !startsWith(runner.os, 'linux') }}
       run: mix format --check-formatted
-    - name: Run tests
+    - name: Check formatting (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: |
+        . "$HOME/.asdf/asdf.sh"
+        mix format --check-formatted
+    - name: Run tests (Ubuntu, Windows)
+      if: ${{ !startsWith(runner.os, 'macos') }}
       run: mix test
+    - name: Run tests (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: |
+        . "$HOME/.asdf/asdf.sh"
+        mix test
