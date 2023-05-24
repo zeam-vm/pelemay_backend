@@ -75,24 +75,25 @@ jobs:
     - name: Set up Elixir (macOS)
       if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
       uses: asdf-vm/actions/install@v2.1.0
-      before-install: |
-        export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
-        export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
-        echo 'setup CC and LDFLAGS'
-        if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
-          if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+      with:
+        before_install: |
+          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+          echo 'setup CC and LDFLAGS'
+          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+            else
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+            fi
+          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
           else
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
           fi
-        elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
-          export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
-        else
-          export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
-        fi
-        echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
-        echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
-        echo "elixir "${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
+          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+          echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
+          echo "elixir "${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
     - name: Set up hex and rebar (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: | 
