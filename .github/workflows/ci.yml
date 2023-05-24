@@ -72,16 +72,10 @@ jobs:
         path: |
           $(HOME)/.asdf/
         key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
-    - name: Install CD tools from .tool-versions (macOS)
-      if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
-      uses: asdf-vm/actions/install@v2
     - name: Set up Elixir (macOS)
-      if: ${{ startsWith(runner.os, 'macos') }}
-      run: |
-        brew install coreutils curl git
-        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
-        brew install wxwidgets openjdk fop openssl@3
-        export PATH="$(brew --prefix openjdk)/bin:$PATH"
+      if: ${{ steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/install@v2.1.0
+      before_install: |
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
         echo 'setup CC and LDFLAGS'
@@ -97,16 +91,11 @@ jobs:
           export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
         fi
         echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
-        echo "install erlang..."
-        asdf install erlang ${{ matrix.otp-version }}
-        asdf global erlang ${{ matrix.otp-version }}
-        echo "install erlang...done"
-        unset CC
-        unset LDFLAGS
-        export ELIXIR_VERSION="${{ matrix.elixir-version }}-otp-$OTP_MAJOR_VERSION"
-        asdf plugin add elixir
-        asdf install elixir $ELIXIR_VERSION
-        asdf global elixir $ELIXIR_VERSION
+        echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
+        echo "elixir "${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
+    - name: Set up hex and rebar (macOS)
+      if: ${{ startsWith(runner.os, 'macos') }}
+      run: | 
         mix local.hex --force
         mix local.rebar --force
     - name: Restore dependencies cache
