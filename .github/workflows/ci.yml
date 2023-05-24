@@ -104,6 +104,7 @@ jobs:
         unset CC
         unset LDFLAGS
         export ELIXIR_VERSION="${{ matrix.elixir-version }}-otp-$OTP_MAJOR_VERSION"
+        asdf plugin add elixir
         asdf install elixir $ELIXIR_VERSION
         asdf global elixir $ELIXIR_VERSION
         mix local.hex --force
