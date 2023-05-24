@@ -67,20 +67,20 @@ jobs:
     - name: Restore .asdf
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/.asdf
+        path: $HOME/.asdf
         key: ${{ runner.os }}-${{ env.ASDF_VERSION }}
         restore-keys: ${{ runner.os }}-${{ env.ASDF_VERSION }}
     - name: Set up Elixir (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
         brew install coreutils curl git
-        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${{ env.ASDF_VERSION }}
-        echo '. "$HOME/.asdf/asdf.sh"' >> ${{ github.workspace }}/.zshrc
-        source ${{ github.workspace }}/.zshrc
+        git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch ${{ env.ASDF_VERSION }}
+        echo '. "$HOME/.asdf/asdf.sh"' >> $HOME/.zshrc
+        source $HOME/.zshrc
         asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
         brew install wxwidgets openjdk fop openssl@3
-        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> ${{ github.workspace }}/.zshrc
-        source ${{ github.workspace }}/.zshrc
+        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> $HOME/.zshrc
+        source $HOME/.zshrc
         echo 'setup PATH to use openjdk'
         export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
         export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
