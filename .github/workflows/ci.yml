@@ -41,6 +41,8 @@ jobs:
         working-directory: ${{ matrix.working-directory }}
     steps:
     - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@v1.2
+      id: system-info
     - name: Set up OTP MAJOR and MINOR VERSION
       run: |
         echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
@@ -68,7 +70,8 @@ jobs:
       with:
         path: |
           ~/.asdf/
-        key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-${{ hashFiles('**/.tool-versions') }}
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-
     - name: Set up Elixir by asdf (Ubuntu)
       if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
       uses: asdf-vm/actions/install@v2.1.0
@@ -100,8 +103,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/deps
-        key: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Set up hex and rebar (macOS)
       if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
       run: | 
