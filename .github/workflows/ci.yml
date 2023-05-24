@@ -24,6 +24,9 @@ jobs:
 
     name: Build and test on ${{ matrix.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
+    env:
+      ASDF_VERSION: 'v0.11.3'
+
     strategy:
       fail-fast: false
       matrix:
@@ -57,10 +60,42 @@ jobs:
       with:
         elixir-version: ${{ matrix.elixir-version }}
         otp-version: ${{ matrix.otp-version }}
+    - name: Restore .asdf
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/.asdf
+        key: ${{ runner.os }}-${{ env.ASDF_VERSION }}
+        restore-keys: ${{ runner.os }}-${{ env.ASDF_VERSION }}
     - name: Set up Elixir (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
-        brew install erlang elixir
+        brew install coreutils curl git
+        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${{ env.ASDF_VERSION }}
+        echo '. "$HOME/.asdf/asdf.sh"' >> ${{ github.workspace }}/.zshrc
+        source ${{ github.workspace }}/.zshrc
+        asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+        brew install wxwidgets openjdk fop openssl@3
+        echo 'export PATH="$(brew --prefix openjdk)/bin:$PATH"' >> ${{ github.workspace }}/.zshrc
+        source ${{ github.workspace }}/.zshrc
+        export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include" LDFLAGS=-L$(brew --prefix unixodbc)/lib
+        echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\(.*\)$/\1/" | read -d '' OTP_MAJOR_VERSION
+        echo ${{ matrix.otp-version }} | sed -e "s/^\([^\.]*\)\.\([^\.]*\).*$/\2/" | read -d '' OTP_MINOR_VERSION
+        if [ "$OTP_MAJOR_VERSION" -eq 25 ]; then 
+          if [ "$OTP_MINOR_VERSION" -ge 1 ]; then
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+          else
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+          fi
+        elif [ "$OTP_MAJOR_VERSION" -ge 26 ]; then
+          export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+        else
+          export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+        fi
+        asdf install erlang ${{ matrix.otp-version }}
+        asdf global erlang ${{ matrix.otp-version }}
+        export ELIXIR_VERSION="${{ matrix.elixir-version }}-otp-$OTP_MAJOR_VERSION"
+        asdf install elixir $ELIXIR_VERSION
+        asdf global elixir $ELIXIR_VERSION
         mix local.hex --force
         mix local.rebar --force
     - name: Restore dependencies cache
