@@ -67,8 +67,8 @@ jobs:
     - name: Set versions Elixir and OTP (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       run: |
-        echo "erlang ${{ matrix.otp-version }}" >> .tool-versions
-        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> .tool-versions
+        echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/$(HOME)/.tool-versions
     - name: Restore .asdf (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
       id: asdf-cache
