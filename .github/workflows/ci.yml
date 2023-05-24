@@ -108,7 +108,6 @@ jobs:
       with:
         path: |
           ${{ github.workspace }}/${{ matrix.working-directory }}/deps
-          ${{ github.workspace }}/${{ matrix.working-directory }}/_build
         key: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-Elixir-v${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Install dependencies
