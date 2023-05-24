@@ -15,13 +15,15 @@ Tested Platforms by CI:
 * Ubuntu 22.04 / 20.04
 * macOS 12 Monterey / 13 Ventura (x86_64)
 * Windows 2022
-* Nerves 
-    * rpi4, rpi3a, rpi3, rpi2, rpi0, rpi
-    * bbb
-    * osd32mp1
-    * npi_imx6ull
-    * grisp2
-    * mangopi_mq_pro
+
+Nerves platforms tested only building by CI:
+
+* rpi4, rpi3a, rpi3, rpi2, rpi0, rpi
+* bbb
+* osd32mp1
+* npi_imx6ull
+* grisp2
+* mangopi_mq_pro
 
 Other manually tested platforms:
 
