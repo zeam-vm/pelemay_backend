@@ -132,7 +132,7 @@ jobs:
         . "$HOME/.asdf/asdf.sh"
         mix compile --warnings-as-errors
     - name: Check formatting (Ubuntu)
-      if: ${{ !startsWith(runner.os, 'linux') }}
+      if: ${{ startsWith(runner.os, 'linux') }}
       run: mix format --check-formatted
     - name: Check formatting (macOS)
       if: ${{ startsWith(runner.os, 'macos') }}
