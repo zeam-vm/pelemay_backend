@@ -10,6 +10,8 @@ Each has their own README, which you can access above to learn more.
 
 [![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
 
+## Supported Platforms
+
 Tested Platforms by CI:
 
 * Ubuntu 22.04 / 20.04
