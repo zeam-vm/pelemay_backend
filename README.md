@@ -34,3 +34,7 @@ Supported Erlang/OTP and Elixir versioins:
 
 * OTP: 24, 25, 26
 * Elixir: 1.14, 1.15
+
+## Acknowledgement
+
+This work was supported by Asahi Kohsan Group Research Support Program of Kitakyushu Foundation for the Advancement of Industry Science and Technology (FAIS).
