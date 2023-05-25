@@ -9,6 +9,13 @@ This repository currently holds the following projects:
 
 Each has their own README, which you can access above to learn more.
 
+## Supported Erlang/OTP and Elixir versions:
+
+Supported Erlang/OTP and Elixir versions:
+
+* OTP: 24, 25, 26
+* Elixir: 1.14, 1.15
+
 ## Supported Platforms
 
 Tested Platforms by CI:
@@ -30,11 +37,6 @@ Other manually tested platforms:
 
 * macOS 13 Ventura (Apple Silicon)
 * groovEPIC
-
-Supported Erlang/OTP and Elixir versions:
-
-* OTP: 24, 25, 26
-* Elixir: 1.14, 1.15
 
 ## Acknowledgement
 
