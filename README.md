@@ -31,7 +31,7 @@ Other manually tested platforms:
 * macOS 13 Ventura (Apple Silicon)
 * groovEPIC
 
-Supported Erlang/OTP and Elixir versioins:
+Supported Erlang/OTP and Elixir versions:
 
 * OTP: 24, 25, 26
 * Elixir: 1.14, 1.15
