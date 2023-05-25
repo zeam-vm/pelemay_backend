@@ -1,14 +1,17 @@
 # Pelemay Backend (Collection)
 
+[![Elixir CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)
+
+[![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
+
+
 This repository currently holds the following projects:
 
 * [`PelemayBackend`](https://github.com/zeam-vm/pelemay_backend/tree/main/pelemay_backend#readme) - A memory-saving, fault-tolerant and distributed collection of Nx compilers and backends for embedded systems.
 
 Each has their own README, which you can access above to learn more.
 
-[![Elixir CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)
-
-[![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
+## Supported Platforms
 
 Tested Platforms by CI:
 
