@@ -1,6 +1,6 @@
 SUBDIRS :=	\
+	utilities/backend_decorator \
 	backends/pelemay_backend \
-	backends/decorating_backend \
 	backends/logging_backend
 
 all:	setup

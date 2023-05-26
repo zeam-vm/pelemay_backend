@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        working-directory: ["backends/pelemay_backend", "backends/decorating_backend", "backends/logging_backend"]
+        working-directory: ["utilities/backend_decorator", "backends/pelemay_backend", "backends/logging_backend"]
         os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         otp-version: ['24.3.4.11', '25.3.2', '26.0']
         elixir-version: ['1.14.4', '1.15.0-rc.0']
