@@ -6,6 +6,8 @@
 This repository currently holds the following projects:
 
 * [`PelemayBackend`](https://github.com/zeam-vm/pelemay_backend/tree/main/backends/pelemay_backend#readme) - A memory-saving, fault-tolerant and distributed collection of Nx compilers and backends for embedded systems.
+* DecoratingBackend - A backend to decorate the specified `based_backend` with the functions before and after a set of functions in the backend. The set can be specified with the style of [AspectJ, which is an AOP language](https://en.wikipedia.org/wiki/Aspect-oriented_programming), and with grouping written in [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example, Aggregates, Backend, Conversion, and so on.
+* LoggingBackend - A backend to log the behavior of the specified `based_backend`.
 
 Each has their own README, which you can access above to learn more.
 
