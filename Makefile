@@ -18,6 +18,11 @@ test:
 		(cd $${_dir} && mix test); \
 	done
 
+format:
+	@for _dir in ${SUBDIRS}; do \
+		(cd $${_dir} && mix format); \
+	done
+
 clean:
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && echo "Cleaning in $${_dir}" && mix clean); \
