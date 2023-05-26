@@ -102,7 +102,7 @@ jobs:
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/deps
+        path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
         key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Set up hex and rebar (macOS)
