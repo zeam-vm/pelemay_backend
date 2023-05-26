@@ -53,7 +53,7 @@ jobs:
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/deps
+          path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
           key: ${{ runner.os }}-Elixir-v${{ env.ELIXIR_VERSION }}-OTP-${{ env.OTP_VERSION }}-${{ hashFiles(format('{0}/{1}/mix.lock', github.workspace, matrix.working-directory)) }}
           restore-keys: ${{ runner.os }}-Elixir-v${{ env.ELIXIR_VERSION }}-OTP-${{ env.OTP_VERSION }}-
       - name: Install dependencies
