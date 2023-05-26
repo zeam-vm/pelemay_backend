@@ -36,6 +36,20 @@ jobs:
             otp-version: '25.3.2'
           - os: windows-2022
             otp-version: '26.0'
+          - os: windows-2022
+            elixir-version: '1.15.0-rc.0'
+          - os: macos-13
+            otp-version: '24.3.4.11'
+          - os: macos-12
+            otp-version: '24.3.4.11'
+          - os: macos-13
+            otp-version: '26'
+          - os: macos-12
+            otp-version: '26'
+          - os: macos-13
+            elixir-version: '1.15.0-rc.0'
+          - os: macos-12
+            elixir-version: '1.15.0-rc.0'
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
