@@ -1,4 +1,4 @@
-SUBDIRS :=	pelemay_backend
+SUBDIRS :=	backends/pelemay_backend
 
 all:	setup
 	@for _dir in ${SUBDIRS}; do \
