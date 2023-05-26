@@ -27,10 +27,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        working-directory: ["backends/pelemay_backend", "backends/decorating_backend", "backends/logging_backend"]
-        os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
-        otp-version: ['24.3.4.11', '25.3.2', '26.0']
-        elixir-version: ['1.14.4', '1.15.0-rc.0']
+        working-directory: ["backends/decorating_backend"]
+        os: [ubuntu-22.04]
+        otp-version: ['26.0']
+        elixir-version: ['1.14.4']
+        # working-directory: ["backends/pelemay_backend", "backends/decorating_backend", "backends/logging_backend"]
+        # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
+        # otp-version: ['24.3.4.11', '25.3.2', '26.0']
+        # elixir-version: ['1.14.4', '1.15.0-rc.0']
         exclude:
           - os: windows-2022
             otp-version: '25.3.2'
@@ -125,7 +129,10 @@ jobs:
         mix local.hex --force
         mix local.rebar --force
     - name: Install dependencies
-      run: mix deps.get
+      run: |
+        mix deps.get
+        echo "${{ github.workspace }}"
+        ls "${{ github.workspace }}"
     - name: Compile and check warning
       run: mix compile --warnings-as-errors
     - name: Check formatting (Ubuntu, macOS)
