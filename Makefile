@@ -13,7 +13,7 @@ setup:
 		(cd $${_dir} && mix deps.get); \
 	done
 
-test:
+test:	all
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && mix test); \
 	done
