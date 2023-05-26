@@ -1,6 +1,6 @@
 # LoggingBackend
 
-**TODO: Add description**
+A backend to log the behavior of the specified `based_backend`.
 
 ## Installation
 

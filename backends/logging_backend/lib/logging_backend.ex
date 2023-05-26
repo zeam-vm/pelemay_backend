@@ -1,6 +1,6 @@
 defmodule LoggingBackend do
   @moduledoc """
-  Documentation for `LoggingBackend`.
+  A backend to log the behavior of the specified `based_backend`.
   """
 
   @doc """
