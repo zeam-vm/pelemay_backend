@@ -29,7 +29,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          working-directory: ["utilities/backend_decorator", "backends/pelemay_backend", "backends/logging_backend"]
+          working-directory: ["backends/pelemay_backend", "backends/logging_backend"]
           target: [rpi4, rpi3a, rpi3, rpi2, rpi0, rpi, bbb, osd32mp1, npi_imx6ull, grisp2, mangopi_mq_pro]
       defaults:
         run:
