@@ -19,7 +19,7 @@ defmodule Sub do
 
   defp get_release_versions(mix_exs_stream) do
     mix_exs_stream
-    |> Stream.map(&Regex.named_captures(~r/\@version \"(?<version>.*)\"/, &1))
+    |> Stream.map(&Regex.named_captures(~r/\@version \"(?<version>.*[^dev])\"/, &1))
     |> Stream.reject(&is_nil/1)
     |> Stream.map(&Map.get(&1, "version"))
     |> Enum.to_list()
