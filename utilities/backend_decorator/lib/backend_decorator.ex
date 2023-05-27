@@ -8,17 +8,4 @@ defmodule BackendDecorator do
   [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example,
   Aggregates, Backend, Conversion, and so on.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> BackendDecorator.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
