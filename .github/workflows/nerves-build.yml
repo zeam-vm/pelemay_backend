@@ -8,7 +8,8 @@ on:
         - '**/*.md'
         - '*.cff'
         - 'LICENSE*'
-    workflow_dispatch:
+        - '**/LICENSE*'
+        workflow_dispatch:
   
 permissions:
     contents: read
