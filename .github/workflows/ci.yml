@@ -13,6 +13,8 @@ on:
       - '**/*.md'
       - '*.cff'
       - 'LICENSE*'
+      - '**/LICENSE*'
+      - '.github/workflows/nerves-build.yml'
   workflow_dispatch:
 
 
