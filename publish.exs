@@ -108,22 +108,4 @@ end
 
 subdir = System.argv()
 
-Enum.zip(Sub.mix_exs_streams(subdir), Sub.replace_to_release(subdir))
-|> Enum.map(fn {{path, before_stream}, {path, after_stream}} ->
-  {
-    path,
-    {
-      before_stream |> Enum.to_list() |> Enum.join(),
-      after_stream |> Enum.to_list() |> Enum.join()
-    }
-  }
-end)
-|> Enum.map(fn {path, {before_content, after_content}} ->
-  {
-    path,
-    before_content != after_content
-  }
-end)
-|> IO.inspect()
-
-#Sub.write_replaced_to_release(subdir)
+Sub.write_replaced_to_release(subdir)
