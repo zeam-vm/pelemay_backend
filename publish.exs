@@ -55,8 +55,7 @@ defmodule Sub do
     |> Enum.map(fn {_app, path} ->
       {
         path,
-        path
-        |> Sub.mix_exs_stream()
+        Sub.mix_exs_stream(path)
       }
     end)
   end
