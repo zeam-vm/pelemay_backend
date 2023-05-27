@@ -1,4 +1,7 @@
-SUBDIRS :=	backends/pelemay_backend
+SUBDIRS :=	\
+	utilities/backend_decorator \
+	backends/pelemay_backend \
+	backends/logging_backend
 
 all:	setup
 	@for _dir in ${SUBDIRS}; do \
@@ -10,9 +13,14 @@ setup:
 		(cd $${_dir} && mix deps.get); \
 	done
 
-test:
+test:	all
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && mix test); \
+	done
+
+format:
+	@for _dir in ${SUBDIRS}; do \
+		(cd $${_dir} && mix format); \
 	done
 
 clean:
