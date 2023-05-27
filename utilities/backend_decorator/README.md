@@ -4,18 +4,10 @@ A backend generator to decorate the specified `based_backend` with the functions
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `backend_decorator` to your list of dependencies in `mix.exs`:
-
 ```elixir
 def deps do
   [
-    {:backend_decorator, "~> 0.1.0"}
+    {:backend_decorator, "~> 0.1.0", github: "zeam-vm/pelemay_backend", sparse: "utilities/backend_decorator"}
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/backend_decorator>.
-
