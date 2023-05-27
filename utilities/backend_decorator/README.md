@@ -7,7 +7,7 @@ A backend generator to decorate the specified `based_backend` with the functions
 ```elixir
 def deps do
   [
-    {:backend_decorator, "~> 0.1.0", github: "zeam-vm/pelemay_backend", sparse: "utilities/backend_decorator"}
+    {:backend_decorator, "~> 0.1.0-dev", github: "zeam-vm/pelemay_backend", sparse: "utilities/backend_decorator"}
   ]
 end
 ```
