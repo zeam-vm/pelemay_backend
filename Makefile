@@ -27,3 +27,6 @@ clean:
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && echo "Cleaning in $${_dir}" && mix clean); \
 	done
+
+publish:
+	./publish.exs ${SUBDIRS}
