@@ -20,7 +20,6 @@ jobs:
       runs-on: ubuntu-20.04
       env:
         MIX_ENV: prod
-        NERVES_PROJ_NAME: nerves_pelemay_backend
         NERVES_LIVEBOOK_VER: "v0.9.1"
         OTP_VERSION: "25.2"
         ELIXIR_VERSION: "1.14.3"
@@ -70,7 +69,7 @@ jobs:
             git checkout mix.exs
             LINE="$(grep -n 'toolshed' mix.exs | awk -F: '{print $1+1}')"
             head -n "${LINE}" mix.exs > mix.exs.tmp
-            echo '      {:pelemay_backend, path: "../pelemay_backend"},' >> mix.exs.tmp
+            echo "      {:$(basename ${{ matrix.working-directory }}), path: \"../$(basename ${{ matrix.working-directory }})\"}," >> mix.exs.tmp
             tail -n "+${LINE}" mix.exs >> mix.exs.tmp
             mv mix.exs.tmp mix.exs
             cat mix.exs
