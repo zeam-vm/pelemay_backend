@@ -1,0 +1,6 @@
+footer
+  p Relevant links:
+  nav
+    ul
+      li = link @env, "Docs", to: "https://hexdocs.pm/still/"
+      li = link @env, "Github", to: "https://github.com/still-ex/still"
