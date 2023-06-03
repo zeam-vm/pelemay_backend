@@ -1,9 +1,19 @@
 name: Deploy Site
 
 on:
-  push:
-    branches: [ main ]
-
+    pull_request:
+        branches: [ "main" ]
+        paths-ignore:
+        - '*.md'
+        - '**/*.md'
+        - '*.cff'
+        - 'LICENSE*'
+        - '**/LICENSE*'
+        - 'backends/**/*'
+        - 'utilitiles/**/*'
+        - '.github/workflows/nerves-build.yml'
+        - '.github/workflows/ci.yml'
+  
 jobs:
   site:
     runs-on: ubuntu-latest
