@@ -1,7 +1,8 @@
 SUBDIRS :=	\
 	utilities/backend_decorator \
 	backends/pelemay_backend \
-	backends/logging_backend
+	backends/logging_backend \
+	benchmarks/onnx_to_axon_bench
 
 all:	setup
 	@for _dir in ${SUBDIRS}; do \
