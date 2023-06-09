@@ -81,7 +81,7 @@ These suggest that the concept of Pelemay Backend makes sense as follows:
 * The size of files `cat_dog_breeds` and `cats_v_dogs.onnx` is approximately 47MB, and they requires approximately the memory of 1MB.
 * In contrast, the size of file `resnet101-v1-7.onnx` is approximately 178MB, and it requires approximately the memory of 9GB.
 
-`resnet101-v1-7.onnx` is one of files in [ResNet}(https://github.com/onnx/models/blob/main/vision/classification/resnet/README.md), which is one of popular models that perform image classification. So, many developers may hope to use it on embedded systems. However, the results deny this hope.
+`resnet101-v1-7.onnx` is one of files in [ResNet](https://github.com/onnx/models/blob/main/vision/classification/resnet/README.md), which is one of popular models that perform image classification. So, many developers may hope to use it on embedded systems. However, the results deny this hope.
 
 ## License
 
