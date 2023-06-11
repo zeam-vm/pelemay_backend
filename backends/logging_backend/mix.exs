@@ -23,6 +23,7 @@ defmodule LoggingBackend.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:backend_decorator, path: "../../utilities/backend_decorator"}
     ]
   end
