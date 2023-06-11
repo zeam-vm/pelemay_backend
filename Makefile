@@ -24,6 +24,11 @@ format:
 		(cd $${_dir} && mix format); \
 	done
 
+dialyzer:
+	@for _dir in ${SUBDIRS}; do \
+		(cd $${_dir} && mix dialyzer); \
+	done
+
 clean:
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && echo "Cleaning in $${_dir}" && mix clean); \
