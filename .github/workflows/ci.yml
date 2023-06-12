@@ -48,6 +48,8 @@ jobs:
         otp-version: ['24.3.4.12', '25.3.2.2', '26.0.1']
         elixir-version: ['1.14.5', '1.15.0-rc.2']
         exclude:
+          - otp-version: '24.3.4.12'
+            elixir-version: '1.15.0-rc.2'
           - os: windows-2022
             otp-version: '25.3.2.2'
           - os: windows-2022
