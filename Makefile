@@ -24,6 +24,11 @@ format:
 		(cd $${_dir} && mix format); \
 	done
 
+credo:
+	@for _dir in ${SUBDIRS}; do \
+		(cd $${_dir} && mix credo); \
+	done
+
 dialyzer:
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && mix dialyzer); \

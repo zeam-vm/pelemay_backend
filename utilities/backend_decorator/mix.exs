@@ -25,6 +25,7 @@ defmodule BackendDecorator.MixProject do
   defp deps do
     [
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:nx, "~> #{@nx_version}"}
     ]
   end
