@@ -4,6 +4,7 @@ defmodule OnnxToAxonBench do
   """
   require Logger
 
+  @spec run() :: any()
   def run() do
     init()
 
@@ -35,22 +36,27 @@ defmodule OnnxToAxonBench do
     )
   end
 
+  @spec priv() :: String.t()
   def priv() do
     Application.app_dir(:onnx_to_axon_bench, "priv")
   end
 
+  @spec path_models_onnx() :: binary()
   def path_models_onnx() do
     Path.join(priv(), "models/onnx")
   end
 
+  @spec path_models_axon() :: binary()
   def path_models_axon() do
     Path.join(priv(), "models/onnx")
   end
 
+  @spec path_data() :: binary()
   def path_data() do
     Path.join(priv(), "data")
   end
 
+  @spec download(Req.url(), keyword()) :: {:ok, binary() | term()} | {:error, Exception.t()}
   def download(source_url, req_options \\ []) do
     case Req.get(source_url, [finch_request: &finch_request/4] ++ req_options) do
       {:ok, response} -> {:ok, response.body}
@@ -58,6 +64,7 @@ defmodule OnnxToAxonBench do
     end
   end
 
+  @spec download!(Req.url(), keyword()) :: binary() | term()
   def download!(source_url, req_options \\ []) do
     Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options).body
   end
@@ -103,17 +110,24 @@ defmodule OnnxToAxonBench do
     |> Map.update!(:private, &%{&1 | downloaded_size: new_downloaded_size})
   end
 
+  @spec basename_from_uri(Req.url()) :: String.t()
+  def basename_from_uri(url) when is_binary(url) do
+    Path.basename(url)
+  end
+
   def basename_from_uri(url) do
     URI.parse(url) |> Map.get(:path) |> Path.basename()
   end
 
+  @spec init() :: :ok
   def init() do
     File.mkdir_p!(path_models_onnx())
     File.mkdir_p!(path_models_axon())
     File.mkdir_p!(path_data())
   end
 
-  defp download_files(files, dst_path) do
+  @spec download_files(list(Req.url()), String.t()) :: list(String.t())
+  def download_files(files, dst_path) do
     Enum.map(files, fn url ->
       basename = basename_from_uri(url)
 
@@ -132,32 +146,51 @@ defmodule OnnxToAxonBench do
     end)
   end
 
+  @spec setup_onnx(list(String.t())) :: list(String.t())
   def setup_onnx(files) do
     download_files(files, path_models_onnx())
   end
 
+  @spec setup_data(list(String.t())) ::
+          list(:ok | {:ok, list({charlist(), String.t()})} | {:error, any()})
   def setup_data(files) do
     download_files(files, path_data())
 
     files
     |> Flow.from_enumerable(max_demand: 1)
-    |> Flow.map(fn url ->
-      Path.join(path_data(), basename_from_uri(url))
-      |> File.read!()
-      |> then(&:erl_tar.extract({:binary, &1}, [:compressed, {:cwd, path_data()}]))
-    end)
+    |> Flow.map(fn url -> extract_from_url(url) end)
     |> Enum.to_list()
   end
 
+  @spec extract_from_url(Req.url()) ::
+          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+  def extract_from_url(url) do
+    Path.join(path_data(), basename_from_uri(url))
+    |> File.read!()
+    |> extract_tar_from_string()
+  end
+
+  @spec extract_tar_from_string(binary()) ::
+          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+  def extract_tar_from_string(contents) do
+    :erl_tar.extract({:binary, contents}, [
+      :compressed,
+      {:cwd, path_data() |> String.to_charlist()}
+    ])
+  end
+
+  @spec axon_name_from_onnx_path(binary()) :: String.t()
   def axon_name_from_onnx_path(onnx_path) do
     model_root = onnx_path |> Path.basename() |> Path.rootname()
     "#{model_root}.axon"
   end
 
+  @spec axon_path_from_onnx_path(binary()) :: binary()
   def axon_path_from_onnx_path(onnx_path) do
     Path.join(path_models_axon(), axon_name_from_onnx_path(onnx_path))
   end
 
+  @spec get_axon_from_onnx(binary()) :: any()
   def get_axon_from_onnx(path_to_onnx_file) do
     path_to_onnx_file
     |> AxonOnnx.import()
