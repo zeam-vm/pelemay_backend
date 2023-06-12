@@ -150,6 +150,13 @@ jobs:
     - name: Check by credo (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix credo
+    - name: Restore dialyzer cache (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/${{ matrix.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
     - name: Check by dialyzer (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix dialyzer
