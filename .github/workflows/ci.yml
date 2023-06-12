@@ -7,7 +7,8 @@ name: Elixir CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    types: [opened, reopened, synchronize]
+    branches: [ "main", "develop" ]
     paths-ignore:
       - '*.md'
       - '**/*.md'
@@ -22,8 +23,13 @@ on:
       - 'publish.exs'
       - '.github/workflows/nerves-build.yml'
       - '.github/workflows/site.yml'
+  push:
+    branches: [ "develop" ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -34,32 +40,34 @@ jobs:
     name: Build and test on ${{ matrix.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         working-directory: ["utilities/backend_decorator", "backends/pelemay_backend", "backends/logging_backend", "benchmarks/onnx_to_axon_bench"]
         # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         os: [ubuntu-22.04]
-        otp-version: ['24.3.4.11', '25.3.2', '26.0']
-        elixir-version: ['1.14.4', '1.15.0-rc.0']
+        otp-version: ['24.3.4.12', '25.3.2.2', '26.0.1']
+        elixir-version: ['1.14.5', '1.15.0-rc.2']
         exclude:
+          - otp-version: '24.3.4.12'
+            elixir-version: '1.15.0-rc.2'
           - os: windows-2022
-            otp-version: '25.3.2'
+            otp-version: '25.3.2.2'
           - os: windows-2022
-            otp-version: '26.0'
+            otp-version: '26.0.1'
           - os: windows-2022
-            elixir-version: '1.15.0-rc.0'
+            elixir-version: '1.15.0-rc.2'
           - os: macos-13
-            otp-version: '24.3.4.11'
+            otp-version: '24.3.4.12'
           - os: macos-12
-            otp-version: '24.3.4.11'
+            otp-version: '24.3.4.12'
           - os: macos-13
-            otp-version: '26'
+            otp-version: '26.0.1'
           - os: macos-12
-            otp-version: '26'
+            otp-version: '26.0.1'
           - os: macos-13
-            elixir-version: '1.15.0-rc.0'
+            elixir-version: '1.15.0-rc.2'
           - os: macos-12
-            elixir-version: '1.15.0-rc.0'
+            elixir-version: '1.15.0-rc.2'
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
@@ -144,6 +152,13 @@ jobs:
     - name: Check by credo (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix credo
+    - name: Restore dialyzer cache (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/${{ matrix.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
     - name: Check by dialyzer (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix dialyzer
