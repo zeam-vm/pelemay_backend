@@ -95,9 +95,10 @@ defmodule OnnxToAxonBench do
   defp handle_message({:data, data}, response) do
     total_size = response.private.total_size
 
-    cond do
-      total_size > 0 -> handle_message_data(data, response)
-      true -> response
+    if total_size > 0 do
+      handle_message_data(data, response)
+    else
+      response
     end
   end
 

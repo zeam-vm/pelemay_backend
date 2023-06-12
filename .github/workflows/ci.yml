@@ -141,6 +141,9 @@ jobs:
     - name: Check formatting (Ubuntu, macOS)
       if: ${{ !startsWith(runner.os, 'windows') }}
       run: mix format --check-formatted
+    - name: Check by credo (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      run: mix credo
     - name: Check by dialyzer (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix dialyzer
