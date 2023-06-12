@@ -7,7 +7,8 @@ name: Elixir CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    types: [opened, reopened, synchronize]
+    branches: [ "main", "develop" ]
     paths-ignore:
       - '*.md'
       - '**/*.md'
@@ -22,8 +23,13 @@ on:
       - 'publish.exs'
       - '.github/workflows/nerves-build.yml'
       - '.github/workflows/site.yml'
+  push:
+    branches: [ "develop" ]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
