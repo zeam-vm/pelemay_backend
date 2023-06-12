@@ -1,5 +1,6 @@
 SUBDIRS :=	\
 	utilities/backend_decorator \
+	utilities/node_activator \
 	backends/pelemay_backend \
 	backends/logging_backend \
 	benchmarks/onnx_to_axon_bench
