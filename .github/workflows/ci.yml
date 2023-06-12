@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        working-directory: ["utilities/backend_decorator", "backends/pelemay_backend", "backends/logging_backend", "benchmarks/onnx_to_axon_bench"]
+        working-directory: ["utilities/backend_decorator", "utilities/node_activator", "backends/pelemay_backend", "backends/logging_backend", "benchmarks/onnx_to_axon_bench"]
         # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         os: [ubuntu-22.04]
         otp-version: ['24.3.4.12', '25.3.2.2', '26.0.1']
