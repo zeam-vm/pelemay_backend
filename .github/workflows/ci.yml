@@ -34,7 +34,7 @@ jobs:
     name: Build and test on ${{ matrix.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         working-directory: ["utilities/backend_decorator", "backends/pelemay_backend", "backends/logging_backend", "benchmarks/onnx_to_axon_bench"]
         # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
