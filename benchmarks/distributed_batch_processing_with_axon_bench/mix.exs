@@ -23,6 +23,7 @@ defmodule DistributedBatchProcessingWithAxonBench.MixProject do
     [
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:node_activator, path: "../../utilities/node_activator"},
       {:nx, "~> 0.5"},
       {:axon, "~> 0.5"},
       {:exla, "~> 0.5"},
