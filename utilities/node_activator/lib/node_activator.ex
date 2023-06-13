@@ -13,9 +13,14 @@ defmodule NodeActivator do
       {:ok, Node.self()}
     else
       launch_epmd()
-      name = :"#{name}_#{:crypto.strong_rand_bytes(5) |> Base.encode32(case: :lower)}"
+      name = name |> name_with_random_key() |> String.to_atom()
       Node.start(name)
     end
+  end
+
+  @spec name_with_random_key(binary()) :: binary()
+  def name_with_random_key(name) do
+    "#{name}_#{:crypto.strong_rand_bytes(5) |> Base.encode32(case: :lower)}"
   end
 
   @spec launch_epmd(keyword) :: :ok | :error
