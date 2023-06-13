@@ -7,9 +7,12 @@ defmodule SpawnCoElixir.Application do
 
   @impl true
   def start(_type, _args) do
+    SpawnCoElixir.init()
+
     children = [
       # Starts a worker by calling: SpawnCoElixir.Worker.start_link(arg)
       # {SpawnCoElixir.Worker, arg}
+      {DynamicSupervisor, name: SpawnCoElixir.DynamicSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
