@@ -3,7 +3,8 @@ SUBDIRS :=	\
 	utilities/node_activator \
 	backends/pelemay_backend \
 	backends/logging_backend \
-	benchmarks/onnx_to_axon_bench
+	benchmarks/onnx_to_axon_bench \
+	benchmarks/distributed_batch_processing_with_axon_bench
 
 all:	setup
 	@for _dir in ${SUBDIRS}; do \
