@@ -54,7 +54,7 @@ defmodule NodeActivator do
         :ok
       else
         # credo:disable-for-next-line
-        Logger.error("epmd #{Enum.join(options, " ")}: #{result}", [error_code: exit_code])
+        Logger.error("epmd #{Enum.join(options, " ")}: #{result}", error_code: exit_code)
         :error
       end
     end
