@@ -1,0 +1,6 @@
+---
+layout: _layout.slime
+---
+
+h1 = @title
+main = @children
