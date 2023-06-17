@@ -22,6 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install Imagemagick (Ubuntu)
+        run: apt -y install imagemagick
+
       - uses: erlef/setup-beam@v1
         with:
           otp-version: '24.3.4.11'
