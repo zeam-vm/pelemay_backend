@@ -13,6 +13,8 @@ on:
         - 'utilitiles/**/*'
         - '.github/workflows/nerves-build.yml'
         - '.github/workflows/ci.yml'
+    push:
+      branches: [ "main" ]
   
 jobs:
   site:
