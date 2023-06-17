@@ -10,6 +10,10 @@ html
     meta name="twitter:creator:id" content="@zacky1972"
     meta name="twitter:title" content=@title
     meta name="twitter:description" content=@description
+    meta property="og:title" content=@title
+    meta property="og:site_name" content="Pelemay Backend"
+    meta property="og:type" content="article"
+    meta property="og:description" content=@description
     meta property="og:image" content=@image
   body
     = @children
