@@ -37,6 +37,9 @@ jobs:
 
       - run: MIX_ENV=site mix deps.get
 
+      - name: Install Imagemagick (Ubuntu)
+        run: sudo apt -y install imagemagick
+
       - run: MIX_ENV=site mix still.compile
 
       - uses: peaceiris/actions-gh-pages@v3

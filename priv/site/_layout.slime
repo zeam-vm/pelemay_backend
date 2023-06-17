@@ -1,12 +1,14 @@
----
-title: "Still"
----
 doctype html
 html
   head
-    title Still
+    title Pelemay Backend
     meta charset="UTF-8"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     = link_to_css @env, "css/theme.css", media: "all"
+    meta name="twitter:card" content="summary"
+    meta property="og:url" content=@permalink
+    meta property="og:title" content=@title
+    meta property="og:description" content=@description
+    meta property="og:image" content=@image
   body
     = @children
