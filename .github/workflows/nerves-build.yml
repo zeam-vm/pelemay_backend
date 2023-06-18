@@ -54,6 +54,7 @@ jobs:
         with:
             key: ${{ secrets.SSH_KEY }}
             name: id_rsa
+            known_hosts: localhost
       - name: Install system dependencies
         run: |
             sudo apt update && sudo apt install -y  build-essential automake autoconf pkg-config bc m4 unzip zip curl git libssl-dev libncurses5-dev python3 ca-certificates squashfs-tools ssh-askpass libmnl-dev
