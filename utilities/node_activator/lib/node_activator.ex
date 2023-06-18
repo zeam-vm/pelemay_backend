@@ -71,17 +71,18 @@ defmodule NodeActivator do
       Logger.error("Fail to find epmd.")
       raise RuntimeError, "Fail to find epmd."
     else
-      _child = spawn_link(fn ->
-        {result, exit_code} = System.cmd(epmd_path, options, parallelism: true)
+      _child =
+        spawn_link(fn ->
+          {result, exit_code} = System.cmd(epmd_path, options, parallelism: true)
 
-        if exit_code == 0 do
-          Logger.info("epmd #{Enum.join(options, " ")}: #{result}")
-        else
-          # credo:disable-for-next-line
-          Logger.error("epmd #{Enum.join(options, " ")}: #{result}", error_code: exit_code)
-          raise RuntimeError, "Fail to launch epmd #{Enum.join(options, " ")}: #{result}"
-        end
-      end)
+          if exit_code == 0 do
+            Logger.info("epmd #{Enum.join(options, " ")}: #{result}")
+          else
+            # credo:disable-for-next-line
+            Logger.error("epmd #{Enum.join(options, " ")}: #{result}", error_code: exit_code)
+            raise RuntimeError, "Fail to launch epmd #{Enum.join(options, " ")}: #{result}"
+          end
+        end)
 
       :ok
     end
