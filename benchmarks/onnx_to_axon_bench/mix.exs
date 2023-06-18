@@ -25,7 +25,6 @@ defmodule OnnxToAxonBench.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:nx, "~> 0.5"},
       {:axon, "~> 0.5"},
-      {:exla, "~> 0.5"},
       {:axon_onnx, "~> 0.4"},
       {:benchee, "~> 1.1"},
       {:req, "~> 0.3.8"},
