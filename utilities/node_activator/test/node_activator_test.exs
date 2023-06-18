@@ -4,7 +4,7 @@ defmodule NodeActivatorTest do
 
   test "run" do
     NodeActivator.run("test")
-
+    Process.sleep(500)
     assert Node.alive?() == true
   end
 
