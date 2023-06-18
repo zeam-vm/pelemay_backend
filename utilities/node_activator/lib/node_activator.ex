@@ -53,8 +53,6 @@ defmodule NodeActivator do
       else
         raise RuntimeError, "Fail to execute the \"execute\" command."
       end
-    else
-      raise RuntimeError, "Fail to execute the \"execute\" command."
     end
   end
 
