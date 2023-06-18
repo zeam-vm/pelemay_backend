@@ -14,14 +14,33 @@ defmodule NodeActivator do
     else
       launch_epmd()
       name = name |> name_with_random_key() |> String.to_atom()
+      Logger.info("Node.start(#{name})")
       Node.start(name)
     end
   end
 
   @spec name_with_random_key(binary()) :: binary()
   def name_with_random_key(name) do
-    "#{name}_#{:crypto.strong_rand_bytes(5) |> Base.encode32(case: :lower)}"
+    "#{name}_#{:crypto.strong_rand_bytes(5) |> Base.encode32(case: :lower)}@#{hostname_f()}"
   end
+
+  @spec hostname_f() :: binary()
+  def hostname_f() do
+    hostname = System.find_executable("hostname")
+
+    unless is_nil(hostname) do
+      {result, exit_code} = System.cmd(hostname, ["-f"])
+
+      if exit_code == 0 do
+        String.trim(result)
+      else
+        raise RuntimeError, "Fail to execute the \"execute\" command."
+      end
+    else
+      raise RuntimeError, "Fail to execute the \"execute\" command."
+    end
+  end
+
 
   @spec launch_epmd(keyword) :: :ok | :error
   def launch_epmd(options \\ [daemon: true]) do
