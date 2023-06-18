@@ -41,7 +41,6 @@ defmodule NodeActivator do
     end
   end
 
-
   @spec launch_epmd(keyword) :: :ok | :error
   def launch_epmd(options \\ [daemon: true]) do
     options =
