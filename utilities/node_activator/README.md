@@ -1,6 +1,6 @@
 # NodeActivator
 
-**TODO: Add description**
+A module to activate VM nodes.
 
 ## Installation
 

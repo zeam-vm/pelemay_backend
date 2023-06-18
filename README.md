@@ -7,12 +7,13 @@ This repository currently holds the following projects:
 
 Backends:
 
-* [`PelemayBackend`](https://github.com/zeam-vm/pelemay_backend/tree/main/backends/pelemay_backend#readme) - A memory-saving, fault-tolerant and distributed collection of Nx compilers and backends for embedded systems.
-* [`LoggingBackend`](https://github.com/zeam-vm/pelemay_backend/blob/main/backends/logging_backend#readme) - A backend to log the behavior of the specified `based_backend`.
+* [`PelemayBackend`](https://github.com/zeam-vm/pelemay_backend/tree/main/backends/pelemay_backend#readme) (WIP) - A memory-saving, fault-tolerant and distributed collection of Nx compilers and backends for embedded systems.
+* [`LoggingBackend`](https://github.com/zeam-vm/pelemay_backend/blob/main/backends/logging_backend#readme) (WIP) - A backend to log the behavior of the specified `based_backend`.
 
 Utilities:
 
-* [`BackendDecorator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/backend_decorator#readme) - A backend generator to decorate the specified `based_backend` with the functions before and after a set of functions in the backend. The set can be specified with the style of [AspectJ, which is an AOP language](https://en.wikipedia.org/wiki/Aspect-oriented_programming), and with grouping written in [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example, Aggregates, Backend, Conversion, and so on.
+* [`BackendDecorator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/backend_decorator#readme) (WIP) - A backend generator to decorate the specified `based_backend` with the functions before and after a set of functions in the backend. The set can be specified with the style of [AspectJ, which is an AOP language](https://en.wikipedia.org/wiki/Aspect-oriented_programming), and with grouping written in [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example, Aggregates, Backend, Conversion, and so on.
+* [`NodeActivator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/node_activator/README.md) - A module to activate VM nodes.
 
 Benchmarks:
 
