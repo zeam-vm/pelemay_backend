@@ -15,8 +15,8 @@ defmodule NodeActivator do
       {:ok, Node.self()}
     else
       case :os.type() do
-        {:unix, _} -> launch_epmd()
-        {:win32, _} -> launch_epmd([port: @epmd_port, daemon: false])
+        {:unix, _} -> launch_epmd(port: @epmd_port)
+        {:win32, _} -> launch_epmd(port: @epmd_port, daemon: false)
       end
 
       Logger.info("wait launching epmd...")
@@ -31,7 +31,7 @@ defmodule NodeActivator do
   defp wait_launching_epmd(0), do: raise(RuntimeError, "Fail to launch epmd.")
 
   defp wait_launching_epmd(count) do
-    unless pgrep("epmd", :os.type()) do
+    unless can_connect?(@epmd_port) do
       Process.sleep(1000)
       wait_launching_epmd(count - 1)
     end
@@ -39,37 +39,18 @@ defmodule NodeActivator do
     :ok
   end
 
-  defp pgrep(_command, {:win32, _}) do
-    case :gen_tcp.connect(~c'localhost', @epmd_port, [:binary, active: false], 1000) do
+  defp can_connect?(port) do
+    case :gen_tcp.connect(~c'localhost', port, [:binary, active: false], 1000) do
       {:ok, socket} ->
-        Logger.info("epmd is active.")
+        Logger.info("active.")
         :gen_tcp.close(socket)
         true
 
       {:error, reason} ->
-        Logger.debug("epmd cannot connect due to #{inspect reason}.")
+        Logger.debug("Fail to connect due to #{inspect(reason)}.")
         false
-      end
-  end
-
-  defp pgrep(command, {:unix, _}) do
-    pgrep = System.find_executable("pgrep")
-
-    if is_nil(pgrep) do
-      raise RuntimeError, "Fail to find the \"pgrep\" command."
-    else
-      {result, exit_code} = System.cmd(pgrep, [command])
-
-      case exit_code do
-        0 -> parse_pgrep_result(result)
-        1 -> false
-        _ -> raise RuntimeError, "Fail to execute the \"pgrep\" command."
-      end
     end
   end
-
-  defp parse_pgrep_result(""), do: false
-  defp parse_pgrep_result(result), do: result |> String.trim() |> String.to_integer()
 
   @spec name_with_random_key(binary()) :: binary()
   def name_with_random_key(name) do
