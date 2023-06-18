@@ -1,6 +1,6 @@
 defmodule NodeActivator do
   @moduledoc """
-  Documentation for `NodeActivator`.
+  A module to activate VM nodes.
   """
   require Logger
 
