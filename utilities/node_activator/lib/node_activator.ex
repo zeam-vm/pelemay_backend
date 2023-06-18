@@ -4,6 +4,8 @@ defmodule NodeActivator do
   """
   require Logger
 
+  @epmd_port 4369
+
   @doc """
   Activates Node.
   """
@@ -12,10 +14,41 @@ defmodule NodeActivator do
     if Node.alive?() do
       {:ok, Node.self()}
     else
-      launch_epmd()
+      case :os.type() do
+        {:unix, _} -> launch_epmd(port: @epmd_port)
+        {:win32, _} -> launch_epmd(port: @epmd_port, daemon: false)
+      end
+
+      Logger.info("wait launching epmd...")
+      wait_launching_epmd(5)
+      Logger.info("done.")
       name = name |> name_with_random_key() |> String.to_atom()
       Logger.info("Node.start(#{name})")
       Node.start(name)
+    end
+  end
+
+  defp wait_launching_epmd(0), do: raise(RuntimeError, "Fail to launch epmd.")
+
+  defp wait_launching_epmd(count) do
+    unless can_connect?(@epmd_port) do
+      Process.sleep(1000)
+      wait_launching_epmd(count - 1)
+    end
+
+    :ok
+  end
+
+  defp can_connect?(port) do
+    case :gen_tcp.connect(~c'localhost', port, [:binary, active: false], 1000) do
+      {:ok, socket} ->
+        Logger.info("active.")
+        :gen_tcp.close(socket)
+        true
+
+      {:error, reason} ->
+        Logger.debug("Fail to connect due to #{inspect(reason)}.")
+        false
     end
   end
 
