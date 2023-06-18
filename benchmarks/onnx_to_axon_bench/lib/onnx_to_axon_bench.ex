@@ -4,8 +4,6 @@ defmodule OnnxToAxonBench do
   """
   require Logger
 
-  import OnnxToAxonBench.Utils.HTTP
-
   @spec run() :: any()
   def run() do
     init()
@@ -18,7 +16,7 @@ defmodule OnnxToAxonBench do
 
     inputs =
       onnx_uri
-      |> Enum.map(fn url -> basename_from_uri(url) end)
+      |> Enum.map(fn url -> OnnxToAxonBench.Utils.HTTP.basename_from_uri(url) end)
       |> Enum.map(fn basename -> {basename, basename} end)
       |> Map.new()
 
@@ -67,13 +65,13 @@ defmodule OnnxToAxonBench do
 
   @spec setup_onnx(list(String.t())) :: list(String.t())
   def setup_onnx(files) do
-    download_files(files, path_models_onnx())
+    OnnxToAxonBench.Utils.HTTP.download_files(files, path_models_onnx())
   end
 
   @spec setup_data(list(String.t())) ::
           list(:ok | {:ok, list({charlist(), String.t()})} | {:error, any()})
   def setup_data(files) do
-    download_files(files, path_data())
+    OnnxToAxonBench.Utils.HTTP.download_files(files, path_data())
 
     files
     |> Flow.from_enumerable(max_demand: 1)
@@ -84,7 +82,7 @@ defmodule OnnxToAxonBench do
   @spec extract_from_url(Req.url()) ::
           :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
   def extract_from_url(url) do
-    Path.join(path_data(), basename_from_uri(url))
+    Path.join(path_data(), OnnxToAxonBench.Utils.HTTP.basename_from_uri(url))
     |> File.read!()
     |> extract_tar_from_string()
   end
