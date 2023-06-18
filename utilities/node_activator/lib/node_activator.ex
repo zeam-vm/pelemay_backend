@@ -29,14 +29,14 @@ defmodule NodeActivator do
     hostname = System.find_executable("hostname")
 
     if is_nil(hostname) do
-      raise RuntimeError, "Fail to execute the \"execute\" command."
+      raise RuntimeError, "Fail to find the \"hostname\" command."
     else
       {result, exit_code} = System.cmd(hostname, ["-f"])
 
       if exit_code == 0 do
         String.trim(result)
       else
-        raise RuntimeError, "Fail to execute the \"execute\" command."
+        raise RuntimeError, "Fail to execute the \"hostname\" command."
       end
     end
   end
