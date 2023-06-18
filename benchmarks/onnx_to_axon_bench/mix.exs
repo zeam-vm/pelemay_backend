@@ -23,6 +23,7 @@ defmodule OnnxToAxonBench.MixProject do
     [
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:nx, "~> 0.5"},
       {:axon, "~> 0.5"},
       {:axon_onnx, "~> 0.4"},
