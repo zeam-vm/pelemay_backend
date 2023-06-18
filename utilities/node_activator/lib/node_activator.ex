@@ -31,7 +31,11 @@ defmodule NodeActivator do
     if is_nil(hostname) do
       raise RuntimeError, "Fail to find the \"hostname\" command."
     else
-      {result, exit_code} = System.cmd(hostname, ["-f"])
+      {result, exit_code} =
+        case :os.type() do
+          {:unix, _} -> System.cmd(hostname, ["-f"])
+          {:win32, _} -> System.cmd(hostname, [])
+        end
 
       if exit_code == 0 do
         String.trim(result)
