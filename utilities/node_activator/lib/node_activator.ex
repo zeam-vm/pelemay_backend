@@ -68,6 +68,7 @@ defmodule NodeActivator do
     epmd_path = System.find_executable("epmd")
 
     if is_nil(epmd_path) do
+      Logger.error("epmd not found.")
       :error
     else
       {result, exit_code} = System.cmd(epmd_path, options)
