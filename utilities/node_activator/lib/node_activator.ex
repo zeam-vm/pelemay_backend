@@ -13,11 +13,48 @@ defmodule NodeActivator do
       {:ok, Node.self()}
     else
       launch_epmd()
+      Logger.info("wait launching epmd...")
+      wait_launching_epmd(5)
+      Logger.info("done.")
       name = name |> name_with_random_key() |> String.to_atom()
       Logger.info("Node.start(#{name})")
       Node.start(name)
     end
   end
+
+  defp wait_launching_epmd(0), do: raise(RuntimeError, "Fail to launch epmd.")
+
+  defp wait_launching_epmd(count) do
+    unless pgrep("epmd") do
+      Process.sleep(1000)
+      wait_launching_epmd(count - 1)
+    end
+
+    :ok
+  end
+
+  defp pgrep(command) do
+    pgrep = System.find_executable("pgrep")
+
+    if is_nil(pgrep) do
+      raise RuntimeError, "Fail to find the \"pgrep\" command."
+    else
+      {result, exit_code} =
+        case :os.type() do
+          {:unix, _} -> System.cmd(pgrep, [command])
+          {:win32, _} -> System.cmd(pgrep, [command])
+        end
+
+      case exit_code do
+        0 -> parse_pgrep_result(result)
+        1 -> false
+        _ -> raise RuntimeError, "Fail to execute the \"pgrep\" command."
+      end
+    end
+  end
+
+  defp parse_pgrep_result(""), do: false
+  defp parse_pgrep_result(result), do: result |> String.trim() |> String.to_integer()
 
   @spec name_with_random_key(binary()) :: binary()
   def name_with_random_key(name) do
