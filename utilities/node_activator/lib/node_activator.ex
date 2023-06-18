@@ -28,7 +28,9 @@ defmodule NodeActivator do
   def hostname_f() do
     hostname = System.find_executable("hostname")
 
-    unless is_nil(hostname) do
+    if is_nil(hostname) do
+      raise RuntimeError, "Fail to execute the \"execute\" command."
+    else
       {result, exit_code} = System.cmd(hostname, ["-f"])
 
       if exit_code == 0 do
@@ -36,8 +38,6 @@ defmodule NodeActivator do
       else
         raise RuntimeError, "Fail to execute the \"execute\" command."
       end
-    else
-      raise RuntimeError, "Fail to execute the \"execute\" command."
     end
   end
 
