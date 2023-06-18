@@ -157,8 +157,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/${{ matrix.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
-        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
-        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-plt
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ matrix.working-directory }}-plt
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ matrix.working-directory }}-plt
     - name: Check by dialyzer (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
       run: mix dialyzer
