@@ -50,9 +50,9 @@ jobs:
           elixir-version: ${{ env.ELIXIR_VERSION }}
           otp-version: ${{ env.OTP_VERSION }}
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v1
+        uses: shimataro/ssh-key-action@v2
         with:
-            private-key: ${{ secrets.SSH_KEY }}
+            key: ${{ secrets.SSH_KEY }}
             name: id_rsa
       - name: Install system dependencies
         run: |
