@@ -13,6 +13,8 @@ on:
         - 'utilitiles/**/*'
         - '.github/workflows/nerves-build.yml'
         - '.github/workflows/ci.yml'
+    push:
+      branches: [ "main" ]
   
 jobs:
   site:
@@ -36,6 +38,9 @@ jobs:
           key: mix-${{ hashFiles('mix.lock') }}
 
       - run: MIX_ENV=site mix deps.get
+
+      - name: Install Imagemagick (Ubuntu)
+        run: sudo apt -y install imagemagick
 
       - run: MIX_ENV=site mix still.compile
 
