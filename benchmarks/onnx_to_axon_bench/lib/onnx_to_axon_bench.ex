@@ -38,7 +38,7 @@ defmodule OnnxToAxonBench do
     end
   end
 
-  @spec priv() :: String.t()
+  @spec priv() :: binary()
   def priv() do
     Application.app_dir(:onnx_to_axon_bench, "priv")
   end
@@ -69,13 +69,12 @@ defmodule OnnxToAxonBench do
     :ok
   end
 
-  @spec setup_onnx(list(String.t())) :: list(String.t())
+  @spec setup_onnx([binary()]) :: [binary()]
   def setup_onnx(files) do
     OnnxToAxonBench.Utils.HTTP.download_files(files, path_models_onnx())
   end
 
-  @spec setup_data(list(String.t())) ::
-          list(:ok | {:ok, list({charlist(), String.t()})} | {:error, any()})
+  @spec setup_data([binary()]) :: [:ok | {:ok, [{charlist(), binary()}]} | {:error, any()}]
   def setup_data(files) do
     OnnxToAxonBench.Utils.HTTP.download_files(files, path_data())
 
@@ -85,8 +84,8 @@ defmodule OnnxToAxonBench do
     |> Enum.to_list()
   end
 
-  @spec extract_from_url(Req.url()) ::
-          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+  @spec extract_from_url(URI.t() | String.t()) ::
+          :ok | {:ok, [{charlist(), binary()}]} | {:error, any()}
   def extract_from_url(url) do
     Path.join(path_data(), OnnxToAxonBench.Utils.HTTP.basename_from_uri(url))
     |> File.read!()
@@ -94,7 +93,7 @@ defmodule OnnxToAxonBench do
   end
 
   @spec extract_tar_from_string(binary()) ::
-          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+          :ok | {:ok, [{charlist(), binary()}]} | {:error, any()}
   def extract_tar_from_string(contents) do
     :erl_tar.extract({:binary, contents}, [
       :compressed,
@@ -102,7 +101,7 @@ defmodule OnnxToAxonBench do
     ])
   end
 
-  @spec axon_name_from_onnx_path(binary()) :: String.t()
+  @spec axon_name_from_onnx_path(binary()) :: binary()
   def axon_name_from_onnx_path(onnx_path) do
     model_root = onnx_path |> Path.basename() |> Path.rootname()
     "#{model_root}.axon"
