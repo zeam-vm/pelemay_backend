@@ -2,6 +2,10 @@
 
 [![Elixir CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg) [![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
 
+<!-- MODULEDOC -->
+A memory-saving, fault-tolerant and distributed collection of Nx compilers and
+backends for embedded systems.
+<!-- MODULEDOC -->
 
 This repository currently holds the following projects:
 

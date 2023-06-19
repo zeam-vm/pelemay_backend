@@ -1,7 +1,7 @@
 defmodule LoggingBackend do
-  @moduledoc """
-  A backend to log the behavior of the specified `based_backend`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
 
   @doc """
   Hello world.
