@@ -11,7 +11,7 @@ defmodule OnnxToAxonBench do
     "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
   ]
 
-  @spec run(keyword) :: :ok
+  @spec run(keyword()) :: :ok
   def run(options \\ []) do
     onnx_urls = options[:onnx_urls] || @onnx_urls
 
@@ -35,7 +35,7 @@ defmodule OnnxToAxonBench do
   def benchee_inputs(onnx_urls) do
     for onnx_url <- onnx_urls, into: %{} do
       basename = Path.basename(onnx_url)
-      {basename, Path.join(path_models_onnx(), basename) }
+      {basename, Path.join(path_models_onnx(), basename)}
     end
   end
 
