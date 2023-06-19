@@ -11,9 +11,12 @@ defmodule OnnxToAxonBench do
     "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
   ]
 
-  @spec run() :: any()
-  def run() do
-    setup()
+  @spec run(keyword) :: :ok
+  def run(options \\ []) do
+    onnx_urls = options[:onnx_urls] || @onnx_urls
+
+    setup(onnx_urls)
+    inputs = benchee_inputs(onnx_urls)
 
     Benchee.run(
       %{
@@ -21,13 +24,16 @@ defmodule OnnxToAxonBench do
           get_axon_from_onnx(path_to_onnx)
         end
       },
-      inputs: benchee_inputs(),
+      inputs: inputs,
       memory_time: 2
     )
+
+    :ok
   end
 
-  def benchee_inputs() do
-    for onnx_url <- @onnx_urls, into: %{} do
+  @spec benchee_inputs([binary()]) :: %{binary() => binary()}
+  def benchee_inputs(onnx_urls) do
+    for onnx_url <- onnx_urls, into: %{} do
       basename = Path.basename(onnx_url)
       {basename, Path.join(path_models_onnx(), basename) }
     end
@@ -53,13 +59,13 @@ defmodule OnnxToAxonBench do
     Path.join(priv(), "data")
   end
 
-  @spec setup() :: :ok
-  def setup() do
+  @spec setup([binary()]) :: :ok
+  def setup(onnx_urls) do
     File.mkdir_p!(path_models_onnx())
     File.mkdir_p!(path_models_axon())
     File.mkdir_p!(path_data())
 
-    setup_onnx(@onnx_urls)
+    setup_onnx(onnx_urls)
 
     :ok
   end
