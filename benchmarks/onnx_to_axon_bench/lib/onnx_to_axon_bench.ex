@@ -14,14 +14,13 @@ defmodule OnnxToAxonBench do
   @spec run() :: any()
   def run() do
     init()
+    setup_onnx(@onnx_urls)
 
     inputs =
       @onnx_urls
       |> Enum.map(fn url -> OnnxToAxonBench.Utils.HTTP.basename_from_uri(url) end)
       |> Enum.map(fn basename -> {basename, basename} end)
       |> Map.new()
-
-    setup_onnx(@onnx_urls)
 
     Benchee.run(
       %{
