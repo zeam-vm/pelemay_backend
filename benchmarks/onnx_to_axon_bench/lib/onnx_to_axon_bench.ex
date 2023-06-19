@@ -5,23 +5,23 @@ defmodule OnnxToAxonBench do
 
   require Logger
 
+  @onnx_urls [
+    "https://huggingface.co/ScottMueller/Cats_v_Dogs.ONNX/resolve/main/cats_v_dogs.onnx",
+    "https://huggingface.co/ScottMueller/Cat_Dog_Breeds.ONNX/resolve/main/cat_dog_breeds.onnx",
+    "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
+  ]
+
   @spec run() :: any()
   def run() do
     init()
 
-    onnx_uri = [
-      "https://huggingface.co/ScottMueller/Cats_v_Dogs.ONNX/resolve/main/cats_v_dogs.onnx",
-      "https://huggingface.co/ScottMueller/Cat_Dog_Breeds.ONNX/resolve/main/cat_dog_breeds.onnx",
-      "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
-    ]
-
     inputs =
-      onnx_uri
+      @onnx_urls
       |> Enum.map(fn url -> OnnxToAxonBench.Utils.HTTP.basename_from_uri(url) end)
       |> Enum.map(fn basename -> {basename, basename} end)
       |> Map.new()
 
-    setup_onnx(onnx_uri)
+    setup_onnx(@onnx_urls)
 
     Benchee.run(
       %{
