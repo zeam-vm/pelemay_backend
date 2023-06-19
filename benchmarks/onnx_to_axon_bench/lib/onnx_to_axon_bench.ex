@@ -14,7 +14,6 @@ defmodule OnnxToAxonBench do
   @spec run() :: any()
   def run() do
     init()
-    setup_onnx(@onnx_urls)
 
     inputs =
       @onnx_urls
@@ -61,6 +60,10 @@ defmodule OnnxToAxonBench do
     File.mkdir_p!(path_models_onnx())
     File.mkdir_p!(path_models_axon())
     File.mkdir_p!(path_data())
+
+    setup_onnx(@onnx_urls)
+
+    :ok
   end
 
   @spec setup_onnx(list(String.t())) :: list(String.t())
