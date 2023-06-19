@@ -12,13 +12,7 @@ defmodule OnnxToAxonBench do
 
   @spec run() :: any()
   def run() do
-    init()
-
-    inputs =
-      @onnx_urls
-      |> Enum.map(fn url -> OnnxToAxonBench.Utils.HTTP.basename_from_uri(url) end)
-      |> Enum.map(fn basename -> {basename, basename} end)
-      |> Map.new()
+    setup()
 
     Benchee.run(
       %{
@@ -26,12 +20,16 @@ defmodule OnnxToAxonBench do
           get_axon_from_onnx(path_to_onnx)
         end
       },
-      inputs: inputs,
-      before_each: fn basename ->
-        Path.join(path_models_onnx(), basename)
-      end,
+      inputs: benchee_inputs(),
       memory_time: 2
     )
+  end
+
+  def benchee_inputs() do
+    for onnx_url <- @onnx_urls, into: %{} do
+      basename = Path.basename(onnx_url)
+      {basename, Path.join(path_models_onnx(), basename) }
+    end
   end
 
   @spec priv() :: String.t()
@@ -54,8 +52,8 @@ defmodule OnnxToAxonBench do
     Path.join(priv(), "data")
   end
 
-  @spec init() :: :ok
-  def init() do
+  @spec setup() :: :ok
+  def setup() do
     File.mkdir_p!(path_models_onnx())
     File.mkdir_p!(path_models_axon())
     File.mkdir_p!(path_data())
