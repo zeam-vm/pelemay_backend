@@ -5,23 +5,18 @@ defmodule OnnxToAxonBench do
 
   require Logger
 
-  @spec run() :: any()
-  def run() do
-    init()
+  @onnx_urls [
+    "https://huggingface.co/ScottMueller/Cats_v_Dogs.ONNX/resolve/main/cats_v_dogs.onnx",
+    "https://huggingface.co/ScottMueller/Cat_Dog_Breeds.ONNX/resolve/main/cat_dog_breeds.onnx",
+    "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
+  ]
 
-    onnx_uri = [
-      "https://huggingface.co/ScottMueller/Cats_v_Dogs.ONNX/resolve/main/cats_v_dogs.onnx",
-      "https://huggingface.co/ScottMueller/Cat_Dog_Breeds.ONNX/resolve/main/cat_dog_breeds.onnx",
-      "https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet101-v1-7.onnx"
-    ]
+  @spec run(keyword()) :: :ok
+  def run(options \\ []) do
+    onnx_urls = options[:onnx_urls] || @onnx_urls
 
-    inputs =
-      onnx_uri
-      |> Enum.map(fn url -> OnnxToAxonBench.Utils.HTTP.basename_from_uri(url) end)
-      |> Enum.map(fn basename -> {basename, basename} end)
-      |> Map.new()
-
-    setup_onnx(onnx_uri)
+    setup(onnx_urls)
+    inputs = benchee_inputs(onnx_urls)
 
     Benchee.run(
       %{
@@ -30,14 +25,21 @@ defmodule OnnxToAxonBench do
         end
       },
       inputs: inputs,
-      before_each: fn basename ->
-        Path.join(path_models_onnx(), basename)
-      end,
       memory_time: 2
     )
+
+    :ok
   end
 
-  @spec priv() :: String.t()
+  @spec benchee_inputs([binary()]) :: %{binary() => binary()}
+  def benchee_inputs(onnx_urls) do
+    for onnx_url <- onnx_urls, into: %{} do
+      basename = Path.basename(onnx_url)
+      {basename, Path.join(path_models_onnx(), basename)}
+    end
+  end
+
+  @spec priv() :: binary()
   def priv() do
     Application.app_dir(:onnx_to_axon_bench, "priv")
   end
@@ -57,20 +59,23 @@ defmodule OnnxToAxonBench do
     Path.join(priv(), "data")
   end
 
-  @spec init() :: :ok
-  def init() do
+  @spec setup([binary()]) :: :ok
+  def setup(onnx_urls) do
     File.mkdir_p!(path_models_onnx())
     File.mkdir_p!(path_models_axon())
     File.mkdir_p!(path_data())
+
+    setup_onnx(onnx_urls)
+
+    :ok
   end
 
-  @spec setup_onnx(list(String.t())) :: list(String.t())
+  @spec setup_onnx([binary()]) :: [binary()]
   def setup_onnx(files) do
     OnnxToAxonBench.Utils.HTTP.download_files(files, path_models_onnx())
   end
 
-  @spec setup_data(list(String.t())) ::
-          list(:ok | {:ok, list({charlist(), String.t()})} | {:error, any()})
+  @spec setup_data([binary()]) :: [:ok | {:ok, [{charlist(), binary()}]} | {:error, any()}]
   def setup_data(files) do
     OnnxToAxonBench.Utils.HTTP.download_files(files, path_data())
 
@@ -80,8 +85,8 @@ defmodule OnnxToAxonBench do
     |> Enum.to_list()
   end
 
-  @spec extract_from_url(Req.url()) ::
-          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+  @spec extract_from_url(URI.t() | String.t()) ::
+          :ok | {:ok, [{charlist(), binary()}]} | {:error, any()}
   def extract_from_url(url) do
     Path.join(path_data(), OnnxToAxonBench.Utils.HTTP.basename_from_uri(url))
     |> File.read!()
@@ -89,7 +94,7 @@ defmodule OnnxToAxonBench do
   end
 
   @spec extract_tar_from_string(binary()) ::
-          :ok | {:ok, list({charlist(), String.t()})} | {:error, any()}
+          :ok | {:ok, [{charlist(), binary()}]} | {:error, any()}
   def extract_tar_from_string(contents) do
     :erl_tar.extract({:binary, contents}, [
       :compressed,
@@ -97,7 +102,7 @@ defmodule OnnxToAxonBench do
     ])
   end
 
-  @spec axon_name_from_onnx_path(binary()) :: String.t()
+  @spec axon_name_from_onnx_path(binary()) :: binary()
   def axon_name_from_onnx_path(onnx_path) do
     model_root = onnx_path |> Path.basename() |> Path.rootname()
     "#{model_root}.axon"
