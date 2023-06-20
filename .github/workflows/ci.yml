@@ -45,16 +45,16 @@ jobs:
         working-directory: ["utilities/backend_decorator", "utilities/node_activator", "backends/pelemay_backend", "backends/logging_backend", "benchmarks/onnx_to_axon_bench"]
         os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         otp-version: ['24.3.4.12', '25.3.2.2', '26.0.1']
-        elixir-version: ['1.14.5', '1.15.0-rc.2']
+        elixir-version: ['1.14.5', '1.15.0']
         exclude:
           - otp-version: '24.3.4.12'
-            elixir-version: '1.15.0-rc.2'
+            elixir-version: '1.15.0'
           - os: windows-2022
             otp-version: '25.3.2.2'
           - os: windows-2022
             otp-version: '26.0.1'
           - os: windows-2022
-            elixir-version: '1.15.0-rc.2'
+            elixir-version: '1.15.0'
           - os: macos-13
             otp-version: '24.3.4.12'
           - os: macos-12
@@ -64,9 +64,9 @@ jobs:
           - os: macos-12
             otp-version: '26.0.1'
           - os: macos-13
-            elixir-version: '1.15.0-rc.2'
+            elixir-version: '1.15.0'
           - os: macos-12
-            elixir-version: '1.15.0-rc.2'
+            elixir-version: '1.15.0'
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
