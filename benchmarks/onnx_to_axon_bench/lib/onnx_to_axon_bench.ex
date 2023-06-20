@@ -1,7 +1,8 @@
 defmodule OnnxToAxonBench do
-  @moduledoc """
-  Documentation for `OnnxToAxonBench`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
+
   require Logger
 
   @spec run() :: any()
