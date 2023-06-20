@@ -1,6 +1,8 @@
 # PelemayBackend
 
+<!-- MODULEDOC -->
 **TODO: Add description**
+<!-- MODULEDOC -->
 
 ## Installation
 
