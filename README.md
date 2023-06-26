@@ -17,11 +17,11 @@ Backends:
 Utilities:
 
 * [`BackendDecorator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/backend_decorator#readme) (WIP) - A backend generator to decorate the specified `based_backend` with the functions before and after a set of functions in the backend. The set can be specified with the style of [AspectJ, which is an AOP language](https://en.wikipedia.org/wiki/Aspect-oriented_programming), and with grouping written in [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example, Aggregates, Backend, Conversion, and so on.
-* [`NodeActivator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/node_activator/README.md) - A module to activate VM nodes.
+* [`NodeActivator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/node_activator#readme) - A module to activate VM nodes.
 
 Benchmarks:
 
-* [`OnnxToAxonBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/onnx_to_axon_bench/README.md) - A benchmark program of loading ONNX to Axon. The results deny the hope to use ResNet, which is one of popular models that perform image classification, for embedded systems due to too much memory consumption. This fact supports the concept of the Pelemay Backend.
+* [`OnnxToAxonBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/onnx_to_axon_bench#readme) - A benchmark program of loading ONNX to Axon. The results deny the hope to use ResNet, which is one of popular models that perform image classification, for embedded systems due to too much memory consumption. This fact supports the concept of the Pelemay Backend.
 
 Each has their own README, which you can access above to learn more.
 
