@@ -8,7 +8,7 @@ A benchmark program of loading ONNX to Axon.
 
 Here are the results that are obtained when running on an M2 MacBook Air:
 
-```
+```elixir
 % cd benchmarks/onnx_to_axon_bench
 % mix run -e "OnnxToAxonBench.run"
 
