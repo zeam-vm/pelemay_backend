@@ -1,7 +1,8 @@
 defmodule NodeActivator do
-  @moduledoc """
-  A module to activate VM nodes.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
+
   require Logger
 
   @epmd_port 4369
