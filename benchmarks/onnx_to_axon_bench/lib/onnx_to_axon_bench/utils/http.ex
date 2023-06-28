@@ -60,16 +60,16 @@ defmodule OnnxToAxonBench.Utils.HTTP do
     |> Map.update!(:private, &%{&1 | downloaded_size: new_downloaded_size})
   end
 
-  @spec basename_from_uri(url()) :: String.t()
+  @spec basename_from_uri(url() | struct()) :: String.t()
   def basename_from_uri(url) when is_binary(url) do
     Path.basename(url)
   end
 
-  def basename_from_uri(url) do
+  def basename_from_uri(url) when is_map_key(url, :path) do
     URI.parse(url) |> Map.get(:path) |> Path.basename()
   end
 
-  @spec download_files([url()], String.t()) :: list(String.t())
+  @spec download_files([url()], String.t()) :: [String.t()]
   def download_files(files, dst_path) do
     Enum.map(files, fn url ->
       basename = basename_from_uri(url)
