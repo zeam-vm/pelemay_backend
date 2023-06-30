@@ -24,8 +24,8 @@ jobs:
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: '24.3.4.11'
-          elixir-version: '1.14.4'
+          otp-version: '24.3.4.13'
+          elixir-version: '1.14.5'
 
       - name: Restore Cache
         uses: actions/cache@v3
