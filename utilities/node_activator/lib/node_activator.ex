@@ -94,7 +94,9 @@ defmodule NodeActivator do
       raise RuntimeError, "Fail to find epmd."
     end
 
-    spawn_link(fn -> do_launch_epmd(epmd_cmd, epmd_options) end)
+    unless can_connect?(@epmd_port) do
+      spawn_link(fn -> do_launch_epmd(epmd_cmd, epmd_options) end)
+    end
 
     :ok
   end
