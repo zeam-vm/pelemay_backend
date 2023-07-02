@@ -1,13 +1,26 @@
 defmodule OnnxToAxonBench.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @source_url "https://github.com/zeam-vm/pelemay_backend"
+  @homepage_url "https://zeam-vm.github.io/pelemay_backend"
+
   def project do
     [
       app: :onnx_to_axon_bench,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "OnnxToAxonBench",
+      source_url: @source_url,
+      homepage_url: @homepage_url,
+      docs: [
+        main: "OnnxToAxonBench",
+        extras: ["README.md"]
+      ]
     ]
   end
 
