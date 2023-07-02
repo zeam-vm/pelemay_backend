@@ -1,15 +1,45 @@
 # OnnxToAxonBench
 
+<!-- MODULEDOC -->
 A benchmark program of loading ONNX to Axon.
+
+## Usage
+
+The benchmark can be run in the interactive Elixir shell (IEx) like below.
+
+```elixir
+run_benchmarks = fn ->
+  Mix.install([
+    {
+      :onnx_to_axon_bench,
+      github: "zeam-vm/pelemay_backend",
+      sparse: "benchmarks/onnx_to_axon_bench"
+    }
+  ])
+
+  OnnxToAxonBench.run()
+
+  :ok
+end
+
+run_benchmarks.()
+```
+
+Alternatively, if you clone the source code, you can run the
+`OnnxToAxonBench.run/0` function via mix run task in the `onnx_to_axon_bench`
+project directory.
+
+```bash
+$ cd benchmarks/onnx_to_axon_bench
+$ mix run -e "OnnxToAxonBench.run"
+```
+<!-- MODULEDOC -->
 
 ## Benchmark Results
 
-Here are the results that are obtained when running on an M2 MacBook Air: 
+Here are the results that are obtained when running on an M2 MacBook Air:
 
-```
-% cd benchmarks/onnx_to_axon_bench 
-% mix run -e "OnnxToAxonBench.run"
-
+```elixir
 05:29:35.627 [info] File cats_v_dogs.onnx has already been downloaded.
 
 05:29:35.628 [info] File cat_dog_breeds.onnx has already been downloaded.

@@ -1,7 +1,8 @@
 defmodule NodeActivator do
-  @moduledoc """
-  Documentation for `NodeActivator`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
+
   require Logger
 
   @epmd_port 4369
@@ -113,7 +114,7 @@ defmodule NodeActivator do
     end
   end
 
-  def launch_epmd(epmd_path, options) do
+  defp launch_epmd(epmd_path, options) do
     {result, exit_code} = System.cmd(epmd_path, options, parallelism: true)
 
     if exit_code == 0 do

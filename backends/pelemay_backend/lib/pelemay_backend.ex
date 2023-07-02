@@ -1,7 +1,7 @@
 defmodule PelemayBackend do
-  @moduledoc """
-  Documentation for `PelemayBackend`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
 
   @doc """
   Hello world.
