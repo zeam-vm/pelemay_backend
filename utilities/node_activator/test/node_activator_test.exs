@@ -42,9 +42,9 @@ defmodule NodeActivatorTest do
 
     test "ends with hostname" do
       node_name = NodeActivator.generate_node_name("test prefix")
+      hostname = NodeActivator.get_hostname()
 
-      {:ok, hostname} = :inet.gethostname()
-      assert node_name |> Atom.to_string() |> String.ends_with?(to_string(hostname))
+      assert node_name |> Atom.to_string() |> String.ends_with?(hostname)
     end
   end
 
