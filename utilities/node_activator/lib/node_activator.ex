@@ -25,7 +25,7 @@ defmodule NodeActivator do
       Logger.info("done.")
       name = generate_node_name(node_name_prefix)
       Logger.info("Node.start(#{name})")
-      Node.start(name)
+      {:ok, _} = Node.start(name)
     end
 
     {:ok, Node.self()}
