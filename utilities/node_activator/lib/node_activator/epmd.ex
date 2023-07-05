@@ -89,7 +89,7 @@ defmodule NodeActivator.Epmd do
   defp epmd_running?() do
     case :gen_tcp.connect(~c'localhost', @epmd_port, [:binary, active: false], 1000) do
       {:ok, socket} ->
-        Logger.info("active.")
+        Logger.info("Port epmd is active.")
         :gen_tcp.close(socket)
         true
 
