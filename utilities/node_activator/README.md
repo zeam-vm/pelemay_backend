@@ -6,7 +6,29 @@ A module to activate VM nodes.
 
 ## Installation
 
-TBD
+In order to use `NodeActivator`, you will need Elixir installed. Then create an Elixir project, whose name is `my_app`, for example, via the `mix` build tool:
+
+```sh
+$ mix new my_app
+```
+
+Then you can add `NodeActivator` as dependency in your `mix.exs`:
+
+```elixir
+  def deps do
+    [
+        {:node_activator, "~> 0.1"}
+    ]
+  end
+```
+
+If you are using Livebook or IEx, you can instead run:
+
+```elixir
+Mix.install([
+    {:node_activator, "~> 0.1"}
+])
+```
 
 ## License
 
