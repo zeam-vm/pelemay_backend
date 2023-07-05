@@ -14,6 +14,7 @@ defmodule NodeActivator.Epmd do
       case :os.type() do
         {:unix, _} -> [port: @epmd_port]
         {:win32, _} -> [port: @epmd_port, daemon: false]
+        _ -> raise RuntimeError, "Unknown os type."
       end
 
     epmd_cmd = System.find_executable("epmd")

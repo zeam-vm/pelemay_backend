@@ -21,6 +21,7 @@ defmodule NodeActivator.Utils do
       case :os.type() do
         {:unix, _} -> System.cmd(hostname_cmd, ["-f"])
         {:win32, _} -> System.cmd(hostname_cmd, [])
+        _ -> raise RuntimeError, "Unknown os type."
       end
 
     if exit_code > 0 do
