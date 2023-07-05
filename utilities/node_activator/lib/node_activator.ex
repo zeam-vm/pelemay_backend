@@ -40,9 +40,11 @@ defmodule NodeActivator do
 
     case Node.start(name) do
       {:ok, _node} ->
+        Logger.info("Node #{name} has been launched.")
         {:ok, Node.self()}
 
       {:error, error} ->
+        Logger.error("Node #{name} cannot be launched.")
         {:error, error}
     end
   end
