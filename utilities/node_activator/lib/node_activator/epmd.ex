@@ -94,7 +94,7 @@ defmodule NodeActivator.Epmd do
         true
 
       {:error, reason} ->
-        Logger.debug("Fail to connect due to #{inspect(reason)}.")
+        Logger.warning("Fail to connect due to #{inspect(reason)}.")
         false
     end
   end
