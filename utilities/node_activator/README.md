@@ -26,7 +26,7 @@ If you are using Livebook or IEx, you can instead run:
 
 ```elixir
 Mix.install([
-    {:node_activator, "~> 0.1"}
+  {:node_activator, "~> 0.1"}
 ])
 ```
 
