@@ -12,7 +12,7 @@ In order to use `NodeActivator`, you will need Elixir installed. Then create an 
 $ mix new my_app
 ```
 
-Then you can add `NodeActivator` as dependency in your `mix.exs`:
+Then you can add `NodeActivator` to the list of dependencies in your `mix.exs`:
 
 ```elixir
   def deps do
