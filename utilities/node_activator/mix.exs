@@ -44,8 +44,7 @@ defmodule NodeActivator.MixProject do
   defp docs do
     [
       main: "NodeActivator",
-      source_url_patterm:
-        "#{@source_url}/blob/v#{@version}/utilities/node_activator/%{path}#L%{line}",
+      source_url_patterm: "#{@source_url}/blob/v#{@version}/utilities/node_activator/%{path}#L%{line}",
       extras: [
         "README.md"
       ]
