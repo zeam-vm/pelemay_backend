@@ -15,11 +15,11 @@ $ mix new my_app
 Then you can add `NodeActivator` to the list of dependencies in your `mix.exs`:
 
 ```elixir
-  def deps do
-    [
-        {:node_activator, "~> 0.1"}
-    ]
-  end
+def deps do
+  [
+    {:node_activator, "~> 0.1"}
+  ]
+end
 ```
 
 If you are using Livebook or IEx, you can instead run:
