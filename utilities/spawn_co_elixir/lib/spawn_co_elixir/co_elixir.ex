@@ -137,28 +137,27 @@ defmodule SpawnCoElixir.CoElixir do
           deps -> deps
         end
 
-      program =
-        """
-        defmodule SpawnCoElixir.CoElixir.Worker do
-          def run() do
-            Mix.install(#{inspect(deps)})
+      program = """
+      defmodule SpawnCoElixir.CoElixir.Worker do
+        def run() do
+          Mix.install(#{inspect(deps)})
 
-            #{code}
+          #{code}
 
-            receive do
-              :end -> :ok
-            end
+          receive do
+            :end -> :ok
           end
         end
+      end
 
-        case Node.connect(:"#{node()}") do
-          true ->
-            SpawnCoElixir.CoElixir.Worker.run()
-            :ok
+      case Node.connect(:"#{node()}") do
+        true ->
+          SpawnCoElixir.CoElixir.Worker.run()
+          :ok
 
-          _ -> raise RuntimeError, "Node #{node()} cannot connect."
-        end
-        """
+        _ -> raise RuntimeError, "Node #{node()} cannot connect."
+      end
+      """
 
       Logger.info("spawn #{inspect(worker_node)}...")
 

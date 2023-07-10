@@ -66,7 +66,10 @@ defmodule SpawnCoElixirTest do
 
       {result, pid} =
         SpawnCoElixir.run(
-          code: "Process.sleep(100); System.halt(1)",
+          code: """
+          Process.sleep(100)
+          System.halt(1)
+          """,
           host_name: "host",
           co_elixir_name: "co_elixir"
         )
