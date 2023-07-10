@@ -15,28 +15,13 @@ defmodule SpawnCoElixir.CoElixir do
   def handle_cast(:spawn_co_elixir, a_process) do
     unless a_process[:running] do
       ret = self()
-      spawn_link(fn -> handle_cast_s(spawn_co_elixir(ret, a_process)) end)
+      spawn_link(fn -> handle_cast_s(spawn_co_elixir(ret, a_process), ret) end)
     end
 
     {
       :noreply,
       Map.put(a_process, :running, true)
     }
-  end
-
-  defp handle_cast_s({:ok, 0}) do
-    Logger.info("Exit CoElixir.")
-    GenServer.cast(ret, :exit)
-  end
-
-  defp handle_cast_s({:ok, _exit_code}) do
-    Logger.info("Reboot CoElixir.")
-    GenServer.cast(ret, :exit)
-    GenServer.cast(ret, :spawn_co_elixir)
-  end
-
-  defp handle_cast_s(r) do
-    Logger.error("Unexpected result of CoElixir: #{inspect r}.")
   end
 
   @impl true
@@ -119,6 +104,21 @@ defmodule SpawnCoElixir.CoElixir do
         Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
         GenServer.cast(pid, :exit)
     end
+  end
+
+  defp handle_cast_s({:ok, 0}, ret) do
+    Logger.info("Exit CoElixir.")
+    GenServer.cast(ret, :exit)
+  end
+
+  defp handle_cast_s({:ok, _exit_code}, ret) do
+    Logger.info("Reboot CoElixir.")
+    GenServer.cast(ret, :exit)
+    GenServer.cast(ret, :spawn_co_elixir)
+  end
+
+  defp handle_cast_s(r, _ret) do
+    Logger.error("Unexpected result of CoElixir: #{inspect r}.")
   end
 
   defp spawn_co_elixir(pid, a_process) do
