@@ -48,7 +48,7 @@ defmodule SpawnCoElixir.CoElixir do
 
     worker_node =
       options[:name]
-      |> NodeActivator.name_with_random_key()
+      |> NodeActivator.Utils.generate_node_name()
       |> concat_node_name_with_hostname()
 
     :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, self()})
