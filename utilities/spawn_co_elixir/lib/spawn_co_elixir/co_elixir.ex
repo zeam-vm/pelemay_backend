@@ -17,7 +17,7 @@ defmodule SpawnCoElixir.CoElixir do
       ret = self()
 
       spawn_link(fn ->
-        {:ok, exit_code} = spawn_co_elixir(a_process)
+        {:ok, exit_code} = spawn_co_elixir(ret, a_process)
 
         if exit_code == 0 do
           Logger.info("Exit CoElixir")
@@ -37,19 +37,64 @@ defmodule SpawnCoElixir.CoElixir do
   end
 
   @impl true
-  def handle_cast(:exit, a_process) do
+  def handle_cast({:worker_node, worker_node}, a_process) do
+    Logger.info("Register worker #{inspect worker_node}")
+
     {
       :noreply,
-      Map.put(a_process, :running, false)
+      Map.put(a_process, :worker_node, worker_node)
     }
+  end
+
+  @impl true
+  def handle_cast(:exit, a_process) do
+    case Map.get(a_process, :worker_node) do
+      nil ->
+        Logger.error("Not found worker_node")
+        {
+          :noreply,
+          a_process
+          |> Map.put(:running, false)
+        }
+
+      :stopped ->
+        {
+          :noreply,
+          a_process
+          |> Map.put(:running, false)
+          |> Map.put(:worker_node, nil)
+        }
+
+      worker_node ->
+        Logger.info("Exit #{inspect worker_node}")
+        Node.spawn(worker_node, System, :halt, [])
+        :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
+        {
+          :noreply,
+          a_process
+          |> Map.put(:running, false)
+          |> Map.put(:worker_node, :stopped)
+        }
+    end
   end
 
   def start_link(
         a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}
       ) do
-    {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
-    GenServer.cast(pid, :spawn_co_elixir)
-    {:ok, pid}
+    case Map.get(a_process, :options) do
+      nil -> {:error, "No match options: #{inspect a_process}."}
+
+      options ->
+        case options[:host_name] do
+          nil -> {:error, "No match host_name: #{inspect a_process}."}
+
+          host_prefix ->
+            NodeActivator.run(host_prefix)
+            {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
+            GenServer.cast(pid, :spawn_co_elixir)
+            {:ok, pid}
+        end
+    end
   end
 
   def workers() do
@@ -57,15 +102,28 @@ defmodule SpawnCoElixir.CoElixir do
     |> Enum.map(fn {node, _pid} -> node end)
   end
 
-  defp spawn_co_elixir(a_process) do
+  def stop(worker_node) do
+    case :ets.lookup(:spawn_co_elixir_co_elixir_lookup, worker_node) do
+      [] ->
+        Logger.warning("Not found worker_node #{worker_node}.")
+        :ok
+
+      [{^worker_node, pid}] ->
+        Logger.info("Found worker_node {#{worker_node}, #{inspect pid}}")
+        GenServer.cast(pid, :exit)
+    end
+  end
+
+  defp spawn_co_elixir(pid, a_process) do
     options = a_process[:options]
-    NodeActivator.run(options[:host_name])
     code = options[:code]
     worker_node = NodeActivator.Utils.generate_node_name(options[:co_elixir_name])
 
-    :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, self()})
+    :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, pid})
 
     try do
+      GenServer.cast(pid, {:worker_node, worker_node})
+
       deps =
         case options[:deps] do
           nil -> []
@@ -74,11 +132,11 @@ defmodule SpawnCoElixir.CoElixir do
 
       program =
         """
-        #{code}
-
         defmodule SpawnCoElixir.CoElixir.Worker do
           def run() do
             Mix.install(#{inspect(deps)})
+
+            #{code}
 
             receive do
               :end -> :ok
@@ -91,7 +149,7 @@ defmodule SpawnCoElixir.CoElixir do
             SpawnCoElixir.CoElixir.Worker.run()
             :ok
 
-          _ -> raise RuntimeError, "Node cannot connect."
+          _ -> raise RuntimeError, "Node #{node()} cannot connect."
         end
         """
 
