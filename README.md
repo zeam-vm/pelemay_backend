@@ -1,7 +1,5 @@
 # Pelemay Backend (Collection)
 
-[![Elixir CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci.yml/badge.svg) [![Nerves CI status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/nerves-build.yml/badge.svg)
-
 <!-- MODULEDOC -->
 A memory-saving, fault-tolerant and distributed collection of Nx compilers and
 backends for embedded systems.
@@ -17,11 +15,12 @@ Backends:
 Utilities:
 
 * [`BackendDecorator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/backend_decorator#readme) (WIP) - A backend generator to decorate the specified `based_backend` with the functions before and after a set of functions in the backend. The set can be specified with the style of [AspectJ, which is an AOP language](https://en.wikipedia.org/wiki/Aspect-oriented_programming), and with grouping written in [hexdocs of Nx](https://hexdocs.pm/nx/Nx.html), for example, Aggregates, Backend, Conversion, and so on.
-* [`NodeActivator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/node_activator#readme) [![Hex.pm](https://img.shields.io/hexpm/v/node_activator.svg?style=flat&color=blue)](https://hex.pm/packages/node_activator) - A module to activate VM nodes.
+* [`NodeActivator`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/node_activator#readme) [![Hex.pm](https://img.shields.io/hexpm/v/node_activator.svg?style=flat&color=blue)](https://hex.pm/packages/node_activator)  [![Elixir CI (NodeActivator) status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_node_activator.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_node_activator.yml/badge.svg) - A module to activate VM nodes.
+* [`SpawnCoElixir`](https://github.com/zeam-vm/pelemay_backend/blob/main/utilities/spawn_co_elixir#readme) [![Elixir CI (SpawnCoElixir) status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_spawn_co_elixir.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_spawn_co_elixir.yml/badge.svg)
 
 Benchmarks:
 
-* [`OnnxToAxonBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/onnx_to_axon_bench#readme) - A benchmark program of loading ONNX to Axon. The results deny the hope to use ResNet, which is one of popular models that perform image classification, for embedded systems due to too much memory consumption. This fact supports the concept of the Pelemay Backend.
+* [`OnnxToAxonBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/onnx_to_axon_bench#readme) [![Elixir CI (OnnxToAxonBench) status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_onnx_to_axon_bench.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_onnx_to_axon_bench.yml/badge.svg) - A benchmark program of loading ONNX to Axon. The results deny the hope to use ResNet, which is one of popular models that perform image classification, for embedded systems due to too much memory consumption. This fact supports the concept of the Pelemay Backend.
 
 Each has their own README, which you can access above to learn more.
 
