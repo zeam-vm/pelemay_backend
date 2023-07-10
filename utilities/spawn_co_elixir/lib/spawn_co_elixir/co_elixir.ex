@@ -82,7 +82,6 @@ defmodule SpawnCoElixir.CoElixir do
           _ -> raise RuntimeError, "Node cannot connect."
         end
         """
-        |> IO.inspect(label: "program")
 
       {_result, _exit_code} =
         System.cmd(
