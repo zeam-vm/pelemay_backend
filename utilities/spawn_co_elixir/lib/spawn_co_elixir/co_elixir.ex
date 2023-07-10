@@ -6,7 +6,7 @@ defmodule SpawnCoElixir.CoElixir do
   use GenServer
 
   @impl true
-  def init(a_process \\ %{options: [name: "co_elixir"]}) do
+  def init(a_process \\ %{options: [host_name: "host", co_elixir_name: "co_elixir"]}) do
     {:ok, a_process}
   end
 
@@ -33,7 +33,7 @@ defmodule SpawnCoElixir.CoElixir do
     }
   end
 
-  def start_link(a_process \\ %{options: [name: "co_elixir"]}) do
+  def start_link(a_process \\ %{options: [host_name: "host", co_elixir_name: "co_elixir"]}) do
     {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
     GenServer.cast(pid, :spawn_co_elixir)
   end
@@ -45,7 +45,8 @@ defmodule SpawnCoElixir.CoElixir do
 
   defp spawn_co_elixir(a_process) do
     options = a_process[:options]
-    worker_node = NodeActivator.Utils.generate_node_name(options[:name])
+    NodeActivator.run(options[:host_name])
+    worker_node = NodeActivator.Utils.generate_node_name(options[:co_elixir_name])
 
     :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, self()})
 
