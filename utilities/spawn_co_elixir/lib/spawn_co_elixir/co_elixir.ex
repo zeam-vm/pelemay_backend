@@ -33,7 +33,9 @@ defmodule SpawnCoElixir.CoElixir do
     }
   end
 
-  def start_link(a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}) do
+  def start_link(
+        a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}
+      ) do
     {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
     GenServer.cast(pid, :spawn_co_elixir)
   end
@@ -95,7 +97,6 @@ defmodule SpawnCoElixir.CoElixir do
         )
 
       :ok
-
     after
       :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
     end
