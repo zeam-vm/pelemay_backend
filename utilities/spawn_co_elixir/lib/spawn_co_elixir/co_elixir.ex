@@ -38,6 +38,7 @@ defmodule SpawnCoElixir.CoElixir do
       ) do
     {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
     GenServer.cast(pid, :spawn_co_elixir)
+    {:ok, pid}
   end
 
   def workers() do
