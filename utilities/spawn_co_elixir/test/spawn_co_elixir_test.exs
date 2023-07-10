@@ -64,7 +64,13 @@ defmodule SpawnCoElixirTest do
     test "launch and exit co_elixir" do
       refute Node.alive?()
 
-      {result, pid} = SpawnCoElixir.run([code: "Process.sleep(100); System.halt(1)", host_name: "host", co_elixir_name: "co_elixir"])
+      {result, pid} =
+        SpawnCoElixir.run(
+          code: "Process.sleep(100); System.halt(1)",
+          host_name: "host",
+          co_elixir_name: "co_elixir"
+        )
+
       assert result == :ok
       assert is_pid(pid)
 

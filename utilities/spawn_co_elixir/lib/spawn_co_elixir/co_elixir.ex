@@ -38,7 +38,7 @@ defmodule SpawnCoElixir.CoElixir do
 
   @impl true
   def handle_cast({:worker_node, worker_node}, a_process) do
-    Logger.info("Register worker #{inspect worker_node}")
+    Logger.info("Register worker #{inspect(worker_node)}")
 
     {
       :noreply,
@@ -51,6 +51,7 @@ defmodule SpawnCoElixir.CoElixir do
     case Map.get(a_process, :worker_node) do
       nil ->
         Logger.error("Not found worker_node")
+
         {
           :noreply,
           a_process
@@ -66,9 +67,10 @@ defmodule SpawnCoElixir.CoElixir do
         }
 
       worker_node ->
-        Logger.info("Exit #{inspect worker_node}")
+        Logger.info("Exit #{inspect(worker_node)}")
         Node.spawn(worker_node, System, :halt, [])
         :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
+
         {
           :noreply,
           a_process
@@ -82,11 +84,13 @@ defmodule SpawnCoElixir.CoElixir do
         a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}
       ) do
     case Map.get(a_process, :options) do
-      nil -> {:error, "No match options: #{inspect a_process}."}
+      nil ->
+        {:error, "No match options: #{inspect(a_process)}."}
 
       options ->
         case options[:host_name] do
-          nil -> {:error, "No match host_name: #{inspect a_process}."}
+          nil ->
+            {:error, "No match host_name: #{inspect(a_process)}."}
 
           host_prefix ->
             NodeActivator.run(host_prefix)
@@ -109,7 +113,7 @@ defmodule SpawnCoElixir.CoElixir do
         :ok
 
       [{^worker_node, pid}] ->
-        Logger.info("Found worker_node {#{worker_node}, #{inspect pid}}")
+        Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
         GenServer.cast(pid, :exit)
     end
   end
@@ -153,7 +157,7 @@ defmodule SpawnCoElixir.CoElixir do
         end
         """
 
-      Logger.info("spawn #{inspect worker_node}...")
+      Logger.info("spawn #{inspect(worker_node)}...")
 
       {_result, exit_code} =
         System.cmd(
@@ -167,7 +171,7 @@ defmodule SpawnCoElixir.CoElixir do
           into: IO.stream()
         )
 
-      Logger.info("exit #{inspect worker_node} with exit_code #{exit_code}")
+      Logger.info("exit #{inspect(worker_node)} with exit_code #{exit_code}")
 
       {:ok, exit_code}
     after
