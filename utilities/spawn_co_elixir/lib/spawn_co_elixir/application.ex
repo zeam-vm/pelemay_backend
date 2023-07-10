@@ -12,7 +12,7 @@ defmodule SpawnCoElixir.Application do
     children = [
       # Starts a worker by calling: SpawnCoElixir.Worker.start_link(arg)
       # {SpawnCoElixir.Worker, arg}
-      {DynamicSupervisor, name: SpawnCoElixir.DynamicSupervisor}
+      {DynamicSupervisor, strategy: :one_for_one, name: SpawnCoElixir.DynamicSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

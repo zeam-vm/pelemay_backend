@@ -4,6 +4,7 @@ defmodule SpawnCoElixir.CoElixir do
   """
 
   use GenServer
+  require Logger
 
   @impl true
   def init(a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}) do
@@ -13,12 +14,20 @@ defmodule SpawnCoElixir.CoElixir do
   @impl true
   def handle_cast(:spawn_co_elixir, a_process) do
     unless a_process[:running] do
-      {:ok, exit_code} = spawn_co_elixir(a_process)
-      if exit_code == 0 do
-        GenServer.cast(:exit, a_process)
-      else
-        GenServer.cast(:spawn_co_elixir, a_process)
-      end
+      ret = self()
+
+      spawn_link(fn ->
+        {:ok, exit_code} = spawn_co_elixir(a_process)
+
+        if exit_code == 0 do
+          Logger.info("Exit CoElixir")
+          GenServer.cast(ret, :exit)
+        else
+          Logger.info("Reboot CoElixir")
+          GenServer.cast(ret, :exit)
+          GenServer.cast(ret, :spawn_co_elixir)
+        end
+      end)
     end
 
     {
@@ -86,6 +95,8 @@ defmodule SpawnCoElixir.CoElixir do
         end
         """
 
+      Logger.info("spawn #{inspect worker_node}...")
+
       {_result, exit_code} =
         System.cmd(
           "elixir",
@@ -97,6 +108,8 @@ defmodule SpawnCoElixir.CoElixir do
           ],
           into: IO.stream()
         )
+
+      Logger.info("exit #{inspect worker_node} with exit_code #{exit_code}")
 
       {:ok, exit_code}
     after
