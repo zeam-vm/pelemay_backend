@@ -24,7 +24,7 @@ defmodule SpawnCoElixir.MixProject do
     [
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:node_activator, path: "../../utilities/node_activator"}
+      {:node_activator, "~> 0.1"}
     ]
   end
 end
