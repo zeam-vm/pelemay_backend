@@ -45,11 +45,7 @@ defmodule SpawnCoElixir.CoElixir do
 
   defp spawn_co_elixir(a_process) do
     options = a_process[:options]
-
-    worker_node =
-      options[:name]
-      |> NodeActivator.Utils.generate_node_name()
-      |> concat_node_name_with_hostname()
+    worker_node = NodeActivator.Utils.generate_node_name(options[:name])
 
     :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, self()})
 
@@ -64,7 +60,7 @@ defmodule SpawnCoElixir.CoElixir do
         "elixir",
         [
           "--name",
-          worker_node,
+          Atom.to_string(worker_node),
           "-e",
           """
           defmodule SpawnCoElixir.CoElixir.Worker do
@@ -88,16 +84,5 @@ defmodule SpawnCoElixir.CoElixir do
         ],
         into: IO.stream()
       )
-  end
-
-  defp hostname() do
-    node()
-    |> Atom.to_string()
-    |> String.split("@")
-    |> Enum.at(1)
-  end
-
-  defp concat_node_name_with_hostname(name) do
-    "#{name}@#{hostname()}"
   end
 end
