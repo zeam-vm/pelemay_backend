@@ -51,46 +51,53 @@ defmodule SpawnCoElixir.CoElixir do
 
     :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, self()})
 
-    deps =
-      case options[:deps] do
-        nil -> []
-        deps -> deps
-      end
+    try do
+      deps =
+        case options[:deps] do
+          nil -> []
+          deps -> deps
+        end
 
-    program =
-      """
-      #{code}
+      program =
+        """
+        #{code}
 
-      defmodule SpawnCoElixir.CoElixir.Worker do
-        def run() do
-          Mix.install(#{inspect(deps)})
+        defmodule SpawnCoElixir.CoElixir.Worker do
+          def run() do
+            Mix.install(#{inspect(deps)})
 
-          receive do
-            :end -> :ok
+            receive do
+              :end -> :ok
+            end
           end
         end
-      end
 
-      case Node.connect(:"#{node()}") do
-        true ->
-          SpawnCoElixir.CoElixir.Worker.run()
-          :ok
+        case Node.connect(:"#{node()}") do
+          true ->
+            SpawnCoElixir.CoElixir.Worker.run()
+            :ok
 
-        _ -> raise RuntimeError, "Node cannot connect."
-      end
-      """
-      |> IO.inspect(label: "program")
+          _ -> raise RuntimeError, "Node cannot connect."
+        end
+        """
+        |> IO.inspect(label: "program")
 
-    {_, 0} =
-      System.cmd(
-        "elixir",
-        [
-          "--name",
-          Atom.to_string(worker_node),
-          "-e",
-          program
-        ],
-        into: IO.stream()
-      )
+      {_result, _exit_code} =
+        System.cmd(
+          "elixir",
+          [
+            "--name",
+            Atom.to_string(worker_node),
+            "-e",
+            program
+          ],
+          into: IO.stream()
+        )
+
+      :ok
+
+    after
+      :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
+    end
   end
 end
