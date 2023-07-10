@@ -117,10 +117,6 @@ defmodule SpawnCoElixir.CoElixir do
     GenServer.cast(ret, :spawn_co_elixir)
   end
 
-  defp handle_cast_s(r, _ret) do
-    Logger.error("Unexpected result of CoElixir: #{inspect(r)}.")
-  end
-
   defp spawn_co_elixir(pid, a_process) do
     options = a_process[:options]
     code = options[:code]
