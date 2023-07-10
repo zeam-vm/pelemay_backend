@@ -3,20 +3,15 @@ name: nerves-build
 on:
     pull_request:
       branches: [ "main" ]
-      paths-ignore:
-        - '*.md'
-        - '**/*.md'
-        - '*.cff'
-        - 'LICENSE*'
-        - '**/LICENSE*'
-        - 'config/*'
-        - 'lib/**/*'
-        - 'priv/**/*'
-        - '.formatter.exs'
-        - 'mix.{exs,lock}'
-        - 'publish.exs'
-        - '.github/workflows/ci.yml'
-        - '.github/workflows/site.yml'
+      paths:
+        - '!*.md'
+        - '!**/*.md'
+        - '!*.cff'
+        - '!LICENSE*'
+        - '!**/LICENSE*'
+        - '!publish.exs'
+        - '!.github/workflows/*'
+        - '.github/workflows/nerves-build.yml'
     workflow_dispatch:
   
 permissions:
