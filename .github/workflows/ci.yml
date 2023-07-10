@@ -146,7 +146,7 @@ jobs:
     - name: Compile and check warning
       run: mix compile --warnings-as-errors
     - name: Check formatting (Ubuntu, macOS)
-      if: ${{ !startsWith(runner.os, 'windows') }}
+      if: ${{ !startsWith(runner.os, 'windows') && startsWith(matrix.elixir-version, '1.15') && startsWith(matrix.otp-version, '26') }}
       run: mix format --check-formatted
     - name: Check by credo (Ubuntu)
       if: ${{ startsWith(runner.os, 'linux') }}
