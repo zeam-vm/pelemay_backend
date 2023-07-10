@@ -1,0 +1,61 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# CI 
+
+name: Elixir CI (NodeActivator)
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [ "main", "develop" ]
+    paths:
+      - '!*.md'
+      - '!**/*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!**/LICENSE*'
+      - '!config/*'
+      - '!lib/**/*'
+      - '!priv/**/*'
+      - '!formatter.exs'
+      - '!mix.{exs,lock}'
+      - '!publish.exs'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_node_activator.yml'
+      - 'utilities/node_activator/*'
+  push:
+    branches: [ "develop" ]    
+    paths:
+      - '!*.md'
+      - '!**/*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!**/LICENSE*'
+      - '!config/*'
+      - '!lib/**/*'
+      - '!priv/**/*'
+      - '!formatter.exs'
+      - '!mix.{exs,lock}'
+      - '!publish.exs'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_node_activator.yml'
+      - 'utilities/node_activator/*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  elixir_ci_node_activator:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    with:
+      working-directory: utilities/node_activator
+  elixir_ci_spawn_co_elixir:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    needs: elixir_ci_node_activator
+    with:
+      working-directory: utilities/spawn_co_elixir

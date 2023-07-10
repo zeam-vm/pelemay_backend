@@ -1,0 +1,56 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# CI 
+
+name: Elixir CI (SpawnCoElixir)
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [ "main", "develop" ]
+    paths:
+      - '!*.md'
+      - '!**/*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!**/LICENSE*'
+      - '!config/*'
+      - '!lib/**/*'
+      - '!priv/**/*'
+      - '!formatter.exs'
+      - '!mix.{exs,lock}'
+      - '!publish.exs'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_spawn_co_elixir.yml'
+      - 'utilities/spawn_co_elixir/*'
+  push:
+    branches: [ "develop" ]    
+    paths:
+      - '!*.md'
+      - '!**/*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!**/LICENSE*'
+      - '!config/*'
+      - '!lib/**/*'
+      - '!priv/**/*'
+      - '!formatter.exs'
+      - '!mix.{exs,lock}'
+      - '!publish.exs'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_spawn_co_elixir.yml'
+      - 'utilities/spawn_co_elixir/*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  elixir_ci_spawn_co_elixir:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    with:
+      working-directory: utilities/spawn_co_elixir
