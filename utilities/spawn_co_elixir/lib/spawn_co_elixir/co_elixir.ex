@@ -13,10 +13,12 @@ defmodule SpawnCoElixir.CoElixir do
   @impl true
   def handle_cast(:spawn_co_elixir, a_process) do
     unless a_process[:running] do
-      spawn_link(fn ->
-        spawn_co_elixir(a_process)
+      {:ok, exit_code} = spawn_co_elixir(a_process)
+      if exit_code == 0 do
         GenServer.cast(:exit, a_process)
-      end)
+      else
+        GenServer.cast(:spawn_co_elixir, a_process)
+      end
     end
 
     {
@@ -84,7 +86,7 @@ defmodule SpawnCoElixir.CoElixir do
         end
         """
 
-      {_result, _exit_code} =
+      {_result, exit_code} =
         System.cmd(
           "elixir",
           [
@@ -96,7 +98,7 @@ defmodule SpawnCoElixir.CoElixir do
           into: IO.stream()
         )
 
-      :ok
+      {:ok, exit_code}
     after
       :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
     end
