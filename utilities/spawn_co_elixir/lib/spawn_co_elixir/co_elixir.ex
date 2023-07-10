@@ -55,6 +55,28 @@ defmodule SpawnCoElixir.CoElixir do
         deps -> deps
       end
 
+    program =
+      """
+      defmodule SpawnCoElixir.CoElixir.Worker do
+        def run() do
+          Mix.install(#{inspect(deps)})
+
+          receive do
+            :end -> :ok
+          end
+        end
+      end
+
+      case Node.connect(:"#{node()}") do
+        true ->
+          SpawnCoElixir.CoElixir.Worker.run()
+          :ok
+
+        _ -> raise RuntimeError, "Node cannot connect."
+      end
+      """
+      |> IO.inspect(label: "program")
+
     {_, 0} =
       System.cmd(
         "elixir",
@@ -62,25 +84,7 @@ defmodule SpawnCoElixir.CoElixir do
           "--name",
           Atom.to_string(worker_node),
           "-e",
-          """
-          defmodule SpawnCoElixir.CoElixir.Worker do
-            def run() do
-              Mix.install(#{inspect(deps)})
-
-              receive do
-                :end -> :ok
-              end
-            end
-          end
-
-          case Node.connect(:"#{node()}") do
-            true ->
-              SpawnCoElixir.CoElixir.Worker.run()
-              :ok
-
-            _ -> raise RuntimeError, "Node cannot connect."
-          end
-          """
+          program
         ],
         into: IO.stream()
       )
