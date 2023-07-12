@@ -1,11 +1,12 @@
 # SpawnCoElixir
 
-**TODO: Add description**
+<!-- MODULEDOC -->
+SpawnCoElixir spawns cooperative Elixir nodes that are supervised.
+<!-- MODULEDOC -->
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `spawn_co_elixir` to your list of dependencies in `mix.exs`:
+Just add `spawn_co_elixir` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,7 +16,5 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/spawn_co_elixir>.
+Documentation can be found at <https://hexdocs.pm/spawn_co_elixir>.
 
