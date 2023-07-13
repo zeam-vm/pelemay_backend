@@ -1,7 +1,5 @@
 defmodule SpawnCoElixir.CoElixir do
-  @moduledoc """
-  SpawnCoElixir.CoElixir
-  """
+  @moduledoc false
 
   use GenServer
   require Logger
