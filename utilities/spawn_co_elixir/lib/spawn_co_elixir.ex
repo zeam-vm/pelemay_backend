@@ -10,7 +10,7 @@ defmodule SpawnCoElixir do
   * `:host_name` - the node name prefix for host
   * `:co_elixir_name` - the node name prefix for CoElixir
   """
-  @type co_elixir_options ::
+  @type co_elixir_option ::
           {:code, binary}
           | {:host_name, binary}
           | {:co_elixir_name, binary}
@@ -18,7 +18,7 @@ defmodule SpawnCoElixir do
   @doc """
   Starts a CoElixir server as a child of `SpawnCoElixir.DynamicSupervisor`.
   """
-  @spec run([co_elixir_options]) :: {:ok, pid}
+  @spec run([co_elixir_option]) :: {:ok, pid}
   def run(options \\ []) do
     co_elixir_options = [
       code: options[:code] || "",
