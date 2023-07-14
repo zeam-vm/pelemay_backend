@@ -26,6 +26,9 @@ defmodule SpawnCoElixir.CoElixirLookupTest do
 
     :ok = CoElixirLookup.delete_entry(:foo_node)
     assert CoElixirLookup.list_worker_nodes() == [:bar_node]
+
+    :ok = CoElixirLookup.delete_all()
+    assert CoElixirLookup.list_worker_nodes() == []
   end
 
   # makes a fake worker pid

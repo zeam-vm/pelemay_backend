@@ -52,4 +52,10 @@ defmodule SpawnCoElixir.CoElixirLookup do
     true = :ets.delete(@table_name, worker_node)
     :ok
   end
+
+  @spec delete_all() :: :ok
+  def delete_all() do
+    true = :ets.delete_all_objects(@table_name)
+    :ok
+  end
 end
