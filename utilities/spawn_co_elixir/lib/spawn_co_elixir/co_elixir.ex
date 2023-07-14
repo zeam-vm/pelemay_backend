@@ -3,6 +3,7 @@ defmodule SpawnCoElixir.CoElixir do
 
   use GenServer
   require Logger
+  alias SpawnCoElixir.CoElixirLookup
 
   @impl true
   def init(a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}) do
@@ -55,7 +56,7 @@ defmodule SpawnCoElixir.CoElixir do
       worker_node ->
         Logger.info("Exit #{inspect(worker_node)}")
         Node.spawn(worker_node, System, :halt, [])
-        :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
+        CoElixirLookup.delete_entry(worker_node)
 
         {
           :noreply,
@@ -88,17 +89,16 @@ defmodule SpawnCoElixir.CoElixir do
   end
 
   def workers() do
-    :ets.tab2list(:spawn_co_elixir_co_elixir_lookup)
-    |> Enum.map(fn {node, _pid} -> node end)
+    CoElixirLookup.list_worker_nodes()
   end
 
   def stop(worker_node) do
-    case :ets.lookup(:spawn_co_elixir_co_elixir_lookup, worker_node) do
-      [] ->
+    case CoElixirLookup.get_worker_pid(worker_node) do
+      nil ->
         Logger.warning("Not found worker_node #{worker_node}.")
         :ok
 
-      [{^worker_node, pid}] ->
+      pid when is_pid(pid) ->
         Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
         GenServer.cast(pid, :exit)
     end
@@ -120,7 +120,7 @@ defmodule SpawnCoElixir.CoElixir do
     code = options[:code]
     worker_node = NodeActivator.Utils.generate_node_name(options[:co_elixir_name])
 
-    :ets.insert(:spawn_co_elixir_co_elixir_lookup, {worker_node, pid})
+    :ok = CoElixirLookup.put_entry(worker_node, pid)
 
     try do
       GenServer.cast(pid, {:worker_node, worker_node})
@@ -171,7 +171,7 @@ defmodule SpawnCoElixir.CoElixir do
 
       {:ok, exit_code}
     after
-      :ets.delete(:spawn_co_elixir_co_elixir_lookup, worker_node)
+      :ok = CoElixirLookup.delete_entry(worker_node)
     end
   end
 end

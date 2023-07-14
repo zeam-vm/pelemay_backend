@@ -5,9 +5,11 @@ defmodule SpawnCoElixir.Application do
 
   use Application
 
+  alias SpawnCoElixir.CoElixirLookup
+
   @impl true
   def start(_type, _args) do
-    init_co_elixir_lookup()
+    CoElixirLookup.create_table()
 
     children = [
       # Starts a worker by calling: SpawnCoElixir.Worker.start_link(arg)
@@ -19,10 +21,5 @@ defmodule SpawnCoElixir.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: SpawnCoElixir.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  defp init_co_elixir_lookup() do
-    _ref = :ets.new(:spawn_co_elixir_co_elixir_lookup, [:set, :public, :named_table])
-    :ok
   end
 end
