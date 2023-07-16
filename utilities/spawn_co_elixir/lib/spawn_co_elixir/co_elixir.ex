@@ -5,6 +5,38 @@ defmodule SpawnCoElixir.CoElixir do
   require Logger
   alias SpawnCoElixir.CoElixirLookup
 
+  ## Client API
+
+  def start_link(options \\ []) do
+    server_options = [
+      co_elixir_name: Keyword.fetch!(options, :co_elixir_name),
+      code: Keyword.fetch!(options, :code),
+      deps: Keyword.fetch!(options, :deps),
+      host_name: Keyword.fetch!(options, :host_name)
+    ]
+
+    NodeActivator.run(server_options[:host_name])
+    {:ok, pid} = GenServer.start_link(__MODULE__, server_options)
+    GenServer.cast(pid, :spawn_co_elixir)
+    {:ok, pid}
+  end
+
+  def workers() do
+    CoElixirLookup.list_worker_nodes()
+  end
+
+  def stop(worker_node) do
+    case CoElixirLookup.get_worker_pid(worker_node) do
+      nil ->
+        Logger.warning("Not found worker_node #{worker_node}.")
+        :ok
+
+      pid when is_pid(pid) ->
+        Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
+        GenServer.cast(pid, :exit)
+    end
+  end
+
   ## GenServer callbacks
 
   @impl true
@@ -48,38 +80,6 @@ defmodule SpawnCoElixir.CoElixir do
         CoElixirLookup.delete_entry(worker_node)
 
         {:noreply, %{a_process | running: false, worker_node: :stopped}}
-    end
-  end
-
-  ## Client API
-
-  def start_link(options \\ []) do
-    server_options = [
-      co_elixir_name: Keyword.fetch!(options, :co_elixir_name),
-      code: Keyword.fetch!(options, :code),
-      deps: Keyword.fetch!(options, :deps),
-      host_name: Keyword.fetch!(options, :host_name)
-    ]
-
-    NodeActivator.run(server_options[:host_name])
-    {:ok, pid} = GenServer.start_link(__MODULE__, server_options)
-    GenServer.cast(pid, :spawn_co_elixir)
-    {:ok, pid}
-  end
-
-  def workers() do
-    CoElixirLookup.list_worker_nodes()
-  end
-
-  def stop(worker_node) do
-    case CoElixirLookup.get_worker_pid(worker_node) do
-      nil ->
-        Logger.warning("Not found worker_node #{worker_node}.")
-        :ok
-
-      pid when is_pid(pid) ->
-        Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
-        GenServer.cast(pid, :exit)
     end
   end
 
