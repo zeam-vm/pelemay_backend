@@ -5,87 +5,20 @@ defmodule SpawnCoElixir.CoElixir do
   require Logger
   alias SpawnCoElixir.CoElixirLookup
 
-  @impl true
-  def init(a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}) do
-    {:ok, a_process}
-  end
+  ## Client API
 
-  @impl true
-  def handle_cast(:spawn_co_elixir, a_process) do
-    unless a_process[:running] do
-      ret = self()
-      spawn_link(fn -> handle_cast_s(spawn_co_elixir(ret, a_process), ret) end)
-    end
+  def start_link(options \\ []) do
+    server_options = [
+      co_elixir_name: Keyword.fetch!(options, :co_elixir_name),
+      code: Keyword.fetch!(options, :code),
+      deps: Keyword.fetch!(options, :deps),
+      host_name: Keyword.fetch!(options, :host_name)
+    ]
 
-    {
-      :noreply,
-      Map.put(a_process, :running, true)
-    }
-  end
-
-  @impl true
-  def handle_cast({:worker_node, worker_node}, a_process) do
-    Logger.info("Register worker #{inspect(worker_node)}")
-
-    {
-      :noreply,
-      Map.put(a_process, :worker_node, worker_node)
-    }
-  end
-
-  @impl true
-  def handle_cast(:exit, a_process) do
-    case Map.get(a_process, :worker_node) do
-      nil ->
-        Logger.error("Not found worker_node")
-
-        {
-          :noreply,
-          a_process
-          |> Map.put(:running, false)
-        }
-
-      :stopped ->
-        {
-          :noreply,
-          a_process
-          |> Map.put(:running, false)
-          |> Map.put(:worker_node, nil)
-        }
-
-      worker_node ->
-        Logger.info("Exit #{inspect(worker_node)}")
-        Node.spawn(worker_node, System, :halt, [])
-        CoElixirLookup.delete_entry(worker_node)
-
-        {
-          :noreply,
-          a_process
-          |> Map.put(:running, false)
-          |> Map.put(:worker_node, :stopped)
-        }
-    end
-  end
-
-  def start_link(
-        a_process \\ %{options: [code: "", host_name: "host", co_elixir_name: "co_elixir"]}
-      ) do
-    case Map.get(a_process, :options) do
-      nil ->
-        {:error, "No match options: #{inspect(a_process)}."}
-
-      options ->
-        case options[:host_name] do
-          nil ->
-            {:error, "No match host_name: #{inspect(a_process)}."}
-
-          host_prefix ->
-            NodeActivator.run(host_prefix)
-            {:ok, pid} = GenServer.start_link(__MODULE__, a_process)
-            GenServer.cast(pid, :spawn_co_elixir)
-            {:ok, pid}
-        end
-    end
+    NodeActivator.run(server_options[:host_name])
+    {:ok, pid} = GenServer.start_link(__MODULE__, server_options)
+    GenServer.cast(pid, :spawn_co_elixir)
+    {:ok, pid}
   end
 
   def workers() do
@@ -104,6 +37,52 @@ defmodule SpawnCoElixir.CoElixir do
     end
   end
 
+  ## GenServer callbacks
+
+  @impl true
+  def init(options \\ []) do
+    a_process = %{options: options, running: false, worker_node: nil}
+
+    {:ok, a_process}
+  end
+
+  @impl true
+  def handle_cast(:spawn_co_elixir, a_process) do
+    unless a_process.running do
+      ret = self()
+      spawn_link(fn -> handle_cast_s(spawn_co_elixir(ret, a_process.options), ret) end)
+    end
+
+    {:noreply, %{a_process | running: true}}
+  end
+
+  @impl true
+  def handle_cast({:worker_node, worker_node}, a_process) do
+    Logger.info("Register worker #{inspect(worker_node)}")
+
+    {:noreply, %{a_process | worker_node: worker_node}}
+  end
+
+  @impl true
+  def handle_cast(:exit, a_process) do
+    case Map.get(a_process, :worker_node) do
+      nil ->
+        Logger.error("Not found worker_node")
+
+        {:noreply, %{a_process | running: false}}
+
+      :stopped ->
+        {:noreply, %{a_process | running: false, worker_node: nil}}
+
+      worker_node ->
+        Logger.info("Exit #{inspect(worker_node)}")
+        Node.spawn(worker_node, System, :halt, [])
+        CoElixirLookup.delete_entry(worker_node)
+
+        {:noreply, %{a_process | running: false, worker_node: :stopped}}
+    end
+  end
+
   defp handle_cast_s({:ok, 0}, ret) do
     Logger.info("Exit CoElixir.")
     GenServer.cast(ret, :exit)
@@ -115,21 +94,16 @@ defmodule SpawnCoElixir.CoElixir do
     GenServer.cast(ret, :spawn_co_elixir)
   end
 
-  defp spawn_co_elixir(pid, a_process) do
-    options = a_process[:options]
-    code = options[:code]
-    worker_node = NodeActivator.Utils.generate_node_name(options[:co_elixir_name])
+  defp spawn_co_elixir(pid, options) do
+    code = Keyword.fetch!(options, :code)
+    deps = Keyword.fetch!(options, :deps)
+    node_name_prefix = Keyword.fetch!(options, :co_elixir_name)
 
+    worker_node = NodeActivator.Utils.generate_node_name(node_name_prefix)
     :ok = CoElixirLookup.put_entry(worker_node, pid)
 
     try do
       GenServer.cast(pid, {:worker_node, worker_node})
-
-      deps =
-        case options[:deps] do
-          nil -> []
-          deps -> deps
-        end
 
       program = """
       defmodule SpawnCoElixir.CoElixir.Worker do
