@@ -11,26 +11,26 @@ on:
     branches: [ "main", "develop" ]
     paths:
       - '!*.md'
-      - '!**/*.md'
       - '!*.cff'
       - '!LICENSE*'
-      - '!**/LICENSE*'
       - '!publish.exs'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
       - 'utilities/spawn_co_elixir/*'
+      - '!**/*.md'
+      - '!**/LICENSE*'
   push:
-    branches: [ "develop" ]    
+    branches: [ "main", "develop" ]    
     paths:
       - '!*.md'
-      - '!**/*.md'
       - '!*.cff'
       - '!LICENSE*'
-      - '!**/LICENSE*'
       - '!publish.exs'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
       - 'utilities/spawn_co_elixir/*'
+      - '!**/*.md'
+      - '!**/LICENSE*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

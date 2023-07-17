@@ -11,26 +11,26 @@ on:
     branches: [ "main", "develop" ]
     paths:
       - '!*.md'
-      - '!**/*.md'
       - '!*.cff'
       - '!LICENSE*'
-      - '!**/LICENSE*'
       - '!publish.exs'
       - '!.github/workflows/*'
       - '.github/workflows/ci_onnx_to_axon_bench.yml'
       - 'benchmarks/onnx_to_axon_bench/*'
+      - '!**/*.md'
+      - '!**/LICENSE*'
   push:
-    branches: [ "develop" ]    
+    branches: [ "main", "develop" ]    
     paths:
       - '!*.md'
-      - '!**/*.md'
       - '!*.cff'
       - '!LICENSE*'
-      - '!**/LICENSE*'
       - '!publish.exs'
       - '!.github/workflows/*'
       - '.github/workflows/ci_onnx_to_axon_bench.yml'
       - 'benchmarks/onnx_to_axon_bench/*'
+      - '!**/*.md'
+      - '!**/LICENSE*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
