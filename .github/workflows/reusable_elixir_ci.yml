@@ -22,16 +22,14 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
         otp-version: ['24.3.4.13', '25.3.2.3', '26.0.2']
-        elixir-version: ['1.14.5', '1.15.2']
+        elixir-version: ['1.14.5', '1.15.3']
         exclude:
           - otp-version: '24.3.4.13'
-            elixir-version: '1.15.2'
+            elixir-version: '1.15.3'
           - os: windows-2022
             otp-version: '25.3.2.3'
           - os: windows-2022
             otp-version: '26.0.2'
-          - os: windows-2022
-            elixir-version: '1.15.2'
           - os: macos-13
             otp-version: '24.3.4.13'
           - os: macos-12
@@ -40,10 +38,6 @@ jobs:
             otp-version: '26.0.2'
           - os: macos-12
             otp-version: '26.0.2'
-          - os: macos-13
-            elixir-version: '1.15.2'
-          - os: macos-12
-            elixir-version: '1.15.2'
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
