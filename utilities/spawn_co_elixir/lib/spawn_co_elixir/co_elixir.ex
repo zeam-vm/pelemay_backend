@@ -7,6 +7,7 @@ defmodule SpawnCoElixir.CoElixir do
 
   ## Client API
 
+  @spec start_link([SpawnCoElixir.co_elixir_option()]) :: {:ok, pid}
   def start_link(options \\ []) do
     server_options = [
       co_elixir_name: Keyword.fetch!(options, :co_elixir_name),
@@ -21,10 +22,7 @@ defmodule SpawnCoElixir.CoElixir do
     {:ok, pid}
   end
 
-  def workers() do
-    CoElixirLookup.list_worker_nodes()
-  end
-
+  @spec stop(node) :: :ok
   def stop(worker_node) do
     case CoElixirLookup.get_worker_pid(worker_node) do
       nil ->
