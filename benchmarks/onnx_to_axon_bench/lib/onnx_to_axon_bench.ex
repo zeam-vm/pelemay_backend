@@ -55,7 +55,7 @@ defmodule OnnxToAxonBench do
 
   @spec priv_dir() :: binary()
   defp priv_dir() do
-    Application.app_dir(:onnx_to_axon_bench, "priv")
+    :filename.basedir(:user_cache, "onnx_to_axon_bench")
   end
 
   @spec onnx_models_dir() :: binary()
