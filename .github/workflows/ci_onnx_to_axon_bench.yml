@@ -10,27 +10,27 @@ on:
     types: [opened, reopened, synchronize]
     branches: [ "main", "develop" ]
     paths:
+      - 'benchmarks/onnx_to_axon_bench/*'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_onnx_to_axon_bench.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
       - '!*.md'
       - '!*.cff'
       - '!LICENSE*'
       - '!publish.exs'
-      - '!.github/workflows/*'
-      - '.github/workflows/ci_onnx_to_axon_bench.yml'
-      - 'benchmarks/onnx_to_axon_bench/*'
-      - '!**/*.md'
-      - '!**/LICENSE*'
   push:
     branches: [ "main", "develop" ]    
     paths:
+      - 'benchmarks/onnx_to_axon_bench/*'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_onnx_to_axon_bench.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
       - '!*.md'
       - '!*.cff'
       - '!LICENSE*'
       - '!publish.exs'
-      - '!.github/workflows/*'
-      - '.github/workflows/ci_onnx_to_axon_bench.yml'
-      - 'benchmarks/onnx_to_axon_bench/*'
-      - '!**/*.md'
-      - '!**/LICENSE*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
