@@ -9,7 +9,7 @@ defmodule OnnxToAxonBenchTest do
 
       %{"cats_v_dogs.onnx" => onnx_path} = OnnxToAxonBench.onnx_urls_to_inputs(onnx_src_urls)
 
-      priv_dir = Application.app_dir(:onnx_to_axon_bench, "priv")
+      priv_dir = :filename.basedir(:user_cache, "onnx_to_axon_bench")
       assert onnx_path == "#{priv_dir}/models/onnx/cats_v_dogs.onnx"
     end
   end
