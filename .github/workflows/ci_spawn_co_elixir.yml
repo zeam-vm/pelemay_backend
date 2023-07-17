@@ -10,27 +10,27 @@ on:
     types: [opened, reopened, synchronize]
     branches: [ "main", "develop" ]
     paths:
+      - 'utilities/spawn_co_elixir/*'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_spawn_co_elixir.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
       - '!*.md'
       - '!*.cff'
       - '!LICENSE*'
       - '!publish.exs'
-      - '!.github/workflows/*'
-      - '.github/workflows/ci_spawn_co_elixir.yml'
-      - 'utilities/spawn_co_elixir/*'
-      - '!**/*.md'
-      - '!**/LICENSE*'
   push:
     branches: [ "main", "develop" ]    
     paths:
+      - 'utilities/spawn_co_elixir/*'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_spawn_co_elixir.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
       - '!*.md'
       - '!*.cff'
       - '!LICENSE*'
       - '!publish.exs'
-      - '!.github/workflows/*'
-      - '.github/workflows/ci_spawn_co_elixir.yml'
-      - 'utilities/spawn_co_elixir/*'
-      - '!**/*.md'
-      - '!**/LICENSE*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
