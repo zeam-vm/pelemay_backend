@@ -10,9 +10,10 @@ on:
     types: [opened, reopened, synchronize]
     branches: [ "main", "develop" ]
     paths:
-      - 'utilities/spawn_co_elixir/*'
+      - 'utilities/spawn_co_elixir/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -22,9 +23,10 @@ on:
   push:
     branches: [ "main", "develop" ]    
     paths:
-      - 'utilities/spawn_co_elixir/*'
+      - 'utilities/spawn_co_elixir/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'

@@ -10,9 +10,10 @@ on:
     types: [opened, reopened, synchronize]
     branches: [ "main", "develop" ]
     paths:
-      - 'benchmarks/onnx_to_axon_bench/*'
+      - 'benchmarks/onnx_to_axon_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_onnx_to_axon_bench.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -22,9 +23,10 @@ on:
   push:
     branches: [ "main", "develop" ]    
     paths:
-      - 'benchmarks/onnx_to_axon_bench/*'
+      - 'benchmarks/onnx_to_axon_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_onnx_to_axon_bench.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
