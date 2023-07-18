@@ -18,9 +18,9 @@ defmodule SpawnCoElixir do
           | {:co_elixir_name, binary}
 
   @doc """
-  Starts a CoElixir server as a child of `SpawnCoElixir.DynamicSupervisor`.
+  Starts a supervised CoElixir worker.
   """
-  @spec run([co_elixir_option]) :: {:ok, pid}
+  @spec run([co_elixir_option]) :: DynamicSupervisor.on_start_child()
   def run(options \\ []) do
     co_elixir_options = [
       code: options[:code] || "",
@@ -29,20 +29,21 @@ defmodule SpawnCoElixir do
       co_elixir_name: options[:co_elixir_name] || "co_elixir"
     ]
 
-    {:ok, _pid} =
-      DynamicSupervisor.start_child(
-        SpawnCoElixir.DynamicSupervisor,
-        {SpawnCoElixir.CoElixir, co_elixir_options}
-      )
+    DynamicSupervisor.start_child(
+      SpawnCoElixir.DynamicSupervisor,
+      {SpawnCoElixir.CoElixir, co_elixir_options}
+    )
   end
 
   @doc """
-  Stops a CoElixir server.
+  Stops a CoElixir worker by node name.
   """
+  @spec stop(node) :: :ok
   defdelegate stop(worker_node), to: SpawnCoElixir.CoElixir
 
   @doc """
-  Lists all running CoElixir servers.
+  Lists all running CoElixir worker nodes.
   """
-  defdelegate workers, to: SpawnCoElixir.CoElixir
+  @spec workers :: [node]
+  defdelegate workers, to: SpawnCoElixir.CoElixirLookup, as: :list_worker_nodes
 end
