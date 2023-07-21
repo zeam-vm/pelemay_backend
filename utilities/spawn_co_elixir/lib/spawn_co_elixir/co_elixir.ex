@@ -22,16 +22,16 @@ defmodule SpawnCoElixir.CoElixir do
     {:ok, pid}
   end
 
-  @spec stop(node) :: :ok
+  @spec stop(node) :: :ok | {:error, any}
   def stop(worker_node) do
     case CoElixirLookup.get_worker_pid(worker_node) do
       nil ->
         Logger.warning("Not found worker_node #{worker_node}.")
-        :ok
+        {:error, :not_found}
 
       pid when is_pid(pid) ->
         Logger.info("Found worker_node {#{worker_node}, #{inspect(pid)}}")
-        GenServer.cast(pid, :exit)
+        _ok_or_error = GenServer.call(pid, :exit)
     end
   end
 
@@ -62,33 +62,33 @@ defmodule SpawnCoElixir.CoElixir do
   end
 
   @impl true
-  def handle_cast(:exit, a_process) do
-    case Map.get(a_process, :worker_node) do
+  def handle_call(:exit, _from, a_process) do
+    case a_process.worker_node do
       nil ->
         Logger.error("Not found worker_node")
 
-        {:noreply, %{a_process | running: false}}
+        {:reply, {:error, :worker_not_found}, %{a_process | running: false}}
 
       :stopped ->
-        {:noreply, %{a_process | running: false, worker_node: nil}}
+        {:reply, :ok, %{a_process | running: false, worker_node: nil}}
 
       worker_node ->
         Logger.info("Exit #{inspect(worker_node)}")
         Node.spawn(worker_node, System, :halt, [])
         CoElixirLookup.delete_entry(worker_node)
 
-        {:noreply, %{a_process | running: false, worker_node: :stopped}}
+        {:reply, :ok, %{a_process | running: false, worker_node: :stopped}}
     end
   end
 
   defp handle_cast_s({:ok, 0}, ret) do
     Logger.info("Exit CoElixir.")
-    GenServer.cast(ret, :exit)
+    :ok = GenServer.call(ret, :exit)
   end
 
   defp handle_cast_s({:ok, _exit_code}, ret) do
     Logger.info("Reboot CoElixir.")
-    GenServer.cast(ret, :exit)
+    :ok = GenServer.call(ret, :exit)
     GenServer.cast(ret, :spawn_co_elixir)
   end
 
