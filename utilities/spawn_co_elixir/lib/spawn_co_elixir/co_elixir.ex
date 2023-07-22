@@ -63,22 +63,15 @@ defmodule SpawnCoElixir.CoElixir do
 
   @impl true
   def handle_call(:exit, _from, a_process) do
-    case a_process.worker_node do
-      nil ->
-        Logger.error("Not found worker_node")
-
-        {:reply, {:error, :worker_not_found}, %{a_process | running: false}}
-
-      :stopped ->
-        {:reply, :ok, %{a_process | running: false, worker_node: nil}}
-
-      worker_node ->
-        Logger.info("Exit #{inspect(worker_node)}")
-        Node.spawn(worker_node, System, :halt, [])
-        CoElixirLookup.delete_entry(worker_node)
-
-        {:reply, :ok, %{a_process | running: false, worker_node: :stopped}}
+    if worker_node = a_process.worker_node do
+      Logger.info("Exit #{inspect(worker_node)}")
+      Node.spawn(worker_node, System, :halt, [])
+      CoElixirLookup.delete_entry(worker_node)
+    else
+      Logger.error("Not found worker node")
     end
+
+    {:reply, :ok, %{a_process | running: false, worker_node: nil}}
   end
 
   defp handle_cast_s({:ok, 0}, ret) do
