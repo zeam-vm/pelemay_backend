@@ -24,6 +24,7 @@ defmodule SpawnCoElixir.MixProject do
     [
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:node_activator, "~> 0.1"}
     ]
   end
