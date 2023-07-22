@@ -6,20 +6,29 @@ defmodule SpawnCoElixirTest do
     on_exit(fn -> Node.stop() end)
   end
 
-  describe "run and exit" do
-    test "launch and exit co_elixir" do
-      refute Node.alive?()
+  test "launch and exit co_elixir" do
+    refute Node.alive?()
+    assert Enum.empty?(SpawnCoElixir.workers())
+    assert Supervisor.count_children(SpawnCoElixir.DynamicSupervisor).workers == 0
 
-      {result, pid} = SpawnCoElixir.run()
-      assert result == :ok
-      assert is_pid(pid)
+    # run
+    assert {:ok, pid} = SpawnCoElixir.run()
+    assert is_pid(pid)
+    assert Node.alive?()
 
-      SpawnCoElixir.workers()
-      |> Enum.map(fn n ->
-        assert Node.ping(n) == :pong
-        n
-      end)
-      |> Enum.each(fn n -> SpawnCoElixir.stop(n) end)
-    end
+    # wait until the node is registered
+    Process.sleep(500)
+    assert [worker_node] = SpawnCoElixir.workers()
+    assert :pong = Node.ping(worker_node)
+
+    # verify supervision
+    assert [{:undefined, _pid, :worker, [SpawnCoElixir.CoElixir]}] =
+             Supervisor.which_children(SpawnCoElixir.DynamicSupervisor)
+
+    # exit
+    assert :ok = SpawnCoElixir.stop(worker_node)
+    assert :pang = Node.ping(worker_node)
+    assert Enum.empty?(SpawnCoElixir.workers())
+    assert {:error, :not_found} = SpawnCoElixir.stop(worker_node)
   end
 end
