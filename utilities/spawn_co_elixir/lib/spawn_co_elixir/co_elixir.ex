@@ -79,9 +79,9 @@ defmodule SpawnCoElixir.CoElixir do
   end
 
   @impl true
-  def handle_call({:register_worker_node, worker_node}, {pid_from, _}, a_process) do
+  def handle_call({:register_worker_node, worker_node}, {_pid_from, _}, a_process) do
     Logger.info("registering #{inspect(worker_node)}")
-    :ok = CoElixirLookup.put_entry(worker_node, pid_from)
+    :ok = CoElixirLookup.put_entry(worker_node, self())
 
     {:reply, :ok, %{a_process | worker_node: worker_node}}
   end
