@@ -6,11 +6,18 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
     code = Keyword.fetch!(options, :code)
     deps = Keyword.fetch!(options, :deps)
 
+    name_or_sname =
+      if "#{worker_node}" =~ "." do
+        "--name"
+      else
+        "--sname"
+      end
+
     {_, exit_status} =
       System.cmd(
         "elixir",
         [
-          "--sname",
+          name_or_sname,
           Atom.to_string(worker_node),
           "-e",
           build_program(node_from, code, deps)
