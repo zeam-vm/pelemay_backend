@@ -27,6 +27,7 @@ defmodule SpawnCoElixirTest do
 
     # exit
     assert :ok = SpawnCoElixir.stop(worker_node)
+    Process.sleep(500)
     assert :pang = Node.ping(worker_node)
     assert Enum.empty?(SpawnCoElixir.workers())
     assert {:error, :not_found} = SpawnCoElixir.stop(worker_node)
