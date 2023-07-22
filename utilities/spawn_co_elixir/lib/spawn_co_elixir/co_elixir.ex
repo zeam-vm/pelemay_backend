@@ -55,10 +55,10 @@ defmodule SpawnCoElixir.CoElixir do
   end
 
   @impl true
-  def handle_cast({:worker_node, worker_node}, a_process) do
+  def handle_call({:worker_node, worker_node}, _from, a_process) do
     Logger.info("Register worker #{inspect(worker_node)}")
 
-    {:noreply, %{a_process | worker_node: worker_node}}
+    {:reply, :ok, %{a_process | worker_node: worker_node}}
   end
 
   @impl true
@@ -101,7 +101,7 @@ defmodule SpawnCoElixir.CoElixir do
     :ok = CoElixirLookup.put_entry(worker_node, pid)
 
     try do
-      GenServer.cast(pid, {:worker_node, worker_node})
+      :ok = GenServer.call(pid, {:worker_node, worker_node})
 
       program = """
       defmodule SpawnCoElixir.CoElixir.Worker do
