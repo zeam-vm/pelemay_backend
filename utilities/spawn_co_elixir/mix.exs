@@ -11,7 +11,10 @@ defmodule SpawnCoElixir.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      name: "SpawnCoElixir",
+      description: "SpawnCoElixir spawns cooperative Elixir nodes that are supervised.",
+      package: package()
     ]
   end
 
@@ -30,6 +33,14 @@ defmodule SpawnCoElixir.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:node_activator, "~> 0.1"}
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Susumu Yamazaki", "Masatoshi Nishiguchi"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
     ]
   end
 
