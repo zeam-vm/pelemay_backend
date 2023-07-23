@@ -63,10 +63,10 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
           exit_status ->
             Logger.error("exit_status of #{worker_node} is #{exit_status}")
             exit_status
-
-          after 1000 ->
-          Logger.error("Timeout to receive exit_status from #{worker_node}")
-          nil
+        after
+          1000 ->
+            Logger.error("Timeout to receive exit_status from #{worker_node}")
+            nil
         end
         |> case do
           nil -> :error

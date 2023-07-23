@@ -74,7 +74,7 @@ defmodule SpawnCoElixirTest do
 
     worker_nodes = SpawnCoElixir.workers()
 
-    Logger.debug("worker_nodes = #{inspect worker_nodes}")
+    Logger.debug("worker_nodes = #{inspect(worker_nodes)}")
 
     # verify supervision
     assert [{:undefined, _pid, :worker, [SpawnCoElixir.CoElixir]}] =
@@ -89,7 +89,7 @@ defmodule SpawnCoElixirTest do
             true
 
           r ->
-            Logger.error("SpawnCoElixir.stop(#{inspect worker_node}) return #{inspect r}")
+            Logger.error("SpawnCoElixir.stop(#{inspect(worker_node)}) return #{inspect(r)}")
             false
         end
       end)
@@ -113,7 +113,8 @@ defmodule SpawnCoElixirTest do
       worker_nodes
       |> Enum.map(fn worker_node ->
         case Node.ping(worker_node) do
-          :pang -> true
+          :pang ->
+            true
 
           p ->
             Logger.error("Node.ping(#{worker_node}) returns #{p}")
@@ -160,11 +161,11 @@ defmodule SpawnCoElixirTest do
         end)
         |> case do
           false ->
-            Logger.debug("All workers #{inspect worker_nodes} are not responded.")
+            Logger.debug("All workers #{inspect(worker_nodes)} are not responded.")
             {{false, count - 1}, {false, count - 1}}
 
           true ->
-            Logger.debug("A worker in #{inspect worker_nodes} is responded")
+            Logger.debug("A worker in #{inspect(worker_nodes)} is responded")
             {{true, 0}, {true, 0}}
         end
     end
