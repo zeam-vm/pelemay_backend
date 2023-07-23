@@ -21,7 +21,8 @@ defmodule NodeActivator.Utils do
 
     {result, exit_code} =
       case :os.type() do
-        {:unix, _} -> System.cmd(hostname_cmd, ["-f"])
+        {:unix, :darwin} -> System.cmd(hostname_cmd, ["-f"])
+        {:unix, _} -> System.cmd(hostname_cmd, ["-i"])
         {:win32, _} -> System.cmd(hostname_cmd, [])
       end
 
