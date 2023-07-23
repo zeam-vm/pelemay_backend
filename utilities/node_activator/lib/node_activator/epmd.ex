@@ -49,7 +49,6 @@ defmodule NodeActivator.Epmd do
     end
   end
 
-
   defp do_launch_epmd(epmd_cmd, epmd_options) do
     {result, exit_code} = System.cmd(epmd_cmd, epmd_options, parallelism: true)
 
