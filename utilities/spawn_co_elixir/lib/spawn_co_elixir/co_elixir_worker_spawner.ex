@@ -99,5 +99,13 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
       _ -> raise RuntimeError, "could not connect to #{node_from}"
     end
     """
+    |> convert(:os.type())
+  end
+
+  defp convert(code, {:unix, _}), do: code
+
+  defp convert(code, {:win32, _}) do
+    Logger.debug(inspect(code))
+    String.replace(code, "\r\n", "\n")
   end
 end
