@@ -3,6 +3,9 @@ defmodule SpawnCoElixirTest do
   doctest SpawnCoElixir
   require Logger
 
+  @waiting_msec 100
+  @counter_waiting 50
+
   setup do
     :ets.new(:spawn_co_elixir_test, [:set, :protected, :named_table])
 
@@ -39,7 +42,7 @@ defmodule SpawnCoElixirTest do
                 end)
               end)
 
-              Process.sleep(100)
+              Process.sleep(#{@waiting_msec})
               GenServer.cast(SpawnCoElixir.Test.WatchDogTimer, :next_clock)
             end)
 
@@ -63,7 +66,7 @@ defmodule SpawnCoElixirTest do
     :ets.insert(:spawn_co_elixir_test, {:watch_dog_timer, false})
 
     r =
-      Stream.unfold({false, 100}, fn
+      Stream.unfold({false, @counter_waiting}, fn
         {true, _} -> nil
         {_, 0} -> nil
         {false, count} -> assert_worker_nodes_working(count)
@@ -73,7 +76,6 @@ defmodule SpawnCoElixirTest do
     assert r
 
     worker_nodes = SpawnCoElixir.workers()
-
     Logger.debug("worker_nodes = #{inspect(worker_nodes)}")
 
     # verify supervision
@@ -100,7 +102,7 @@ defmodule SpawnCoElixirTest do
     :ets.insert(:spawn_co_elixir_test, {:watch_dog_timer, false})
 
     r =
-      Stream.unfold({false, 20}, fn
+      Stream.unfold({false, @counter_waiting}, fn
         {true, _} -> nil
         {_, 0} -> nil
         {false, count} -> wait_worker_nodes(count)
@@ -145,7 +147,7 @@ defmodule SpawnCoElixirTest do
   end
 
   defp assert_worker_nodes_working(count) do
-    Process.sleep(10)
+    Process.sleep(@waiting_msec)
 
     case SpawnCoElixir.workers() do
       [] ->
@@ -172,7 +174,7 @@ defmodule SpawnCoElixirTest do
   end
 
   defp wait_worker_nodes(count) do
-    Process.sleep(10)
+    Process.sleep(@waiting_msec)
 
     case SpawnCoElixir.workers() do
       [] -> {{false, count - 1}, {false, count - 1}}
