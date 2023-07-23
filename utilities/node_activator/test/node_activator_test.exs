@@ -3,9 +3,9 @@ defmodule NodeActivatorTest do
   doctest NodeActivator
 
   alias NodeActivator.Epmd
-  alias NodeActivator.Utils
 
   setup do
+    Node.stop()
     on_exit(fn -> Node.stop() end)
   end
 

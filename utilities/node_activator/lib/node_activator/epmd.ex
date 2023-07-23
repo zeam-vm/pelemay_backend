@@ -13,7 +13,7 @@ defmodule NodeActivator.Epmd do
     options =
       case :os.type() do
         {:unix, _} -> [port: @epmd_port]
-        {:win32, _} -> [port: @epmd_port, daemon: false]
+        {:win32, _} -> [port: @epmd_port]
       end
 
     epmd_cmd = System.find_executable("epmd")
@@ -32,6 +32,21 @@ defmodule NodeActivator.Epmd do
     wait_launching_epmd(5)
     Logger.info("done.")
     :ok
+  end
+
+  # Checks if the `epmd` process is running.
+  @spec epmd_running?() :: boolean()
+  def epmd_running?() do
+    case :gen_tcp.connect(~c'localhost', @epmd_port, [:binary, active: false], 1000) do
+      {:ok, socket} ->
+        Logger.info("Port epmd is active.")
+        :gen_tcp.close(socket)
+        true
+
+      {:error, reason} ->
+        Logger.warning("Fail to connect due to #{inspect(reason)}.")
+        false
+    end
   end
 
   defp do_launch_epmd(epmd_cmd, epmd_options) do
@@ -81,20 +96,5 @@ defmodule NodeActivator.Epmd do
       {:stop, name} when is_binary(name) -> ["-stop", name]
     end)
     |> List.flatten()
-  end
-
-  # Checks if the `epmd` process is running.
-  @spec epmd_running?() :: boolean()
-  defp epmd_running?() do
-    case :gen_tcp.connect(~c'localhost', @epmd_port, [:binary, active: false], 1000) do
-      {:ok, socket} ->
-        Logger.info("Port epmd is active.")
-        :gen_tcp.close(socket)
-        true
-
-      {:error, reason} ->
-        Logger.warning("Fail to connect due to #{inspect(reason)}.")
-        false
-    end
   end
 end

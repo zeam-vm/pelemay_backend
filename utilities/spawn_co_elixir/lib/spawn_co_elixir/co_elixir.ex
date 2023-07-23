@@ -57,31 +57,34 @@ defmodule SpawnCoElixir.CoElixir do
       Logger.info("spawning #{inspect(worker_node)}")
 
       spawn_link(fn ->
-        try do
-          :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
+        :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
 
-          case CoElixirWorkerSpawner.run(this_node, worker_node, options) do
-            :ok ->
-              Logger.info("spawned #{inspect(worker_node)}")
-              :ok = GenServer.call(this_pid, :exit_co_elixir)
-
-            {:error, exit_code} ->
-              Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
-              :ok = GenServer.call(this_pid, :reboot_co_elixir)
-          end
-        after
-          :ok = GenServer.call(this_pid, {:deregister_worker_node, worker_node})
-        end
+        CoElixirWorkerSpawner.run(this_node, worker_node, options)
+        |> handle_continue_spawn_co_elixir_s(this_pid, worker_node)
       end)
 
       {:noreply, %{a_process | running: true}}
     end
   end
 
+  defp handle_continue_spawn_co_elixir_s(:ok, _this_pid, worker_node) do
+    Logger.info("spawned #{inspect(worker_node)}")
+  end
+
+  defp handle_continue_spawn_co_elixir_s({:error, exit_code}, this_pid, worker_node) do
+    Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
+    :ok = GenServer.call(this_pid, :reboot_co_elixir)
+  end
+
+  defp handle_continue_spawn_co_elixir_s(:error, this_pid, worker_node) do
+    Logger.info("could not spawn #{inspect(worker_node)}: without exit code")
+    :ok = GenServer.call(this_pid, :reboot_co_elixir)
+  end
+
   @impl true
-  def handle_call({:register_worker_node, worker_node}, {pid_from, _}, a_process) do
+  def handle_call({:register_worker_node, worker_node}, {_pid_from, _}, a_process) do
     Logger.info("registering #{inspect(worker_node)}")
-    :ok = CoElixirLookup.put_entry(worker_node, pid_from)
+    :ok = CoElixirLookup.put_entry(worker_node, self())
 
     {:reply, :ok, %{a_process | worker_node: worker_node}}
   end
