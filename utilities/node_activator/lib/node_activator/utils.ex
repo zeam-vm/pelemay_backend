@@ -37,6 +37,7 @@ defmodule NodeActivator.Utils do
   defp to_fully_qualified_hostname(hostname, {:unix, _}), do: hostname
 
   defp to_fully_qualified_hostname(hostname, {:win32, _}) do
+    Logger.debug("short hostname: #{hostname}")
     ping_cmd = System.find_executable("ping")
 
     if is_nil(ping_cmd) do
@@ -57,7 +58,7 @@ defmodule NodeActivator.Utils do
       |> then(&Regex.named_captures(~r/Reply from (?<ip>[0-9a-f:.]+)/, &1))
       |> Map.get("ip")
 
-    Logger.debug("hostname: #{r}")
+    Logger.debug("fully qualified hostname: #{r}")
     r
   end
 end
