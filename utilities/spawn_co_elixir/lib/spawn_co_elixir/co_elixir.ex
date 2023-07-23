@@ -60,19 +60,27 @@ defmodule SpawnCoElixir.CoElixir do
       spawn_link(fn ->
         :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
 
-        case CoElixirWorkerSpawner.run(this_node, worker_node, options) do
-          :ok ->
-            Logger.info("spawned #{inspect(worker_node)}")
-            :ok = GenServer.call(this_pid, :exit_co_elixir)
-
-          {:error, exit_code} ->
-            Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
-            :ok = GenServer.call(this_pid, :reboot_co_elixir)
-        end
+        CoElixirWorkerSpawner.run(this_node, worker_node, options)
+        |> handle_continue_spawn_co_elixir_s()
       end)
 
       {:noreply, %{a_process | running: true}}
     end
+  end
+
+  defp handle_continue_spawn_co_elixir_s(:ok) do
+    Logger.info("spawned #{inspect(worker_node)}")
+    :ok = GenServer.call(this_pid, :exit_co_elixir)
+  end
+
+  defp handle_continue_spawn_co_elixir_s({:error, exit_code}) do
+    Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
+    :ok = GenServer.call(this_pid, :reboot_co_elixir)
+  end
+
+  defp handle_continue_spawn_co_elixir_s(:error) do
+    Logger.info("could not spawn #{inspect(worker_node)}: without exit code")
+    :ok = GenServer.call(this_pid, :reboot_co_elixir)
   end
 
   @impl true
