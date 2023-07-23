@@ -13,6 +13,8 @@ defmodule NodeActivator.Utils do
 
   @spec get_hostname() :: binary()
   def get_hostname() do
+    Logger.debug("os.type: #{inspect(:os.type())}")
+
     hostname_cmd = System.find_executable("hostname")
 
     if is_nil(hostname_cmd) do
