@@ -13,7 +13,7 @@ defmodule NodeActivator.Epmd do
     options =
       case :os.type() do
         {:unix, _} -> [port: @epmd_port]
-        {:win32, _} -> [port: @epmd_port, daemon: false]
+        {:win32, _} -> [port: @epmd_port]
       end
 
     epmd_cmd = System.find_executable("epmd")
