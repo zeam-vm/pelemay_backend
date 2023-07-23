@@ -1,6 +1,8 @@
 defmodule NodeActivator.Utils do
   @moduledoc false
 
+  require Logger
+
   @spec generate_node_name(binary()) :: atom()
   def generate_node_name(prefix) do
     prefix = Regex.replace(~r/\s/, prefix, "-")
@@ -47,10 +49,15 @@ defmodule NodeActivator.Utils do
       raise RuntimeError, "Fail to execute the \"ping\" command."
     end
 
-    String.trim(result)
-    |> String.split("\n")
-    |> Enum.at(1)
-    |> then(&Regex.named_captures(~r/Reply from (?<ip>[0-9a-f:.]+)/, &1))
-    |> Map.get("ip")
+    r =
+      result
+      |> String.trim()
+      |> String.split("\n")
+      |> Enum.at(1)
+      |> then(&Regex.named_captures(~r/Reply from (?<ip>[0-9a-f:.]+)/, &1))
+      |> Map.get("ip")
+
+    Logger.debug("hostname: #{r}")
+    r
   end
 end
