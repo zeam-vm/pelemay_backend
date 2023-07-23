@@ -34,20 +34,10 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
     end)
 
     Stream.unfold({false, 20}, fn
-      {_, 0} ->
-        nil
-
-      {true, _} ->
-        nil
-
-      {false, count} ->
-        Process.sleep(100)
-        n = Node.connect(worker_node)
-
-        {
-          {n, count - 1},
-          {n, count - 1}
-        }
+      {_, 0} -> nil
+      {true, _} -> nil
+      {:ignored, count} -> next_count(count, worker_node)
+      {false, count} -> next_count(count, worker_node)
     end)
     |> Enum.reduce(false, fn
       {true, _}, _ -> true
@@ -73,6 +63,16 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
           exit_status -> {:error, exit_status}
         end
     end
+  end
+
+  defp next_count(count, worker_node) do
+    Process.sleep(100)
+    n = Node.connect(worker_node)
+
+    {
+      {n, count - 1},
+      {n, count - 1}
+    }
   end
 
   defp build_program(node_from, modules, code, deps) do
