@@ -35,6 +35,7 @@ defmodule NodeActivator.Utils do
     result
     |> String.trim()
     |> to_fully_qualified_hostname(:os.type())
+    |> expand_ipv6()
   end
 
   defp to_fully_qualified_hostname(hostname, {:unix, _}), do: hostname
@@ -63,5 +64,36 @@ defmodule NodeActivator.Utils do
 
     Logger.debug("fully qualified hostname: #{r}")
     r
+  end
+
+  defp expand_ipv6(hostname) do
+    cond do
+      Regex.match?(~r/^([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}$/, hostname) ->
+        hostname
+        |> String.split(":")
+        |> Enum.map(&"000#{&1}")
+        |> Enum.map_join(":", &String.slice(&1, -4..-1))
+
+      Regex.match?(~r/^([0-9a-f]{1,4}[:]{1,2})+[0-9a-f]{1,4}$/, hostname) ->
+        hostname
+        |> String.split("::")
+        |> Enum.map(&String.split(&1, ":"))
+        |> Enum.map(&{&1, Enum.count(&1)})
+        |> Enum.unzip()
+        |> then(fn {l, n} ->
+          [
+            Enum.at(l, 0),
+            1..(8 - Enum.sum(n))
+            |> Enum.map(fn _ -> "0" end),
+            Enum.at(l, 1)
+          ]
+        end)
+        |> List.flatten()
+        |> Enum.join(":")
+        |> expand_ipv6()
+
+      true ->
+        hostname
+    end
   end
 end
