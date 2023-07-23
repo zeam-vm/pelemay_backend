@@ -83,6 +83,9 @@ defmodule SpawnCoElixirTest do
              Supervisor.which_children(SpawnCoElixir.DynamicSupervisor)
 
     # exit
+
+    Logger.debug("Exit all nodes #{inspect(worker_nodes)}")
+
     r =
       worker_nodes
       |> Enum.map(fn worker_node ->
