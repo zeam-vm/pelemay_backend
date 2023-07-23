@@ -7,6 +7,7 @@ defmodule SpawnCoElixirTest do
   @counter_waiting 50
 
   setup do
+    Node.stop()
     :ets.new(:spawn_co_elixir_test, [:set, :protected, :named_table])
 
     on_exit(fn ->

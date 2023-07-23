@@ -5,6 +5,7 @@ defmodule NodeActivatorTest do
   alias NodeActivator.Epmd
 
   setup do
+    Node.stop()
     on_exit(fn -> Node.stop() end)
   end
 
