@@ -7,12 +7,14 @@ defmodule SpawnCoElixir do
   The CoElixir server option
 
   * `:code` - Elixir code to be run by `CoElixir.Worker`
+  * `:modules` - Elixir code of modules to be defined in `CoElixir.Worker`
   * `:deps` - dependencies for `CoElixir.Worker`
   * `:host_name` - the node name prefix for host
   * `:co_elixir_name` - the node name prefix for `CoElixir`
   """
   @type co_elixir_option ::
           {:code, binary}
+          | {:modules, binary}
           | {:deps, [atom | tuple]}
           | {:host_name, binary}
           | {:co_elixir_name, binary}
@@ -24,6 +26,7 @@ defmodule SpawnCoElixir do
   def run(options \\ []) do
     co_elixir_options = [
       code: options[:code] || "",
+      modules: options[:modules] || "",
       deps: options[:deps] || [],
       host_name: options[:host_name] || "host",
       co_elixir_name: options[:co_elixir_name] || "co_elixir"

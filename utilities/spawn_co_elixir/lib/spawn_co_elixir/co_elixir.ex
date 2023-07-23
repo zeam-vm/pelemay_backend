@@ -13,6 +13,7 @@ defmodule SpawnCoElixir.CoElixir do
     server_options = [
       co_elixir_name: Keyword.fetch!(options, :co_elixir_name),
       code: Keyword.fetch!(options, :code),
+      modules: Keyword.fetch!(options, :modules),
       deps: Keyword.fetch!(options, :deps),
       host_name: Keyword.fetch!(options, :host_name)
     ]
