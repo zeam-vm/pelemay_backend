@@ -58,20 +58,16 @@ defmodule SpawnCoElixir.CoElixir do
       Logger.info("spawning #{inspect(worker_node)}")
 
       spawn_link(fn ->
-        try do
-          :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
+        :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
 
-          case CoElixirWorkerSpawner.run(this_node, worker_node, options) do
-            :ok ->
-              Logger.info("spawned #{inspect(worker_node)}")
-              :ok = GenServer.call(this_pid, :exit_co_elixir)
+        case CoElixirWorkerSpawner.run(this_node, worker_node, options) do
+          :ok ->
+            Logger.info("spawned #{inspect(worker_node)}")
+            :ok = GenServer.call(this_pid, :exit_co_elixir)
 
-            {:error, exit_code} ->
-              Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
-              :ok = GenServer.call(this_pid, :reboot_co_elixir)
-          end
-        after
-          :ok = GenServer.call(this_pid, {:deregister_worker_node, worker_node})
+          {:error, exit_code} ->
+            Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
+            :ok = GenServer.call(this_pid, :reboot_co_elixir)
         end
       end)
 
