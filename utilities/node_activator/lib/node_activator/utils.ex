@@ -32,16 +32,24 @@ defmodule NodeActivator.Utils do
       raise RuntimeError, "Fail to execute the \"hostname\" command."
     end
 
-    result
-    |> String.trim()
-    |> to_fully_qualified_hostname(:os.type())
-    |> expand_ipv6()
+    hostname =
+      result
+      |> String.trim()
+
+    Logger.debug("short hostname: #{hostname}")
+
+    hostname =
+      hostname
+      |> to_fully_qualified_hostname(:os.type())
+      |> expand_ipv6()
+
+    Logger.debug("fully qualified hostname: #{hostname}")
+    hostname
   end
 
   defp to_fully_qualified_hostname(hostname, {:unix, _}), do: hostname
 
   defp to_fully_qualified_hostname(hostname, {:win32, _}) do
-    Logger.debug("short hostname: #{hostname}")
     ping_cmd = System.find_executable("ping")
 
     if is_nil(ping_cmd) do
@@ -54,16 +62,12 @@ defmodule NodeActivator.Utils do
       raise RuntimeError, "Fail to execute the \"ping\" command."
     end
 
-    r =
-      result
-      |> String.trim()
-      |> String.split("\n")
-      |> Enum.at(1)
-      |> then(&Regex.named_captures(~r/Reply from (?<ip>[0-9a-f:.]+)/, &1))
-      |> Map.get("ip")
-
-    Logger.debug("fully qualified hostname: #{r}")
-    r
+    result
+    |> String.trim()
+    |> String.split("\n")
+    |> Enum.at(1)
+    |> then(&Regex.named_captures(~r/Reply from (?<ip>[0-9a-f:.]+)/, &1))
+    |> Map.get("ip")
   end
 
   defp expand_ipv6(hostname) do
