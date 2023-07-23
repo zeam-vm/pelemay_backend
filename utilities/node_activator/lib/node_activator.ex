@@ -32,6 +32,12 @@ defmodule NodeActivator do
     end
   end
 
+  @doc """
+  Checks if the `epmd` process is running.
+  """
+  @spec epmd_running?() :: boolean()
+  defdelegate epmd_running?(), to: Epmd
+
   defp start_distributed_node(node_name_prefix) do
     Epmd.launch_epmd()
 

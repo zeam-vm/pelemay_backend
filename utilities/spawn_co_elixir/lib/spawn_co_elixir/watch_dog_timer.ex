@@ -2,7 +2,7 @@ defmodule SpawnCoElixir.WatchDogTimer do
   @moduledoc false
   use GenServer
 
-  @waiting_msec 100
+  @waiting_msec 10
   @table :spawn_co_elixir_watch_dog_timer
   @key :watch_dog_timer
 

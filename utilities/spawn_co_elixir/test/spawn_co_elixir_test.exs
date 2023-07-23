@@ -3,8 +3,8 @@ defmodule SpawnCoElixirTest do
   doctest SpawnCoElixir
   require Logger
 
-  @waiting_msec 100
-  @counter_waiting 50
+  @waiting_msec 20
+  @counter_waiting 100
   @table :spawn_co_elixir_watch_dog_timer
   @key :watch_dog_timer
 
