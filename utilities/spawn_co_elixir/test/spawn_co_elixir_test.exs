@@ -5,10 +5,12 @@ defmodule SpawnCoElixirTest do
 
   @waiting_msec 100
   @counter_waiting 50
+  @table :spawn_co_elixir_watch_dog_timer
+  @key :watch_dog_timer
 
   setup do
     Node.stop()
-    :ets.new(:spawn_co_elixir_test, [:set, :protected, :named_table])
+    :ets.new(@table, [:set, :protected, :named_table])
 
     on_exit(fn ->
       Node.stop()
@@ -22,49 +24,14 @@ defmodule SpawnCoElixirTest do
 
     # run
     result =
-      SpawnCoElixir.run(
-        modules: """
-        defmodule SpawnCoElixir.Test.WatchDogTimer do
-          use GenServer
-
-          @impl true
-          def init(state) do
-            :ets.new(:spawn_co_elixir_test, [:set, :protected, :named_table])
-            {:ok, state, {:continue, :clock}}
-          end
-
-          @impl true
-          def handle_continue(:clock, state) do
-            spawn_link(fn ->
-              Node.list()
-              |> Enum.map(fn node ->
-                Node.spawn(node, fn ->
-                  :ets.insert(:spawn_co_elixir_test, {:watch_dog_timer, true})
-                end)
-              end)
-
-              Process.sleep(#{@waiting_msec})
-              GenServer.cast(SpawnCoElixir.Test.WatchDogTimer, :next_clock)
-            end)
-
-            {:noreply, state}
-          end
-
-          @impl true
-          def handle_cast(:next_clock, state) do
-            {:noreply, state, {:continue, :clock}}
-          end
-        end
-        """,
-        code: "GenServer.start_link(SpawnCoElixir.Test.WatchDogTimer, [])"
-      )
+      SpawnCoElixir.run(code: "GenServer.start_link(SpawnCoElixir.WatchDogTimer, [])")
 
     assert {:ok, pid} = result
     assert is_pid(pid)
     assert Node.alive?()
 
     # wait until the node is registered
-    :ets.insert(:spawn_co_elixir_test, {:watch_dog_timer, false})
+    :ets.insert(@table, {@key, false})
 
     r =
       Stream.unfold({false, @counter_waiting}, fn
@@ -103,7 +70,7 @@ defmodule SpawnCoElixirTest do
 
     assert r
 
-    :ets.insert(:spawn_co_elixir_test, {:watch_dog_timer, false})
+    :ets.insert(@table, {@key, false})
 
     r =
       Stream.unfold({false, @counter_waiting}, fn
@@ -187,22 +154,22 @@ defmodule SpawnCoElixirTest do
   end
 
   defp lookup_watch_dog_timer(count) do
-    :ets.lookup(:spawn_co_elixir_test, :watch_dog_timer)
+    :ets.lookup(@table, @key)
     |> lookup_watch_dog_timer_s(count)
   end
 
   defp lookup_watch_dog_timer_s(nil, _) do
-    Logger.error("ETS table :watch_dog_timer not found")
+    Logger.error("ETS table #{@key} not found")
     nil
   end
 
   defp lookup_watch_dog_timer_s([], _) do
-    Logger.error("ETS table :watch_dog_timer does not contain any term")
+    Logger.error("ETS table #{@key} does not contain any term")
     nil
   end
 
-  defp lookup_watch_dog_timer_s([{:watch_dog_timer, result}], count) do
-    Logger.debug(":watch_dog_timer is #{result}")
+  defp lookup_watch_dog_timer_s([{@key, result}], count) do
+    Logger.debug("#{@key} is #{result}")
     {{result, count - 1}, {result, count - 1}}
   end
 end

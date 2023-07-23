@@ -5,7 +5,6 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
   @spec run(node, node, keyword) :: :ok | :error | {:error, non_neg_integer}
   def run(node_from, worker_node, options) do
     code = Keyword.fetch!(options, :code)
-    modules = Keyword.fetch!(options, :modules)
     deps = Keyword.fetch!(options, :deps)
 
     name_or_sname =
@@ -25,7 +24,7 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
             name_or_sname,
             Atom.to_string(worker_node),
             "-e",
-            build_program(node_from, modules, code, deps)
+            build_program(node_from, code, deps)
           ],
           into: IO.stream()
         )
@@ -75,10 +74,8 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
     }
   end
 
-  defp build_program(node_from, modules, code, deps) do
+  defp build_program(node_from, code, deps) do
     """
-    #{modules}
-
     defmodule SpawnCoElixir.CoElixir.Worker do
       def run() do
         Mix.install(#{inspect(deps)})
@@ -99,13 +96,5 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
       _ -> raise RuntimeError, "could not connect to #{node_from}"
     end
     """
-    |> convert(:os.type())
-  end
-
-  defp convert(code, {:unix, _}), do: code
-
-  defp convert(code, {:win32, _}) do
-    Logger.debug(inspect(code))
-    String.replace(code, "\r\n", "\n")
   end
 end
