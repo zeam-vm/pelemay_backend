@@ -45,8 +45,7 @@ defmodule SpawnCoElixir.CoElixir do
 
   @impl true
   def handle_continue(:spawn_co_elixir, a_process) do
-    options = a_process.options
-    node_name_prefix = Keyword.fetch!(options, :co_elixir_name)
+    node_name_prefix = Keyword.fetch!(a_process.options, :co_elixir_name)
     worker_node = NodeActivator.Utils.generate_node_name(node_name_prefix)
     this_pid = self()
     this_node = Node.self()
@@ -55,30 +54,29 @@ defmodule SpawnCoElixir.CoElixir do
       {:noreply, a_process}
     else
       Logger.info("spawning #{inspect(worker_node)}")
-
-      spawn_link(fn ->
-        :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
-
-        CoElixirWorkerSpawner.run(this_node, worker_node, options)
-        |> handle_continue_spawn_co_elixir_s(this_pid, worker_node)
-      end)
+      do_spawn_co_elixir(this_pid, this_node, worker_node, a_process.options)
 
       {:noreply, %{a_process | running: true}}
     end
   end
 
-  defp handle_continue_spawn_co_elixir_s(:ok, _this_pid, worker_node) do
-    Logger.info("spawned #{inspect(worker_node)}")
-  end
+  defp do_spawn_co_elixir(this_pid, this_node, worker_node, options) do
+    spawn_link(fn ->
+      :ok = GenServer.call(this_pid, {:register_worker_node, worker_node})
 
-  defp handle_continue_spawn_co_elixir_s({:error, exit_code}, this_pid, worker_node) do
-    Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
-    :ok = GenServer.call(this_pid, :reboot_co_elixir)
-  end
+      case CoElixirWorkerSpawner.run(this_node, worker_node, options) do
+        :ok ->
+          Logger.info("spawned #{inspect(worker_node)}")
 
-  defp handle_continue_spawn_co_elixir_s(:error, this_pid, worker_node) do
-    Logger.info("could not spawn #{inspect(worker_node)}: without exit code")
-    :ok = GenServer.call(this_pid, :reboot_co_elixir)
+        {:error, exit_code} ->
+          Logger.info("could not spawn #{inspect(worker_node)}: exit code #{exit_code}")
+          :ok = GenServer.call(this_pid, :reboot_co_elixir)
+
+        :error ->
+          Logger.info("could not spawn #{inspect(worker_node)}: without exit code")
+          :ok = GenServer.call(this_pid, :reboot_co_elixir)
+      end
+    end)
   end
 
   @impl true
