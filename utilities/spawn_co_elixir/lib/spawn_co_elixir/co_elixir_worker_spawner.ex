@@ -8,7 +8,7 @@ defmodule SpawnCoElixir.CoElixirWorkerSpawner do
   @spec run(node, node, keyword) :: :ok | :error | {:error, non_neg_integer}
   def run(node_from, worker_node, options) do
     code = Keyword.fetch!(options, :code)
-    deps = Keyword.fetch!(options, :deps) ++ [{:spawn_co_elixir, path: "."}]
+    deps = Keyword.fetch!(options, :deps) ++ [{:spawn_co_elixir, "~> 0.3"}]
 
     name_or_sname =
       if "#{worker_node}" =~ "." do
