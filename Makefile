@@ -5,7 +5,8 @@ SUBDIRS :=	\
 	utilities/http_downloader \
 	backends/pelemay_backend \
 	backends/logging_backend \
-	benchmarks/onnx_to_axon_bench
+	benchmarks/onnx_to_axon_bench \
+	benchmarks/distributed_computing_bench
 
 all:	setup
 	@for _dir in ${SUBDIRS}; do \
