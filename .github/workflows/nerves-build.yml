@@ -24,9 +24,9 @@ jobs:
       runs-on: ubuntu-20.04
       env:
         MIX_ENV: prod
-        NERVES_LIVEBOOK_VER: "v0.9.1"
-        OTP_VERSION: "25.2.3"
-        ELIXIR_VERSION: "1.14.5"
+        NERVES_LIVEBOOK_VER: "v0.10.1"
+        OTP_VERSION: "26.0.2"
+        ELIXIR_VERSION: "1.15.4"
 
       strategy:
         fail-fast: false
