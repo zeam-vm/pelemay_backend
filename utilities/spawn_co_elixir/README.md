@@ -18,6 +18,14 @@ end
 
 Documentation can be found at <https://hexdocs.pm/spawn_co_elixir>.
 
+## Procedure when publishing
+
+1. Publish NodeActivator before publishing SpawnCoElixir;
+2. Modify `deps` in `mix.exs` to use `node_activator` of the latest hex package instead of relative path;
+3. Publish SpawnCoElixir;
+4. Modify `deps` in `run` in `lib/spawn_co_elixir/co_elixir_worker_spawner.ex` to use `spawn_co_elixir` of the latest hex package instead of relative path;
+5. Republish SpawnCoElixir. 
+
 ## License
 
 Copyright (c) 2023 University of Kitakyushu
