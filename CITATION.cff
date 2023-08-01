@@ -14,4 +14,6 @@ authors:
     email: zacky@kitakyu-u.ac.jp
     affiliation: University of Kitakyushu
     orcid: 'https://orcid.org/0009-0008-3972-4141'
+  - given-names: Masayoshi
+    family-names: Nishiguchi
 repository-code: 'https://github.com/zeam-vm/pelemay_backend'
