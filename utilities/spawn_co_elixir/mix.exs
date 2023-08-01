@@ -1,7 +1,7 @@
 defmodule SpawnCoElixir.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.0"
   @source_url "https://github.com/zeam-vm/pelemay_backend"
 
   def project do
@@ -32,7 +32,7 @@ defmodule SpawnCoElixir.MixProject do
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
-      {:node_activator, path: "../node_activator"}
+      {:node_activator, "~> 0.2"}
     ]
   end
 
@@ -50,7 +50,8 @@ defmodule SpawnCoElixir.MixProject do
       source_url_pattern:
         "#{@source_url}/blob/v#{@version}/utilities/spawn_co_elixir/%{path}#L%{line}",
       extras: [
-        "README.md"
+        "README.md",
+        "CHANGELOG.md"
       ]
     ]
   end
