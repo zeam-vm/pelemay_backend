@@ -14,7 +14,14 @@ defmodule SpawnCoElixir.MixProject do
       docs: docs(),
       name: "SpawnCoElixir",
       description: "SpawnCoElixir spawns cooperative Elixir nodes that are supervised.",
-      package: package()
+      package: package(),
+      preferred_cli_env: %{
+        credo: :test,
+        dialyzer: :test,
+        docs: :docs,
+        "hex.publish": :docs,
+        "hex.build": :docs
+      }
     ]
   end
 
@@ -29,9 +36,9 @@ defmodule SpawnCoElixir.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.3", only: :test, runtime: false},
+      {:credo, "~> 1.7", only: :test, runtime: false},
+      {:ex_doc, "~> 0.29", only: :docs, runtime: false},
       {:node_activator, "~> 0.2"}
     ]
   end
