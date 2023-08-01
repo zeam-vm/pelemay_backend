@@ -1,0 +1,48 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# CI 
+
+name: Elixir CI (DistributedBatchProcessingWithAxonBench)
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [ "main", "develop" ]
+    paths:
+      - 'benchmarks/distributed_batch_processing_with_axon_bench/**'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_distributed_batch_processing_with_axon_bench.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
+      - '!*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!publish.exs'
+  push:
+    branches: [ "main", "develop" ]    
+    paths:
+      - 'benchmarks/distributed_batch_processing_with_axon_bench/**'
+      - '!.github/workflows/*'
+      - '.github/workflows/ci_distributed_batch_processing_with_axon_bench.yml'
+      - '.github/workflows/reusable_elixir_ci.yml'
+      - '!**/*.md'
+      - '!**/LICENSE*'
+      - '!*.md'
+      - '!*.cff'
+      - '!LICENSE*'
+      - '!publish.exs'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  elixir_ci_onnx_to_axon_bench:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    with:
+      working-directory: benchmarks/distributed_batch_processing_with_axon_bench
