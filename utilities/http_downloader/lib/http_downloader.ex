@@ -1,6 +1,7 @@
-defmodule OnnxToAxonBench.Utils.HTTP do
-  @moduledoc false
-
+defmodule HttpDownloader do
+  @moduledoc """
+  Documentation for `HttpDownloader`.
+  """
   require Logger
 
   @type url :: URI.t() | String.t()
@@ -16,6 +17,35 @@ defmodule OnnxToAxonBench.Utils.HTTP do
   @spec download!(url(), keyword()) :: binary() | term()
   def download!(source_url, req_options \\ []) do
     Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options).body
+  end
+
+  @spec basename_from_uri(url() | struct()) :: String.t()
+  def basename_from_uri(url) when is_binary(url) do
+    Path.basename(url)
+  end
+
+  def basename_from_uri(url) when is_map_key(url, :path) do
+    URI.parse(url) |> Map.get(:path) |> Path.basename()
+  end
+
+  @spec download_files([url()], String.t()) :: [String.t()]
+  def download_files(files, dst_path) do
+    Enum.map(files, fn url ->
+      basename = basename_from_uri(url)
+
+      dst_path = Path.join(dst_path, basename)
+
+      dst_path
+      |> File.exists?()
+      |> case do
+        true ->
+          Logger.info("File #{basename} has already been downloaded.")
+
+        false ->
+          Logger.info("File #{basename} will be downloaded...")
+          download!(url, output: dst_path, max_redirects: 5, redirect_log_level: false)
+      end
+    end)
   end
 
   defp finch_request(req_request, finch_request, finch_name, finch_options) do
@@ -58,34 +88,5 @@ defmodule OnnxToAxonBench.Utils.HTTP do
     response
     |> Map.update!(:body, &(&1 <> data))
     |> Map.update!(:private, &%{&1 | downloaded_size: new_downloaded_size})
-  end
-
-  @spec basename_from_uri(url() | struct()) :: String.t()
-  def basename_from_uri(url) when is_binary(url) do
-    Path.basename(url)
-  end
-
-  def basename_from_uri(url) when is_map_key(url, :path) do
-    URI.parse(url) |> Map.get(:path) |> Path.basename()
-  end
-
-  @spec download_files([url()], String.t()) :: [String.t()]
-  def download_files(files, dst_path) do
-    Enum.map(files, fn url ->
-      basename = basename_from_uri(url)
-
-      dst_path = Path.join(dst_path, basename)
-
-      dst_path
-      |> File.exists?()
-      |> case do
-        true ->
-          Logger.info("File #{basename} has already been downloaded.")
-
-        false ->
-          Logger.info("File #{basename} will be downloaded...")
-          download!(url, output: dst_path, max_redirects: 5, redirect_log_level: false)
-      end
-    end)
   end
 end

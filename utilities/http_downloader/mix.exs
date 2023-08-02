@@ -1,13 +1,11 @@
-defmodule OnnxToAxonBench.MixProject do
+defmodule HttpDownloader.MixProject do
   use Mix.Project
 
   @version "0.1.0"
-  @source_url "https://github.com/zeam-vm/pelemay_backend"
-  @homepage_url "https://zeam-vm.github.io/pelemay_backend"
 
   def project do
     [
-      app: :onnx_to_axon_bench,
+      app: :http_downloader,
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -18,16 +16,7 @@ defmodule OnnxToAxonBench.MixProject do
         docs: :docs,
         "hex.publish": :docs,
         "hex.build": :docs
-      },
-
-      # Docs
-      name: "OnnxToAxonBench",
-      source_url: @source_url,
-      homepage_url: @homepage_url,
-      docs: [
-        main: "OnnxToAxonBench",
-        extras: ["README.md"]
-      ]
+      }
     ]
   end
 
@@ -44,12 +33,8 @@ defmodule OnnxToAxonBench.MixProject do
       {:dialyxir, "~> 1.3", only: :test, runtime: false},
       {:credo, "~> 1.7", only: :test, runtime: false},
       {:ex_doc, "~> 0.29", only: :docs, runtime: false},
-      {:http_downloader, path: "../../utilities/http_downloader"},
-      {:nx, "~> 0.5"},
-      {:axon, "~> 0.5"},
-      {:axon_onnx, "~> 0.4"},
-      {:benchee, "~> 1.1"},
-      {:flow, "~> 1.2"}
+      {:req, "~> 0.3.8"},
+      {:progress_bar, "~> 2.0"}
     ]
   end
 end

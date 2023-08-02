@@ -2,6 +2,7 @@ SUBDIRS :=	\
 	utilities/backend_decorator \
 	utilities/node_activator \
 	utilities/spawn_co_elixir \
+	utilities/http_downloader \
 	backends/pelemay_backend \
 	backends/logging_backend \
 	benchmarks/onnx_to_axon_bench
