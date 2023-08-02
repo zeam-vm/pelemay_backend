@@ -12,6 +12,7 @@ on:
     paths:
       - 'utilities/node_activator/**'
       - '!utilities/spawn_co_elixir/**'
+      - '!benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_node_activator.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
@@ -26,6 +27,7 @@ on:
     paths:
       - 'utilities/node_activator/**'
       - '!utilities/spawn_co_elixir/**'
+      - '!benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_node_activator.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
@@ -53,3 +55,9 @@ jobs:
     needs: elixir_ci_node_activator
     with:
       working-directory: utilities/spawn_co_elixir
+  elixir_ci_distributed_computing_bench:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    needs: elixir_ci_spawn_co_elixir
+    with:
+      working-directory: benchmarks/distributed_computing_bench
+    
