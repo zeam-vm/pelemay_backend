@@ -1,0 +1,126 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# CI 
+
+name: Reusable Elixir CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+      os:
+        required: true
+        type: string
+      otp-version:
+        required: true
+        type: string
+      elixir-version:
+        required: true
+        type: string
+      
+jobs:
+  elixir_ci:
+
+    name: Build and test on ${{ inputs.os }}, ${{ inputs.elixir-version }}, ${{ inputs.otp-version }}, ${{ inputs.working-directory }}, 
+    runs-on: ${{ inputs.os }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
+    - name: Set up OTP MAJOR and MINOR VERSION
+      run: |
+        echo "OTP_MAJOR_VERSION=$(echo ${{ inputs.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
+        echo "OTP_MINOR_VERSION=$(echo ${{ inputs.otp-version }} | sed -e 's/^\([^\.]*\)\.\([^\.]*\).*$/\2/')" >> $GITHUB_ENV
+    - name: Set versions Elixir and OTP
+      run: |
+        echo "erlang ${{ inputs.otp-version }}" >> ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ inputs.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
+    - name: Set up Elixir
+      continue-on-error: true
+      id: set_up_elixir_by_setup-beam
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{ inputs.elixir-version }}
+        otp-version: ${{ inputs.otp-version }}
+    - name: Install asdf
+      continue-on-error: true
+      if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
+      id: install_asdf
+      uses: asdf-vm/actions/setup@v2
+    - name: Restore .asdf
+      if: ${{ steps.install_asdf.outcome == 'success' }}
+      id: asdf-cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.asdf/
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-${{ hashFiles('**/.tool-versions') }}
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-
+    - name: Set up Elixir by asdf (Ubuntu)
+      if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
+      uses: asdf-vm/actions/install@v2.1.0
+      with:
+        before_install: |
+          sudo apt -y install build-essential automake autoconf git squashfs-tools ssh-askpass pkg-config curl libmnl-dev
+    - name: Set up Elixir by asdf (macOS)
+      if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
+      uses: asdf-vm/actions/install@v2.1.0
+      with:
+        before_install: |
+          brew install wxwidgets openjdk fop openssl@3
+          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+          echo 'setup CC and LDFLAGS'
+          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+            else
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+            fi
+          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+          else
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+          fi
+          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/${{ inputs.working-directory }}/deps
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ inputs.elixir-version }}-OTP-${{ inputs.otp-version }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ inputs.elixir-version }}-OTP-${{ inputs.otp-version }}-
+    - name: Set up hex and rebar (macOS)
+      if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
+      run: | 
+        mix local.hex --force
+        mix local.rebar --force
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Compile and check warning
+      run: mix compile --warnings-as-errors
+    - name: Check formatting (Ubuntu, macOS)
+      if: ${{ !startsWith(runner.os, 'windows') && startsWith(inputs.elixir-version, '1.15') && startsWith(inputs.otp-version, '26') }}
+      run: mix format --check-formatted
+    - name: Check by credo (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      run: mix credo
+    - name: Restore dialyzer cache (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      uses: actions/cache@v3
+      with:
+        path: |
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ inputs.otp-version }}_elixir-${{ inputs.elixir-version }}_deps-dev.plt*
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ inputs.otp-version }}_elixir-${{ inputs.elixir-version }}_deps-dev.plt*
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ inputs.elixir-version }}-OTP-${{ inputs.otp-version }}-repo-${{ inputs.working-directory }}-plt
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ inputs.elixir-version }}-OTP-${{ inputs.otp-version }}-repo-${{ inputs.working-directory }}-plt
+    - name: Check by dialyzer (Ubuntu)
+      if: ${{ startsWith(runner.os, 'linux') }}
+      run: mix dialyzer
+    - name: Run tests
+      run: mix test
