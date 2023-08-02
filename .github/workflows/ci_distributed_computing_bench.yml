@@ -42,7 +42,7 @@ permissions:
   contents: read
 
 jobs:
-  elixir_ci_onnx_to_axon_bench:
+  elixir_ci_distributed_computing_bench:
     uses: ./.github/workflows/reusable_elixir_ci.yml
     with:
       working-directory: benchmarks/distributed_computing_bench
