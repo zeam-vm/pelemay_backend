@@ -15,7 +15,7 @@ on:
 jobs:
   elixir_ci:
 
-    name: Build and test on ${{ inputs.working-directory }}, ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    name: Build and test on ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}, ${{ inputs.working-directory }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
