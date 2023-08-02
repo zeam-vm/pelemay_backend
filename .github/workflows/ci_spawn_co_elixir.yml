@@ -11,6 +11,7 @@ on:
     branches: [ "main", "develop" ]
     paths:
       - 'utilities/spawn_co_elixir/**'
+      - '!benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
@@ -24,6 +25,7 @@ on:
     branches: [ "main", "develop" ]    
     paths:
       - 'utilities/spawn_co_elixir/**'
+      - '!benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
       - '.github/workflows/ci_spawn_co_elixir.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
@@ -46,3 +48,9 @@ jobs:
     uses: ./.github/workflows/reusable_elixir_ci.yml
     with:
       working-directory: utilities/spawn_co_elixir
+  elixir_ci_distributed_computing_bench:
+    uses: ./.github/workflows/reusable_elixir_ci.yml
+    needs: elixir_ci_spawn_co_elixir
+    with:
+      working-directory: benchmarks/distributed_computing_bench
+    

@@ -3,18 +3,16 @@
 # separate terms of service, privacy policy, and support
 # CI 
 
-name: Elixir CI (HttpDownloader)
+name: Elixir CI (DistributedComputingBench)
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [ "main", "develop" ]
     paths:
-      - 'utilities/http_downloader/**'
-      - '!benchmarks/onnx_to_axon_bench/**'
-      - '!benchmarks/distributed_computing_bench/**'
+      - 'benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
-      - '.github/workflows/ci_http_downloader.yml'
+      - '.github/workflows/ci_distributed_computing_bench.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
@@ -25,11 +23,9 @@ on:
   push:
     branches: [ "main", "develop" ]    
     paths:
-      - 'utilities/http_downloader/**'
-      - '!benchmarks/onnx_to_axon_bench/**'
-      - '!benchmarks/distributed_computing_bench/**'
+      - 'benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
-      - '.github/workflows/ci_http_downloader.yml'
+      - '.github/workflows/ci_distributed_computing_bench.yml'
       - '.github/workflows/reusable_elixir_ci.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
@@ -46,18 +42,7 @@ permissions:
   contents: read
 
 jobs:
-  elixir_ci_http_downloader:
-    uses: ./.github/workflows/reusable_elixir_ci.yml
-    with:
-      working-directory: utilities/http_downloader
-  elixir_ci_onnx_to_axon_bench:
-    uses: ./.github/workflows/reusable_elixir_ci.yml
-    needs: elixir_ci_http_downloader
-    with:
-      working-directory: benchmarks/onnx_to_axon_bench
   elixir_ci_distributed_computing_bench:
     uses: ./.github/workflows/reusable_elixir_ci.yml
-    needs: elixir_ci_http_downloader
     with:
       working-directory: benchmarks/distributed_computing_bench
-        
