@@ -46,93 +46,98 @@ permissions:
   contents: read
 
 jobs:
-  elixir_ci_node_activator:
+  elixir_ci_node_activator_ubuntu:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-13, macos-12]
-        # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
+        os: [ubuntu-20.04, ubuntu-22.04]
         otp-version: ['24.3.4.13', '25.3.2.3', '26.0.2']
         elixir-version: ['1.14.5', '1.15.4']
         exclude:
           - otp-version: '24.3.4.13'
             elixir-version: '1.15.4'
-          - os: windows-2022
-            otp-version: '25.3.2.3'
-          - os: windows-2022
-            otp-version: '26.0.2'
-          - os: macos-13
-            otp-version: '24.3.4.13'
-          - os: macos-12
-            otp-version: '24.3.4.13'
-          - os: macos-13
-            otp-version: '26.0.2'
-          - os: macos-12
-            otp-version: '26.0.2'
     uses: ./.github/workflows/reusable_ci.yml
     with:
       working-directory: utilities/node_activator
       os: ${{ matrix.os }}
       otp-version: ${{ matrix.otp-version }}
       elixir-version: ${{ matrix.elixir-version }}
-  elixir_ci_spawn_co_elixir:
+  elixir_ci_spawn_co_elixir_ubuntu:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-13, macos-12]
-        # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
+        os: [ubuntu-20.04, ubuntu-22.04]
         otp-version: ['24.3.4.13', '25.3.2.3', '26.0.2']
         elixir-version: ['1.14.5', '1.15.4']
         exclude:
           - otp-version: '24.3.4.13'
             elixir-version: '1.15.4'
-          - os: windows-2022
-            otp-version: '25.3.2.3'
-          - os: windows-2022
-            otp-version: '26.0.2'
-          - os: macos-13
-            otp-version: '24.3.4.13'
-          - os: macos-12
-            otp-version: '24.3.4.13'
-          - os: macos-13
-            otp-version: '26.0.2'
-          - os: macos-12
-            otp-version: '26.0.2'
     uses: ./.github/workflows/reusable_ci.yml
-    needs: elixir_ci_node_activator
+    needs: elixir_ci_node_activator_ubuntu
     with:
       working-directory: utilities/spawn_co_elixir
       os: ${{ matrix.os }}
       otp-version: ${{ matrix.otp-version }}
       elixir-version: ${{ matrix.elixir-version }}
-  elixir_ci_distributed_computing_bench:
+  elixir_ci_distributed_computing_bench_ubuntu:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-13, macos-12]
-        # os: [ubuntu-20.04, ubuntu-22.04, windows-2022, macos-13, macos-12]
+        os: [ubuntu-20.04, ubuntu-22.04]
         otp-version: ['24.3.4.13', '25.3.2.3', '26.0.2']
         elixir-version: ['1.14.5', '1.15.4']
         exclude:
           - otp-version: '24.3.4.13'
             elixir-version: '1.15.4'
-          - os: windows-2022
-            otp-version: '25.3.2.3'
-          - os: windows-2022
-            otp-version: '26.0.2'
-          - os: macos-13
-            otp-version: '24.3.4.13'
-          - os: macos-12
-            otp-version: '24.3.4.13'
-          - os: macos-13
-            otp-version: '26.0.2'
-          - os: macos-12
-            otp-version: '26.0.2'
     uses: ./.github/workflows/reusable_ci.yml
-    needs: elixir_ci_spawn_co_elixir
+    needs: elixir_ci_spawn_co_elixir_ubuntu
     with:
       working-directory: benchmarks/distributed_computing_bench
       os: ${{ matrix.os }}
       otp-version: ${{ matrix.otp-version }}
       elixir-version: ${{ matrix.elixir-version }}
-    
+  elixir_ci_node_activator_other:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [macos-13, macos-12]
+        # os: [windows-2022, macos-13, macos-12]
+        otp-version: ['24.3.4.13']
+        elixir-version: ['1.14.5']
+    uses: ./.github/workflows/reusable_ci.yml
+    needs: elixir_ci_node_activator_ubuntu
+    with:
+      working-directory: utilities/node_activator
+      os: ${{ matrix.os }}
+      otp-version: ${{ matrix.otp-version }}
+      elixir-version: ${{ matrix.elixir-version }}
+  elixir_ci_spawn_co_elixir_other:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [macos-13, macos-12]
+        # os: [windows-2022, macos-13, macos-12]
+        otp-version: ['24.3.4.13']
+        elixir-version: ['1.14.5']
+    uses: ./.github/workflows/reusable_ci.yml
+    needs: elixir_ci_spawn_co_elixir_ubuntu
+    with:
+      working-directory: utilities/spawn_co_elixir
+      os: ${{ matrix.os }}
+      otp-version: ${{ matrix.otp-version }}
+      elixir-version: ${{ matrix.elixir-version }}
+  elixir_ci_distributed_computing_bench_other:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [macos-13, macos-12]
+        # os: [windows-2022, macos-13, macos-12]
+        otp-version: ['24.3.4.13']
+        elixir-version: ['1.14.5']
+    uses: ./.github/workflows/reusable_ci.yml
+    needs: elixir_ci_distributed_computing_bench_ubuntu
+    with:
+      working-directory: benchmarks/distributed_computing_bench
+      os: ${{ matrix.os }}
+      otp-version: ${{ matrix.otp-version }}
+      elixir-version: ${{ matrix.elixir-version }}
