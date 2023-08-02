@@ -4,7 +4,6 @@ defmodule OnnxToAxonBench do
              |> Enum.fetch!(1)
 
   require Logger
-  alias OnnxToAxonBench.Utils.HTTP
 
   @onnx_urls [
     "https://huggingface.co/ScottMueller/Cats_v_Dogs.ONNX/resolve/main/cats_v_dogs.onnx",
@@ -25,7 +24,7 @@ defmodule OnnxToAxonBench do
     onnx_urls = options[:onnx_urls] || @onnx_urls
 
     File.mkdir_p!(onnx_models_dir())
-    HTTP.download_files(onnx_urls, onnx_models_dir())
+    HttpDownloader.download_files(onnx_urls, onnx_models_dir())
     inputs = onnx_urls_to_inputs(onnx_urls)
 
     Benchee.run(
