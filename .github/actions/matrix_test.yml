@@ -1,0 +1,13 @@
+include:
+  - otp-version: '24.3.4.13'
+    elixir-version: '1.14.5'
+  - otp-version: '24.3.4.13'
+    elixir-version: '1.15.4'
+  - otp-version: '25.3.2.3'
+    elixir-version: '1.14.5'
+  - otp-version: '25.3.2.3'
+    elixir-version: '1.15.4'
+  - otp-version: '26.0.2'
+    elixir-version: '1.14.5'
+  - otp-version: '26.0.2'
+    elixir-version: '1.15.4'
