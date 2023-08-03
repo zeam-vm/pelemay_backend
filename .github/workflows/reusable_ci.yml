@@ -11,6 +11,9 @@ on:
       working-directory:
         required: true
         type: string
+      os:
+        required: true
+        type: string
       matrix:
         required: true
         type: string
@@ -21,8 +24,8 @@ on:
 jobs:
   elixir_ci:
 
-    name: Build and test on ${{ matrix.os }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}, ${{ inputs.working-directory }}, 
-    runs-on: ${{ matrix.os }}
+    name: On ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    runs-on: ${{ inputs.os }}
     strategy:
       matrix: ${{ fromJSON(inputs.matrix) }}
     defaults:
