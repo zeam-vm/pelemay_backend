@@ -16,7 +16,7 @@ on:
       - '!.github/workflows/*'
       - '.github/workflows/ci_node_activator.yml'
       - '.github/workflows/reusable_ci.yml'
-      - '.github/workflows/matrix_check.yml'
+      - '.github/actions/matrix_check.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -32,7 +32,7 @@ on:
       - '!.github/workflows/*'
       - '.github/workflows/ci_node_activator.yml'
       - '.github/workflows/reusable_ci.yml'
-      - '.github/workflows/matrix_check.yml'
+      - '.github/actions/matrix_check.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v3
       - id: set-matrix-for-check
         run: |
-          json=$(cat ${{ github.workspace }}/.github/workflows/matrix_check.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_check.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
           echo "matrix=${json}" >> $GITHUB_OUTPUT
   check:
     name: Check NodeActivator
