@@ -7,6 +7,12 @@ defmodule HttpDownloader do
 
   @type url :: URI.t() | String.t()
 
+  @doc """
+  Downloads a remote file with progress bar.
+
+  Currently built on top of the req package.
+  For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
+  """
   @spec download(url(), keyword()) :: {:ok, binary() | term()} | {:error, Exception.t()}
   def download(source_url, req_options \\ []) do
     case Req.get(source_url, [finch_request: &finch_request/4] ++ req_options) do
@@ -15,11 +21,20 @@ defmodule HttpDownloader do
     end
   end
 
+  @doc """
+  Downloads a remote file with progress bar.
+
+  Currently built on top of the req package.
+  For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
+  """
   @spec download!(url(), keyword()) :: binary() | term()
   def download!(source_url, req_options \\ []) do
     Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options).body
   end
 
+  @doc """
+  Returns the last component of the path.
+  """
   @spec basename_from_uri(url() | struct()) :: String.t()
   def basename_from_uri(url) when is_binary(url) do
     Path.basename(url)
@@ -29,6 +44,10 @@ defmodule HttpDownloader do
     URI.parse(url) |> Map.get(:path) |> Path.basename()
   end
 
+  @doc """
+  Downloads multiple remote files with progress bar and save them to provided
+  destination.
+  """
   @spec download_files([url()], String.t()) :: [String.t()]
   def download_files(files, dst_path) do
     Enum.map(files, fn url ->
