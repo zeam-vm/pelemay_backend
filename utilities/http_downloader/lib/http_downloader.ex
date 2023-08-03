@@ -1,7 +1,8 @@
 defmodule HttpDownloader do
-  @moduledoc """
-  Documentation for `HttpDownloader`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
+
   require Logger
 
   @type url :: URI.t() | String.t()
