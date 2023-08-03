@@ -1,0 +1,4 @@
+include:
+  - os: ubuntu-22.04
+    otp-version: "26.0.2"
+    elixir-version: "1.15.4"
