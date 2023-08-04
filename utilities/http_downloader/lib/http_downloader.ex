@@ -13,10 +13,11 @@ defmodule HttpDownloader do
   Currently built on top of the req package.
   For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
   """
-  @spec download(url(), keyword()) :: {:ok, binary() | term()} | {:error, Exception.t()}
+  @spec download(url(), keyword()) :: {:ok, binary()} | {:error, any()}
   def download(source_url, req_options \\ []) do
     case Req.get(source_url, [finch_request: &finch_request/4] ++ req_options) do
-      {:ok, response} -> {:ok, response.body}
+      {:ok, response} when response.status == 200 -> {:ok, response.body}
+      {:ok, response} -> {:error, response.body}
       {:error, reason} -> {:error, reason}
     end
   end
@@ -27,9 +28,12 @@ defmodule HttpDownloader do
   Currently built on top of the req package.
   For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
   """
-  @spec download!(url(), keyword()) :: binary() | term()
+  @spec download!(url(), keyword()) :: binary()
   def download!(source_url, req_options \\ []) do
-    Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options).body
+    case Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options) do
+      response when response.status == 200 -> response.body
+      response -> raise(response.body)
+    end
   end
 
   @doc """
