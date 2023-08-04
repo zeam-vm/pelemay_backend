@@ -31,4 +31,15 @@ defmodule HttpDownloaderTest do
       end
     end
   end
+
+  describe "basename_from_uri/1" do
+    test "returns basename when string url is provided" do
+      assert "3.dat" = HttpDownloader.basename_from_uri("http://example.com/1/2/3.dat")
+    end
+
+    test "returns basename when struct url is provided" do
+      uri = URI.new!("http://example.com/1/2/3.dat")
+      assert "3.dat" = HttpDownloader.basename_from_uri(uri)
+    end
+  end
 end
