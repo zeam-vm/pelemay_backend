@@ -1,24 +1,44 @@
 defmodule HttpDownloader do
-  @moduledoc """
-  Documentation for `HttpDownloader`.
-  """
+  @moduledoc File.read!("README.md")
+             |> String.split("<!-- MODULEDOC -->")
+             |> Enum.fetch!(1)
+
   require Logger
 
   @type url :: URI.t() | String.t()
 
-  @spec download(url(), keyword()) :: {:ok, binary() | term()} | {:error, Exception.t()}
+  @doc """
+  Downloads a remote file with progress bar.
+
+  Currently built on top of the req package.
+  For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
+  """
+  @spec download(url(), keyword()) :: {:ok, binary()} | {:error, any()}
   def download(source_url, req_options \\ []) do
     case Req.get(source_url, [finch_request: &finch_request/4] ++ req_options) do
-      {:ok, response} -> {:ok, response.body}
+      {:ok, response} when response.status == 200 -> {:ok, response.body}
+      {:ok, response} -> {:error, response.body}
       {:error, reason} -> {:error, reason}
     end
   end
 
-  @spec download!(url(), keyword()) :: binary() | term()
+  @doc """
+  Downloads a remote file with progress bar.
+
+  Currently built on top of the req package.
+  For a list of available options, See https://hexdocs.pm/req/Req.html#new/1.
+  """
+  @spec download!(url(), keyword()) :: binary()
   def download!(source_url, req_options \\ []) do
-    Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options).body
+    case Req.get!(source_url, [finch_request: &finch_request/4] ++ req_options) do
+      response when response.status == 200 -> response.body
+      response -> raise(response.body)
+    end
   end
 
+  @doc """
+  Returns the last component of the path.
+  """
   @spec basename_from_uri(url() | struct()) :: String.t()
   def basename_from_uri(url) when is_binary(url) do
     Path.basename(url)
@@ -28,6 +48,10 @@ defmodule HttpDownloader do
     URI.parse(url) |> Map.get(:path) |> Path.basename()
   end
 
+  @doc """
+  Downloads multiple remote files with progress bar and save them to provided
+  destination.
+  """
   @spec download_files([url()], String.t()) :: [String.t()]
   def download_files(files, dst_path) do
     Enum.map(files, fn url ->
