@@ -17,6 +17,8 @@ on:
       - '.github/workflows/reusable_ci.yml'
       - '.github/actions/matrix_check.yml'
       - '.github/actions/matrix_test.yml'
+      - '.github/actions/matrix_reduced_test_1.yml'
+      - '.github/actions/matrix_reduced_test_2.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -33,6 +35,8 @@ on:
       - '.github/workflows/reusable_ci.yml'
       - '.github/actions/matrix_check.yml'
       - '.github/actions/matrix_test.yml'
+      - '.github/actions/matrix_reduced_test_1.yml'
+      - '.github/actions/matrix_reduced_test_2.yml'
       - '!**/*.md'
       - '!**/LICENSE*'
       - '!*.md'
@@ -54,6 +58,8 @@ jobs:
     outputs:
       matrix-for-check: ${{ steps.set-matrix-for-check.outputs.matrix }}
       matrix-test: ${{ steps.set-matrix-test.outputs.matrix }}
+      matrix-reduced-test-1: ${{ steps.set-matrix-reduced-test-1.outputs.matrix }}
+      matrix-reduced-test-2: ${{ steps.set-matrix-reduced-test-2.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
       - id: set-matrix-for-check
@@ -63,6 +69,14 @@ jobs:
       - id: set-matrix-test
         run: |
           json=$(cat ${{ github.workspace }}/.github/actions/matrix_test.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          echo "matrix=${json}" >> $GITHUB_OUTPUT
+      - id: set-matrix-reduced-test-1
+        run: |
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_1.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          echo "matrix=${json}" >> $GITHUB_OUTPUT
+      - id: set-matrix-reduced-test-2
+        run: |
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_2.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
           echo "matrix=${json}" >> $GITHUB_OUTPUT
   check_spawn_co_elixir:
     name: Check SpawnCoElixir
@@ -98,7 +112,7 @@ jobs:
     with:
       working-directory: utilities/spawn_co_elixir
       os: macos-13
-      matrix: ${{ needs.constants.outputs.matrix-test }}
+      matrix: ${{ needs.constants.outputs.matrix-reduced-test-2 }}
       perform-check: false
   test_macos_12_spawn_co_elixir:
     name: Test SpawnCoElixir (macOS 12)
@@ -107,7 +121,7 @@ jobs:
     with:
       working-directory: utilities/spawn_co_elixir
       os: macos-12
-      matrix: ${{ needs.constants.outputs.matrix-test }}
+      matrix: ${{ needs.constants.outputs.matrix-reduced-test-1 }}
       perform-check: false
   test_ubuntu_22_distribued_computing_bench:
     name: Test DistributedComputingBench (Ubuntu 22.04)
@@ -134,7 +148,7 @@ jobs:
     with:
       working-directory: benchmarks/distributed_computing_bench
       os: macos-13
-      matrix: ${{ needs.constants.outputs.matrix-test }}
+      matrix: ${{ needs.constants.outputs.matrix-reduced-test-1 }}
       perform-check: false
   test_macos_12_distribued_computing_bench:
     name: Test DistributedComputingBench (macOS 12)
@@ -143,5 +157,5 @@ jobs:
     with:
       working-directory: benchmarks/distributed_computing_bench
       os: macos-12
-      matrix: ${{ needs.constants.outputs.matrix-test }}
+      matrix: ${{ needs.constants.outputs.matrix-reduced-test-2 }}
       perform-check: false
