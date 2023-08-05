@@ -33,7 +33,7 @@ defmodule DistributedComputingBench.MixProject do
       {:dialyxir, "~> 1.3", only: :test, runtime: false},
       {:credo, "~> 1.7", only: :test, runtime: false},
       {:ex_doc, "~> 0.29", only: :docs, runtime: false},
-      {:http_downloader, path: "../../utilities/http_downloader"},
+      {:http_downloader, "~> 0.1"},
       {:spawn_co_elixir, "~> 0.3"},
       {:nx, "~> 0.5"},
       {:axon, "~> 0.5"},

@@ -2,6 +2,7 @@ defmodule HttpDownloader.MixProject do
   use Mix.Project
 
   @version "0.1.0"
+  @source_url "https://github.com/zeam-vm/pelemay_backend"
 
   def project do
     [
@@ -10,13 +11,17 @@ defmodule HttpDownloader.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: docs(),
       preferred_cli_env: %{
         credo: :test,
         dialyzer: :test,
         docs: :docs,
         "hex.publish": :docs,
         "hex.build": :docs
-      }
+      },
+      name: "HttpDownloader",
+      description: "Downloads remote file with progress bar.",
+      package: package()
     ]
   end
 
@@ -35,6 +40,25 @@ defmodule HttpDownloader.MixProject do
       {:ex_doc, "~> 0.29", only: :docs, runtime: false},
       {:req, "~> 0.3.8"},
       {:progress_bar, "~> 2.0"}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "HttpDownloader",
+      source_url_pattern:
+        "#{@source_url}/blob/v#{@version}/utilities/http_downloaderr/%{path}#L%{line}",
+      extras: [
+        "README.md"
+      ]
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Susumu Yamazaki", "Masatoshi Nishiguchi"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
     ]
   end
 end

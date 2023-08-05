@@ -11,8 +11,7 @@ Just add `http_downloader` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:http_downloader, "~> 0.1.0",
-     github: "zeam-vm/pelemay_backend", sparse: "utilities/http_downloader"}
+    {:http_downloader, "~> 0.1.0"}
   ]
 end
 ```
@@ -22,8 +21,7 @@ In notebooks and scripts, use the following `Mix.install/2` call:
 ```elixir
 Mix.install(
   [
-    {:http_downloader, "~> 0.1.0",
-     github: "zeam-vm/pelemay_backend", sparse: "utilities/http_downloader"}
+    {:http_downloader, "~> 0.1.0"}
   ]
 )
 ```
