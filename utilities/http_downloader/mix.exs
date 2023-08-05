@@ -18,7 +18,10 @@ defmodule HttpDownloader.MixProject do
         docs: :docs,
         "hex.publish": :docs,
         "hex.build": :docs
-      }
+      },
+      name: "HttpDownloader",
+      description: "Downloads remote file with progress bar.",
+      package: package()
     ]
   end
 
@@ -48,6 +51,14 @@ defmodule HttpDownloader.MixProject do
       extras: [
         "README.md"
       ]
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Susumu Yamazaki", "Masatoshi Nishiguchi"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
     ]
   end
 end
