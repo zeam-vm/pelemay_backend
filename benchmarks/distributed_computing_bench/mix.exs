@@ -11,6 +11,7 @@ defmodule DistributedComputingBench.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       preferred_cli_env: %{
+        bumblebee_bench: :bumblebee_bench,
         credo: :test,
         dialyzer: :test,
         docs: :docs,
@@ -22,9 +23,17 @@ defmodule DistributedComputingBench.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    case Mix.env() do
+      :bumblebee_bench ->
+        [
+          extra_applications: [:logger, :exla]
+        ]
+
+      _ ->
+        [
+          extra_applications: [:logger]
+        ]
+    end
   end
 
   # Run "mix help deps" to learn about dependencies.
@@ -36,8 +45,8 @@ defmodule DistributedComputingBench.MixProject do
       {:http_downloader, "~> 0.1"},
       {:spawn_co_elixir, "~> 0.3"},
       {:nx, "~> 0.5"},
-      {:axon, "~> 0.5"},
-      {:axon_onnx, "~> 0.4"},
+      {:bumblebee, "~> 0.3", only: :bumblebee_bench},
+      {:exla, "~> 0.5", only: :bumblebee_bench},
       {:benchee, "~> 1.1"}
     ]
   end
