@@ -29,6 +29,11 @@ defmodule DistributedComputingBench.MixProject do
           extra_applications: [:logger, :exla]
         ]
 
+      :test ->
+        [
+          extra_applications: [:logger, :exla]
+        ]
+
       _ ->
         [
           extra_applications: [:logger]
@@ -45,8 +50,8 @@ defmodule DistributedComputingBench.MixProject do
       {:http_downloader, "~> 0.1"},
       {:spawn_co_elixir, "~> 0.3"},
       {:nx, "~> 0.5"},
-      {:bumblebee, "~> 0.3", only: :bumblebee_bench},
-      {:exla, "~> 0.5", only: :bumblebee_bench},
+      {:bumblebee, "~> 0.3", only: [:bumblebee_bench, :test]},
+      {:exla, "~> 0.5", only: [:bumblebee_bench, :test]},
       {:benchee, "~> 1.1"}
     ]
   end
