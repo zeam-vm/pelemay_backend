@@ -121,7 +121,6 @@ jobs:
           ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
           ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt*
         key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ inputs.working-directory }}-plt
-        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ inputs.working-directory }}-plt
     - name: Check by dialyzer (Ubuntu)
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
       run: mix dialyzer
