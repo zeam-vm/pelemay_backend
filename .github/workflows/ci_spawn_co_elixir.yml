@@ -64,19 +64,19 @@ jobs:
       - uses: actions/checkout@v3
       - id: set-matrix-for-check
         run: |
-          json=$(cat ${{ github.workspace }}/.github/actions/matrix_check.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_check.yml| ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
           echo "matrix=${json}" >> $GITHUB_OUTPUT
       - id: set-matrix-test
         run: |
-          json=$(cat ${{ github.workspace }}/.github/actions/matrix_test.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_test.yml | ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
           echo "matrix=${json}" >> $GITHUB_OUTPUT
       - id: set-matrix-reduced-test-1
         run: |
-          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_1.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_1.yml | ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
           echo "matrix=${json}" >> $GITHUB_OUTPUT
       - id: set-matrix-reduced-test-2
         run: |
-          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_2.yml | ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' | jq -c)
+          json=$(cat ${{ github.workspace }}/.github/actions/matrix_reduced_test_2.yml | ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
           echo "matrix=${json}" >> $GITHUB_OUTPUT
   check_spawn_co_elixir:
     name: Check SpawnCoElixir
