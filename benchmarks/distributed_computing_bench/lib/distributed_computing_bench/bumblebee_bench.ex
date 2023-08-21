@@ -6,18 +6,11 @@ defmodule DistributedComputingBench.BumblebeeBench do
   require Logger
 
   def run() do
-    System.cmd(
-      "mix",
-      [
-        "run",
-        "-r",
-        "lib/distributed_computing_bench/bumblebee_bench/runner.exs",
-        "-e",
-        "DistributedComputingBench.BumblebeeBench.Runner.run"
-      ],
-      env: [
-        {"MIX_ENV", "bumblebee_bench"}
-      ]
+    SpawnCoElixir.run(
+      code: File.read!("lib/distributed_computing_bench/bumblebee_bench/runner.exs"),
+      deps: [:spawn_co_elixir, :http_downloader, :nx, :exla, :bumble_bee, :benchee],
+      host_name: "bumblebee_bench",
+      co_elixir_name: "bumblebee_bench_worker"
     )
   end
 end
