@@ -49,7 +49,8 @@ defmodule HttpDownloader.MixProject do
       source_url_pattern:
         "#{@source_url}/blob/v#{@version}/utilities/http_downloaderr/%{path}#L%{line}",
       extras: [
-        "README.md"
+        "README.md",
+        "CHANGELOG.md"
       ]
     ]
   end
