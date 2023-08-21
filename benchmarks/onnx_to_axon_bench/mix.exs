@@ -45,8 +45,8 @@ defmodule OnnxToAxonBench.MixProject do
       {:credo, "~> 1.7", only: :test, runtime: false},
       {:ex_doc, "~> 0.29", only: :docs, runtime: false},
       {:http_downloader, "~> 0.1"},
-      {:nx, "~> 0.5"},
-      {:axon, "~> 0.5"},
+      {:nx, "~> 0.6"},
+      {:axon, "~> 0.6"},
       {:axon_onnx, "~> 0.4"},
       {:benchee, "~> 1.1"},
       {:flow, "~> 1.2"}
