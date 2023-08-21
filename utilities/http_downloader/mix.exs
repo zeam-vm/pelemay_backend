@@ -1,7 +1,7 @@
 defmodule HttpDownloader.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
   @source_url "https://github.com/zeam-vm/pelemay_backend"
 
   def project do
@@ -39,7 +39,7 @@ defmodule HttpDownloader.MixProject do
       {:credo, "~> 1.7", only: :test, runtime: false},
       {:ex_doc, "~> 0.29", only: :docs, runtime: false},
       {:req, "~> 0.3.8"},
-      {:progress_bar, "~> 2.0"}
+      {:progress_bar, "~> 3.0"}
     ]
   end
 
@@ -49,7 +49,8 @@ defmodule HttpDownloader.MixProject do
       source_url_pattern:
         "#{@source_url}/blob/v#{@version}/utilities/http_downloaderr/%{path}#L%{line}",
       extras: [
-        "README.md"
+        "README.md",
+        "CHANGELOG.md"
       ]
     ]
   end
