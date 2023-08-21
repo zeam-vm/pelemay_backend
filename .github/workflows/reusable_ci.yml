@@ -20,7 +20,10 @@ on:
       perform-check:
         required: true
         type: boolean
-      
+
+env:
+  XLA_HTTP_HEADERS: "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+        
 jobs:
   elixir_ci:
 
