@@ -1,8 +1,8 @@
-# Changelog for 0.2.0
+# Changelog for 0.3.0
 
 ## 1. Enhancements
 
-* Update ProgressBar to 3.0
+* Update Req to 0.4.1
 
 ## 2. Bug fixes
 
