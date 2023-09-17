@@ -7,9 +7,17 @@ version: 2
       - "zacky1972"
     shedule: 
       interval: "daily"
-      
+
   - package-ecosystem: "mix"
     directory: "/utilities/node_activator"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "zacky1972"
+    schedule:
+      interval: "daily"
+  
+  - package-ecosystem: "mix"
+    directory: "/utilities/spawn_co_elixir"
     open-pull-requests-limit: 1
     reviewers:
       - "zacky1972"
