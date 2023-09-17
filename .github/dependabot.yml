@@ -7,7 +7,7 @@ updates:
       - "zacky1972"
     schedule: 
       interval: "daily"
-
+      
   - package-ecosystem: "mix"
     directory: "/utilities/node_activator"
     open-pull-requests-limit: 1
