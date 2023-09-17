@@ -23,3 +23,19 @@ updates:
       - "zacky1972"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "mix"
+    directory: "/utilities/http_downloader"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "zacky1972"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "mix"
+    directory: "/benchmarks/onnx_to_axon_bench"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "zacky1972"
+    schedule:
+      interval: "daily"
