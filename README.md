@@ -41,17 +41,14 @@ Tested Platforms by CI:
 * Ubuntu 22.04 / 20.04
 * macOS 12 Monterey / 13 Ventura (x86_64)
 
-Nerves platforms tested only building by CI:
-
-* rpi4
-
 Other manually tested platforms:
 
 * macOS 13 Ventura (Apple Silicon)
 * groovEPIC
 
-Temporally not tested by CI:
+Temporally not tested by CI of Nerves:
 
+* rpi4
 * rpi3a, rpi3, rpi2, rpi0, rpi
 * bbb
 * osd32mp1
