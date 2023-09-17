@@ -1,0 +1,17 @@
+version: 2
+ updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "zacky1972"
+    shedule: 
+      interval: "daily"
+      
+  - package-ecosystem: "mix"
+    directory: "/utilities/node_activator"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "zacky1972"
+    schedule:
+      interval: "daily"
