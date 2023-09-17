@@ -61,7 +61,7 @@ jobs:
       matrix-reduced-test-1: ${{ steps.set-matrix-reduced-test-1.outputs.matrix }}
       matrix-reduced-test-2: ${{ steps.set-matrix-reduced-test-2.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: set-matrix-for-check
         run: |
           json=$(cat ${{ github.workspace }}/.github/actions/matrix_check.yml| ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
