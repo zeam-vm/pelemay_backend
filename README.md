@@ -38,11 +38,12 @@ Supported Erlang/OTP and Elixir versions:
 
 Tested Platforms by CI:
 
-* Ubuntu 22.04 / 20.04
-* macOS 12 Monterey / 13 Ventura (x86_64)
+* Ubuntu 22.04 and 20.04
+* macOS 13 Ventura and 12 Monterey (x86_64)
 
 Other manually tested platforms:
 
+* macOS 14 Sonoma (x86_64 and Apple Silicon)
 * macOS 13 Ventura (Apple Silicon)
 * groovEPIC
 
