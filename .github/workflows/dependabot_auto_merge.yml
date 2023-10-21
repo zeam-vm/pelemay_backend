@@ -25,6 +25,7 @@ jobs:
   constants:
     name: Constants
     runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
     outputs:
       matrix-for-dependabot: ${{ steps.set-matrix-for-dependabot.outputs.matrix }}
     steps:
