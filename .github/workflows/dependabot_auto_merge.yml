@@ -36,7 +36,7 @@ jobs:
   check_matrix:
     name: Check DistributedComputingBench
     needs: constants
-    uses: ./.github/workflows/reusable_ci.yml
+    uses: ./.github/workflows/reusable_ci_with_working_directory.yml
     with:
       os: ubuntu-22.04
       matrix: ${{ needs.constants.outputs.matrix-for-dependabot }}
@@ -44,7 +44,7 @@ jobs:
   test_ubuntu_22_matrix:
     name: Test DistributedComputingBench (Ubuntu 22.04)
     needs: [constants, check_matrix]
-    uses: ./.github/workflows/reusable_ci.yml
+    uses: ./.github/workflows/reusable_ci_with_working_directory.yml
     with:
       os: ubuntu-22.04
       matrix: ${{ needs.constants.outputs.matrix-for-dependabot }}
