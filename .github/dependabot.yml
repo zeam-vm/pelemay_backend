@@ -2,40 +2,25 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "zacky1972"
     schedule: 
       interval: "daily"
       
   - package-ecosystem: "mix"
     directory: "/utilities/node_activator"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "zacky1972"
     schedule:
       interval: "daily"
   
   - package-ecosystem: "mix"
     directory: "/utilities/spawn_co_elixir"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "zacky1972"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "mix"
     directory: "/utilities/http_downloader"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "zacky1972"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "mix"
     directory: "/benchmarks/onnx_to_axon_bench"
-    open-pull-requests-limit: 4
-    reviewers:
-      - "zacky1972"
     schedule:
       interval: "daily"
