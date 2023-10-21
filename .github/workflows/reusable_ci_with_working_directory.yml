@@ -24,7 +24,7 @@ env:
 jobs:
   elixir_ci:
 
-    name: On ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    name: On ${{ matrix.working-directory }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: ${{ inputs.os }}
     strategy:
       matrix: ${{ fromJSON(inputs.matrix) }}
