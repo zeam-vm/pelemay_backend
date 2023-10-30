@@ -56,6 +56,8 @@ jobs:
     needs: [constants, check_matrix, test_ubuntu_22_matrix]
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
+      - name: Auto approve
+        uses: hmarr/auto-approve-action@v3
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1
