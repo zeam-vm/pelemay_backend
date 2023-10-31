@@ -8,7 +8,7 @@ name: Elixir CI (DistributedComputingBench)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "check_by_SHR" ]
     paths:
       - 'benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
@@ -25,7 +25,7 @@ on:
       - '!LICENSE*'
       - '!publish.exs'
   push:
-    branches: [ "main", "develop" ]    
+    branches: [ "main", "develop", "check_by_SHR" ]    
     paths:
       - 'benchmarks/distributed_computing_bench/**'
       - '!.github/workflows/*'
