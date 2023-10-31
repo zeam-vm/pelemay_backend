@@ -1,0 +1,83 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# CI 
+
+name: Reusable Elixir CI
+
+on:
+  workflow_call:
+    inputs:
+      matrix:
+        required: true
+        type: string
+      perform-check:
+        required: true
+        type: boolean
+
+env:
+  XLA_HTTP_HEADERS: "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+        
+jobs:
+  elixir_ci:
+
+    name: On ${{ matrix.working-directory }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    runs-on: [self-hosted, macOS]
+    strategy:
+      matrix: ${{ fromJSON(inputs.matrix) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
+    - name: Set up OTP MAJOR and MINOR VERSION
+      run: |
+        echo "OTP_MAJOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\(.*\)$/\1/')" >> $GITHUB_ENV
+        echo "OTP_MINOR_VERSION=$(echo ${{ matrix.otp-version }} | sed -e 's/^\([^\.]*\)\.\([^\.]*\).*$/\2/')" >> $GITHUB_ENV
+    - name: Set versions Elixir and OTP
+      run: |
+        echo "erlang ${{ matrix.otp-version }}" >> ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
+    - name: Set up Elixir by asdf (macOS)
+      uses: asdf-vm/actions/install@v3
+      with:
+        before_install: |
+          brew install wxwidgets openjdk fop openssl@3
+          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+          echo 'setup CC and LDFLAGS'
+          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+            else
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+            fi
+          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+          else
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+          fi
+          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+    - name: Set up hex and rebar (macOS)
+      run: | 
+        mix local.hex --force
+        mix local.rebar --force
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Compile and check warning
+      if: ${{ inputs.perform-check }}
+      run: mix compile --warnings-as-errors
+    - name: Check formatting (Ubuntu, macOS)
+      if: ${{ inputs.perform-check && !startsWith(runner.os, 'windows') && startsWith(matrix.elixir-version, '1.15') && startsWith(matrix.otp-version, '26') }}
+      run: mix format --check-formatted
+    - name: Check by credo (Ubuntu)
+      if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
+      run: mix credo
+    - name: Check by dialyzer (Ubuntu)
+      if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
+      run: mix dialyzer
+    - name: Run tests
+      if: ${{ !inputs.perform-check }}
+      run: mix test
