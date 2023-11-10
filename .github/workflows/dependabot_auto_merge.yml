@@ -66,6 +66,7 @@ jobs:
         run: |
           gh pr edit "$PR_URL" --base 'check_by_SHR'
         env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Approve and enable auto-merge for Dependabot PRs
         if: ${{ ( steps.metadata.outputs.package-ecosystem == 'mix' && steps.metadata.outputs.update-type == 'version-update:semver-patch' ) || steps.metadata.outputs.package-ecosystem == 'github-actions' }}
