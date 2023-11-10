@@ -58,6 +58,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' || github.event.action == 'synchronize' && startsWith( github.head_ref, 'dependabot' ) }}
     steps:
       - name: Dependabot metadata
+        if: ${{ github.actor == 'dependabot[bot]' }}
         id: metadata
         uses: dependabot/fetch-metadata@v1
         with:
