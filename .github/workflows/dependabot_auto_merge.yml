@@ -26,7 +26,7 @@ jobs:
   constants:
     name: Constants
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor == 'dependabot[bot]' || github.event.action == 'synchronize' && startsWith( github.head_ref, 'dependabot' ) }}
     outputs:
       matrix-for-dependabot: ${{ steps.set-matrix-for-dependabot.outputs.matrix }}
     steps:
@@ -53,8 +53,9 @@ jobs:
       perform-check: false
   dependabot:
     runs-on: ubuntu-latest
+    permissions: write-all
     needs: [constants, check_matrix, test_ubuntu_22_matrix]
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor == 'dependabot[bot]' || github.event.action == 'synchronize' && startsWith( github.head_ref, 'dependabot' ) }}
     steps:
       - name: Dependabot metadata
         id: metadata
@@ -65,9 +66,10 @@ jobs:
         run: |
           gh pr edit "$PR_URL" --base 'check_by_SHR'
         env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Approve and enable auto-merge for Dependabot PRs
-        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
+        if: ${{ ( steps.metadata.outputs.package-ecosystem == 'mix' && steps.metadata.outputs.update-type == 'version-update:semver-patch' ) || steps.metadata.outputs.package-ecosystem == 'github-actions' }}
         run: |
           gh pr review --approve "$PR_URL"
           gh pr edit "$PR_URL" -t "(auto merged) $PR_TITLE"
