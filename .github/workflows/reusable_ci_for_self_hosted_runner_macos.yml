@@ -14,6 +14,10 @@ on:
       perform-check:
         required: true
         type: boolean
+      arch:
+        required: false
+        type: string
+        default: "none"
 
 env:
   XLA_HTTP_HEADERS: "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
@@ -21,7 +25,7 @@ env:
 jobs:
   elixir_ci:
 
-    name: On ${{ matrix.working-directory }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
+    name: On ${{ inputs.arch }}, ${{ matrix.working-directory }}, ${{ matrix.elixir-version }}, ${{ matrix.otp-version }}
     runs-on: [self-hosted, macOS]
     strategy:
       matrix: ${{ fromJSON(inputs.matrix) }}
