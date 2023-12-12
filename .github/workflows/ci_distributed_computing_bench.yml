@@ -52,6 +52,7 @@ permissions:
 jobs:
   constants:
     name: Constants
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     outputs:
       matrix-for-check: ${{ steps.set-matrix-for-check.outputs.matrix }}
