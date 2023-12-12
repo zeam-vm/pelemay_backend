@@ -25,19 +25,14 @@ jobs:
         run: |
           json=$(cat ${{ github.workspace }}/.github/actions/matrix_for_self_hosted_macos.yml| ruby -ryaml -rjson -e 'puts YAML.load(STDIN).to_json')
           echo "matrix=${json}" >> $GITHUB_OUTPUT
-  set_arch_on_self_hosted:
-    name: Set arch on self-hosted runner
-    runs-on: self-hosted
-    outputs:
-      arch: ${{ steps.set-arch-on-self-hosted.outputs.arch }}
-    steps:
-      - id: set-arch-on-self-hosted
-        run: echo "arch=$(arch)" >> $GITHUB_OUTPUT
   test_self_hosted_matrix:
+    strategy:
+      matrix:
+        arch: [X86, ARM64]    
     name: Test Matrix (Selfhosted CI on macOS)
-    needs: [constants, set_arch_on_self_hosted]
+    needs: constants
     uses: ./.github/workflows/reusable_ci_for_self_hosted_runner_macos.yml
     with:
       matrix: ${{ needs.constants.outputs.matrix-for-self-hosted-macos }}
       perform-check: false
-      arch: ${{needs.set_arch_on_self_hosted.outputs.arch }}
+      arch: ${{ matrix.arch }}
