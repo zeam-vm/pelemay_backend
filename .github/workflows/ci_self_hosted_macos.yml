@@ -28,7 +28,7 @@ jobs:
   test_self_hosted_matrix:
     strategy:
       matrix:
-        arch: [x86, arm64]    
+        arch: [X86, ARM64]    
     name: Test Matrix (Selfhosted CI on macOS)
     needs: constants
     uses: ./.github/workflows/reusable_ci_for_self_hosted_runner_macos.yml
