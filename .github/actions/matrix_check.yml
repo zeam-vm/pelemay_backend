@@ -2,4 +2,4 @@ include:
   - otp-version: "26.1.2"
     elixir-version: "1.15.7"
   - otp-version: "26.1.2"
-    elixir-version: "main"
+    elixir-version: "1.16.0-rc.1"
