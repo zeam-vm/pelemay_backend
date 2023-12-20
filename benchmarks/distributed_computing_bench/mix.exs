@@ -50,7 +50,7 @@ defmodule DistributedComputingBench.MixProject do
       {:http_downloader, "~> 0.1"},
       {:spawn_co_elixir, "~> 0.3"},
       {:nx, "~> 0.5"},
-      {:bumblebee, "~> 0.3.1", only: [:bumblebee_bench, :test]},
+      {:bumblebee, "~> 0.4.2", only: [:bumblebee_bench, :test]},
       {:exla, "~> 0.5", only: [:bumblebee_bench, :test]},
       {:benchee, "~> 1.1"}
     ]
