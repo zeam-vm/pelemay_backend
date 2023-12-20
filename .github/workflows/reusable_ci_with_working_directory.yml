@@ -93,16 +93,18 @@ jobs:
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
     - name: Restore dependencies cache
       uses: actions/cache@v3
+      id: dependencies-cache
       with:
         path: ${{ github.workspace }}/${{ matrix.working-directory }}/deps
         key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
     - name: Set up hex and rebar (macOS)
-      if: ${{ steps.set_up_elixir_by_setup-beam.outcome == 'failure' }}
+      if: ${{ steps.dependencies-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' }}
       run: | 
         mix local.hex --force
         mix local.rebar --force
     - name: Install dependencies
+      if: ${{ steps.dependencies-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' }}
       run: mix deps.get
     - name: Compile and check warning
       if: ${{ inputs.perform-check }}
