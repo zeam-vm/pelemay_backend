@@ -24,3 +24,8 @@ updates:
     directory: "/benchmarks/onnx_to_axon_bench"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "mix"
+    directory: "/benchmarks/distributed_computing_bench"
+    schedule:
+      interval: "daily"
