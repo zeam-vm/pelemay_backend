@@ -34,5 +34,4 @@ jobs:
     uses: ./.github/workflows/reusable_ci_for_self_hosted_runner_macos.yml
     with:
       matrix: ${{ needs.constants.outputs.matrix-for-self-hosted-macos }}
-      perform-check: false
       arch: ${{ matrix.arch }}
