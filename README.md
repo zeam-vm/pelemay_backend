@@ -38,7 +38,7 @@ Supported Erlang/OTP and Elixir versions:
 
 Tested Platforms by CI:
 
-* Ubuntu 22.04 and 20.04
+* Ubuntu 22.04
 * macOS 14 Sonoma (Apple Silicon and x86_64)
 
 Other manually tested platforms:
