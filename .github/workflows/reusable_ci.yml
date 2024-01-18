@@ -61,7 +61,7 @@ jobs:
     - name: Restore .asdf
       if: ${{ steps.install_asdf.outcome == 'success' }}
       id: asdf-cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.asdf/
@@ -95,7 +95,7 @@ jobs:
           fi
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
     - name: Restore dependencies cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: dependencies-cache
       with:
         path: ${{ github.workspace }}/${{ inputs.working-directory }}/deps
@@ -120,7 +120,7 @@ jobs:
       run: mix credo
     - name: Restore dialyzer cache (Ubuntu)
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
