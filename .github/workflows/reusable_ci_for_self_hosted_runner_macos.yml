@@ -44,6 +44,7 @@ jobs:
     - name: Set up Elixir by asdf (macOS)
       uses: asdf-vm/actions/install@v3
       id: install_by_asdf
+      continue-on-error: true
       with:
         before_install: |
           brew install wxwidgets openjdk fop openssl@3
@@ -63,12 +64,12 @@ jobs:
           fi
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
     - name: Recover if fail
-      if: failure() && steps.install_by_asdf.outcome == 'failure'
+      if: steps.install_by_asdf.outcome == 'failure'
       run: |
         echo "erlang ${{ matrix.otp-version }}" > ${{ github.workspace }}/.tool-versions
         echo "elixir ${{ matrix.elixir-version }}-otp-$((${{ env.OTP_MAJOR_VERSION }}-1))" > ${{ github.workspace }}/.tool-versions
     - name: Set up Elixir by asdf, again (macOS)
-      if: failure() && steps.install_by_asdf.outcome == 'failure'
+      if: steps.install_by_asdf.outcome == 'failure'
       uses: asdf-vm/actions/install@v3
       with:
         before_install: |
