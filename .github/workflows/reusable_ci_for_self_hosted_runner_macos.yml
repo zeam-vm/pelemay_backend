@@ -43,6 +43,34 @@ jobs:
         echo "elixir ${{ matrix.elixir-version }}-otp-${{ env.OTP_MAJOR_VERSION }}" >> ${{ github.workspace }}/.tool-versions
     - name: Set up Elixir by asdf (macOS)
       uses: asdf-vm/actions/install@v3
+      id: install_by_asdf
+      continue-on-error: true
+      with:
+        before_install: |
+          brew install wxwidgets openjdk fop openssl@3
+          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+          echo 'setup CC and LDFLAGS'
+          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
+            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+            else
+              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+            fi
+          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
+          else
+            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
+          fi
+          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+    - name: Recover if fail
+      if: steps.install_by_asdf.outcome == 'failure'
+      run: |
+        echo "erlang ${{ matrix.otp-version }}" > ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-$((${{ env.OTP_MAJOR_VERSION }}-1))" > ${{ github.workspace }}/.tool-versions
+    - name: Set up Elixir by asdf, again (macOS)
+      if: steps.install_by_asdf.outcome == 'failure'
+      uses: asdf-vm/actions/install@v3
       with:
         before_install: |
           brew install wxwidgets openjdk fop openssl@3
