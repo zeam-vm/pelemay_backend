@@ -8,6 +8,12 @@ include:
   - otp-version: '24.3.4.16'
     elixir-version: "1.16.2"
   - otp-version: '26.2.3'
+<<<<<<< HEAD
     elixir-version: "1.16.2"
   - otp-version: "27.0-rc2"
     elixir-version: "1.16.2"
+=======
+    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.1"
+>>>>>>> 5cb0648 (update Erlang/OTP 27)
