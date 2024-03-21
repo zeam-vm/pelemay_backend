@@ -7,5 +7,5 @@ include:
     elixir-version: '1.14.5'
   - otp-version: '25.3.2.9'
     elixir-version: "1.16.1"
-  - otp-version: "27.0-rc1"
+  - otp-version: "27.0-rc2"
     elixir-version: '1.15.7'
