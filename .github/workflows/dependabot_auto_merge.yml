@@ -60,7 +60,7 @@ jobs:
       - name: Dependabot metadata
         if: ${{ github.actor == 'dependabot[bot]' }}
         id: metadata
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Change merge branch for Dependabot PR
