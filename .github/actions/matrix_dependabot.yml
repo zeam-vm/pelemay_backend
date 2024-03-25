@@ -1,31 +1,31 @@
 include:
-  - otp-version: "27.0-rc1"
-    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.2"
     working-directory: utilities/node_activator
-  - otp-version: "27.0-rc1"
-    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.2"
     working-directory: utilities/spawn_co_elixir
-  - otp-version: "27.0-rc1"
-    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.2"
     working-directory: utilities/http_downloader
-  - otp-version: "27.0-rc1"
-    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.2"
     working-directory: benchmarks/distributed_computing_bench
-  - otp-version: "27.0-rc1"
-    elixir-version: "1.16.1"
+  - otp-version: "27.0-rc2"
+    elixir-version: "1.16.2"
     working-directory: benchmarks/onnx_to_axon_bench
-  - otp-version: "26.2.2"
-    elixir-version: "1.16.1"
+  - otp-version: "26.2.3"
+    elixir-version: "1.16.2"
     working-directory: utilities/node_activator
-  - otp-version: "26.2.2"
-    elixir-version: "1.16.1"
+  - otp-version: "26.2.3"
+    elixir-version: "1.16.2"
     working-directory: utilities/spawn_co_elixir
-  - otp-version: "26.2.2"
-    elixir-version: "1.16.1"
+  - otp-version: "26.2.3"
+    elixir-version: "1.16.2"
     working-directory: utilities/http_downloader
-  - otp-version: "26.2.2"
-    elixir-version: "1.16.1"
+  - otp-version: "26.2.3"
+    elixir-version: "1.16.2"
     working-directory: benchmarks/distributed_computing_bench
-  - otp-version: "26.2.2"
-    elixir-version: "1.16.1"
+  - otp-version: "26.2.3"
+    elixir-version: "1.16.2"
     working-directory: benchmarks/onnx_to_axon_bench
