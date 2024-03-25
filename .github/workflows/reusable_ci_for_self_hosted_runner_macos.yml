@@ -95,7 +95,7 @@ jobs:
         mix local.rebar --force
     - name: fix issue of Erlang/OTP 26.2.3
       run: |
-        mix archive.install github hexpm/hex branch latest
+        mix archive.install github hexpm/hex branch latest --force
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
