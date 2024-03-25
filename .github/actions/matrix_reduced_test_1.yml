@@ -12,7 +12,6 @@ include:
   - otp-version: "27.0-rc2"
     elixir-version: "1.16.2"
   - otp-version: "27.0-rc2"
-    elixir-version: "1.16.1"
     elixir-version: "1.16.2"
   - otp-version: "27.0-rc2"
     elixir-version: "1.16.2"
