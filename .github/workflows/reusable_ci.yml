@@ -69,31 +69,23 @@ jobs:
         restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-
     - name: Set up Elixir by asdf (Ubuntu)
       if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
+      id: install_by_asdf
+      continue-on-error: true
       uses: asdf-vm/actions/install@v3
       with:
         before_install: |
           sudo apt -y install build-essential automake autoconf git squashfs-tools ssh-askpass pkg-config curl libmnl-dev
-    - name: Set up Elixir by asdf (macOS)
-      if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'macos') }}
+    - name: Recover if fail
+      if: steps.install_by_asdf.outcome == 'failure'
+      run: |
+        echo "erlang ${{ matrix.otp-version }}" > ${{ github.workspace }}/.tool-versions
+        echo "elixir ${{ matrix.elixir-version }}-otp-$((${{ env.OTP_MAJOR_VERSION }}-1))" > ${{ github.workspace }}/.tool-versions
+    - name: Set up Elixir by asdf, again (Ubuntu)
+      if: steps.install_by_asdf.outcome == 'failure'
       uses: asdf-vm/actions/install@v3
       with:
         before_install: |
-          brew install wxwidgets openjdk fop openssl@3
-          export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
-          export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
-          echo 'setup CC and LDFLAGS'
-          if [ ${{ env.OTP_MAJOR_VERSION }} -eq 25 ]; then 
-            if [ ${{ env.OTP_MINOR_VERSION }} -ge 1 ]; then
-              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
-            else
-              export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
-            fi
-          elif [ ${{ env.OTP_MAJOR_VERSION }} -ge 26 ]; then
-            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@3) --with-odbc=$(brew --prefix unixodbc)"
-          else
-            export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
-          fi
-          echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+          sudo apt -y install build-essential automake autoconf git squashfs-tools ssh-askpass pkg-config curl libmnl-dev
     - name: Restore dependencies cache
       uses: actions/cache@v4
       id: dependencies-cache
