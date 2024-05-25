@@ -1,0 +1,22 @@
+name: cleanup all caches
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+  
+          set +e
+          echo "Deleting caches..."
+          gh actions-cache list -R $REPO -L 100 | while IFS=$'\t' read -r cacheKey _ branch _
+          do
+            gh actions-cache delete "$cacheKey" -R $REPO -B "$branch" --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
