@@ -31,7 +31,7 @@ Each has their own README, which you can access above to learn more.
 
 Supported Erlang/OTP and Elixir versions:
 
-* OTP: 24, 25, 26, 27
+* OTP: 25, 26, 27
 * Elixir: 1.14, 1.15, 1.16
 
 ## Supported Platforms
