@@ -6,6 +6,4 @@ include:
   - otp-version: '26.2.5'
     elixir-version: "1.14.5"
   - otp-version: "27.0"
-    elixir-version: "1.14.5"
-  - otp-version: "27.0"
     elixir-version: "1.15.8"
