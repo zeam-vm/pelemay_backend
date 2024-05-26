@@ -62,8 +62,8 @@ jobs:
       with:
         path: |
           ~/.asdf/
-        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-${{ hashFiles('**/.tool-versions') }}
-        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-asdf-
+        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-asdf-${{ hashFiles('**/.tool-versions') }}
+        restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-asdf-
     - name: Set up Elixir by asdf (Ubuntu)
       if: ${{ steps.asdf-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
       id: install_by_asdf
