@@ -92,13 +92,11 @@ jobs:
         path: ${{ github.workspace }}/${{ inputs.working-directory }}/deps
         key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-
-    - name: Set up hex and rebar (macOS)
-      if: ${{ steps.dependencies-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' }}
+    - name: Set up hex and rebar
       run: | 
         mix local.hex --force
         mix local.rebar --force
     - name: Install dependencies
-      if: ${{ steps.dependencies-cache.outcome == 'success' && steps.asdf-cache.outputs.cache-hit != 'true' }}
       run: mix deps.get
     - name: Compile and check warning
       if: ${{ inputs.perform-check }}
