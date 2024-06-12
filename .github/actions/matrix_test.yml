@@ -1,17 +1,19 @@
 include:
   - otp-version: '25.3.2.12'
-    elixir-version: '1.14.5'
-  - otp-version: '25.3.2.12'
     elixir-version: "1.15.8"
   - otp-version: '25.3.2.12'
     elixir-version: "1.16.3"
-  - otp-version: '26.2.5'
-    elixir-version: "1.14.5"
+  - otp-version: '25.3.2.12'
+    elixir-version: '1.17.0'
   - otp-version: '26.2.5'
     elixir-version: '1.15.8'
   - otp-version: '26.2.5'
     elixir-version: "1.16.3"
+  - otp-version: '26.2.5'
+    elixir-version: "1.17.0"
   - otp-version: "27.0"
     elixir-version: "1.15.8"
   - otp-version: "27.0"
     elixir-version: "1.16.3"
+  - otp-version: '27.0'
+    elixir-version: "1.17.0"
