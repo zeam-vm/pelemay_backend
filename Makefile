@@ -38,6 +38,11 @@ dialyzer:
 		(cd $${_dir} && mix dialyzer); \
 	done
 
+update:
+	@for _dir in ${SUBDIRS}; do \
+		(cd $${_dir} && mix deps.update --all); \
+	done
+
 clean:
 	@for _dir in ${SUBDIRS}; do \
 		(cd $${_dir} && echo "Cleaning in $${_dir}" && mix clean); \
