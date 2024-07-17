@@ -114,7 +114,17 @@ jobs:
           ${{ github.workspace }}/${{ matrix.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt*
         key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ matrix.working-directory }}-plt
     - name: Check by dialyzer (Ubuntu)
+      id: dialyzer
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
+      continue-on-error: true
+      run: mix dialyzer
+    - name: Recover if fail dialyzer
+      if: steps.dialyzer.outcome == 'failure'
+      run: rm -rf |
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt*
+    - name: Check by dialyzer, again (Ubuntu)
+      if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') && steps.dialyzer.outcome == 'failure' }}
       run: mix dialyzer
     - name: Run tests
       if: ${{ !inputs.perform-check }}
