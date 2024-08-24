@@ -27,6 +27,7 @@ defmodule PelemayBackend.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:nx, ">= 0.5.0 and <= 0.6.2"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
