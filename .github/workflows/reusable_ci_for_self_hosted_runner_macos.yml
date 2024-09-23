@@ -63,6 +63,7 @@ jobs:
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
           fi
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+          ulimit -n 65536
     - name: Recover if fail
       if: steps.install_by_asdf.outcome == 'failure'
       run: |
@@ -89,6 +90,7 @@ jobs:
             export KERL_CONFIGURE_OPTIONS="--with-ssl=$(brew --prefix openssl@1.1) --with-odbc=$(brew --prefix unixodbc)"
           fi
           echo "KERL_CONFIGURE_OPTIONS=$KERL_CONFIGURE_OPTIONS"
+          ulimit -n 65536
     - name: Set up hex and rebar (macOS)
       run: | 
         mix local.hex --force
