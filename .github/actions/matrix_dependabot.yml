@@ -14,15 +14,15 @@ include:
   - otp-version: "27.1"
     elixir-version: "1.17.3"
     working-directory: utilities/node_activator
-  - otp-version: "27.0.1"
-    elixir-version: "1.17.2"
+  - otp-version: "27.1"
+    elixir-version: "1.17.3"
     working-directory: utilities/spawn_co_elixir
-  - otp-version: "27.0.1"
-    elixir-version: "1.17.2"
+  - otp-version: "27.1"
+    elixir-version: "1.17.3"
     working-directory: utilities/http_downloader
-  - otp-version: "27.0.1"
-    elixir-version: "1.17.2"
+  - otp-version: "27.1"
+    elixir-version: "1.17.3"
     working-directory: benchmarks/distributed_computing_bench
-  - otp-version: "27.0.1"
-    elixir-version: "1.17.2"
+  - otp-version: "27.1"
+    elixir-version: "1.17.3"
     working-directory: benchmarks/onnx_to_axon_bench
