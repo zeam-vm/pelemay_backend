@@ -28,6 +28,8 @@ defmodule PelemayBackend.MixProject do
   defp deps do
     [
       {:nx, ">= 0.5.0 and <= 0.6.2"},
+      {:openblas_builder, "~> 0.1.0-dev", github: "zeam-vm/openblas_builder", branch: "main"},
+      {:nimble_parsec, "~> 1.2"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
