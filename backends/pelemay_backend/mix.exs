@@ -1,6 +1,6 @@
-if :erlang.system_info(:otp_release) < ~c"24" do
-  Mix.raise("Nx requires Erlang/OTP 24+")
-end
+# if :erlang.system_info(:otp_release) < ~c"24" do
+#   Mix.raise("Nx requires Erlang/OTP 24+")
+# end
 
 defmodule PelemayBackend.MixProject do
   use Mix.Project
@@ -21,6 +21,8 @@ defmodule PelemayBackend.MixProject do
     ]
   end
 
+  # TODO: _bak とまったく同じコードにいったん戻してみる
+
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
@@ -31,10 +33,11 @@ defmodule PelemayBackend.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:nx, ">= 0.5.0 and <= 0.6.2"},
+      {:nx, "== 0.3.0"},
+      {:ex_doc, "== 0.29.4", only: :dev, runtime: false},
       {:openblas_builder, "~> 0.1.0-dev", github: "zeam-vm/openblas_builder", branch: "main"},
-      {:elixir_make, "~> 0.6", runtime: false},
-      {:nimble_parsec, "~> 1.2"},
+      {:elixir_make, "== 0.7.6", runtime: false},
+      {:nimble_parsec, "== 1.3.0"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
