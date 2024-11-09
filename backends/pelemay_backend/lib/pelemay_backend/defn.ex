@@ -69,7 +69,7 @@ defmodule PelemayBackend.Defn do
           {:error, reason} -> raise RuntimeError, message: List.to_string(reason)
         end
       rescue
-        e in ErlangError -> raise RuntimeError, message: List.to_string(e.original)
+        e in ErlangError -> reraise RuntimeError, message: List.to_string(e.original)
       end
 
       receive do
