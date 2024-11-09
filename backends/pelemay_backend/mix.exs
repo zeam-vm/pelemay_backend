@@ -17,6 +17,17 @@ defmodule PelemayBackend.MixProject do
       compilers: [:pelemay_backend, :elixir_make] ++ Mix.compilers(),
       aliases: [
         "compile.pelemay_backend": &compile/1
+      ],
+      dialyzer: [
+        plt_add_apps: [:mix],
+        flags: [
+          :unmatched_returns,
+          :error_handling,
+          :underspecs,
+          :no_contracts,
+          :unknown
+        ],
+        ignore_warnings: ".dialyzer_ignore.exs"
       ]
     ]
   end
