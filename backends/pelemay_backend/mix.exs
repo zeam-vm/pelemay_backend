@@ -44,10 +44,10 @@ defmodule PelemayBackend.MixProject do
   defp deps do
     [
       {:nx, "== 0.3.0"},
-      {:ex_doc, "== 0.29.4", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.29.4", only: :dev, runtime: false},
       {:openblas_builder, "~> 0.1.0-dev", github: "zeam-vm/openblas_builder", branch: "main"},
-      {:elixir_make, "== 0.7.6", runtime: false},
-      {:nimble_parsec, "== 1.3.0"},
+      {:elixir_make, "~> 0.7.6", runtime: false},
+      {:nimble_parsec, "~> 1.4.0"},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
