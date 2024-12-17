@@ -1,8 +1,8 @@
 include:
   - otp-version: "25.3.2.16"
-    elixir-version: "1.16.3"
+    elixir-version: "1.18.0-rc.0"
   - otp-version: "25.3.2.16"
-    elixir-version: "1.17.3"
+    elixir-version: "1.16.3"
   - otp-version: "26.2.5.6"
     elixir-version: "1.17.3"
   - otp-version: "27.2"
