@@ -1,23 +1,5 @@
 include:
   - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: backends/pelemay_backend
-  - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: utilities/node_activator
-  - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: utilities/spawn_co_elixir
-  - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: utilities/http_downloader
-  - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: benchmarks/distributed_computing_bench
-  - otp-version: "27.2"
-    elixir-version: "1.16.3"
-    working-directory: benchmarks/onnx_to_axon_bench
-  - otp-version: "27.2"
     elixir-version: "1.17.3"
     working-directory: backends/pelemay_backend
   - otp-version: "27.2"
@@ -36,20 +18,20 @@ include:
     elixir-version: "1.17.3"
     working-directory: benchmarks/onnx_to_axon_bench
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: backends/pelemay_backend
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: utilities/node_activator
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: utilities/spawn_co_elixir
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: utilities/http_downloader
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: benchmarks/distributed_computing_bench
   - otp-version: "27.2"
-    elixir-version: "1.18.0-rc.0"
+    elixir-version: "1.18.0"
     working-directory: benchmarks/onnx_to_axon_bench
