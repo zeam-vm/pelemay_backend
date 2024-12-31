@@ -16,7 +16,7 @@ jobs:
   constants:
     name: Constants
     if: startsWith(github.head_ref, 'check_by_SHR')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix-for-self-hosted-macos: ${{ steps.set-matrix-for-self-hosted-macos.outputs.matrix }}
     steps:
