@@ -25,7 +25,7 @@ permissions:
 jobs:
   constants:
     name: Constants
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.actor == 'dependabot[bot]' || github.event.action == 'synchronize' && startsWith( github.head_ref, 'dependabot' ) }}
     outputs:
       matrix-for-dependabot: ${{ steps.set-matrix-for-dependabot.outputs.matrix }}
@@ -52,7 +52,7 @@ jobs:
       matrix: ${{ needs.constants.outputs.matrix-for-dependabot }}
       perform-check: false
   dependabot:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions: write-all
     needs: [constants, check_matrix, test_ubuntu_22_matrix]
     if: ${{ github.actor == 'dependabot[bot]' || github.event.action == 'synchronize' && startsWith( github.head_ref, 'dependabot' ) }}
