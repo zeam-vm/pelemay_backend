@@ -117,7 +117,7 @@ jobs:
         restore-keys: |
           plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-
         path: |
-          priv/plts
+          ${{ github.workspace }}/${{ inputs.working-directory }}/priv/plts
     - name: Create PLTs
       if: steps.plt_cache.outputs.cache-hit != 'true' && ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
       run: mix dialyzer --plt
@@ -129,7 +129,7 @@ jobs:
         key: |
           plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-${{ hashFiles('**/mix.lock') }}
         path: |
-          priv/plts    
+          ${{ github.workspace }}/${{ inputs.working-directory }}/priv/plts    
     - name: Check by dialyzer (Ubuntu)
       id: dialyzer
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
