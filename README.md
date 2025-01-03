@@ -37,16 +37,16 @@ Supported Erlang/OTP and Elixir versions:
 
 Tested Platforms by CI:
 
-* Ubuntu 22.04
-* macOS 14 Sonoma (Apple Silicon and x86_64)
+* Ubuntu 22.04, 24.04
 
 Other manually tested platforms:
 
+* macOS 14 Sonoma (Apple Silicon and x86_64)
 * groovEPIC
 
 Not tested by CI:
 
-* macOS 13 Ventura and 12 Monterey (x86_64 and x86_64)
+* macOS 13 Ventura and 12 Monterey (Apple Silicon and x86_64)
 
 Temporally not tested by CI of Nerves:
 
