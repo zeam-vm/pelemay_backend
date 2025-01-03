@@ -118,10 +118,14 @@ jobs:
           plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-
         path: |
 <<<<<<< HEAD
+<<<<<<< HEAD
           ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
 =======
           ${{ github.workspace }}/${{ inputs.working-directory }}/priv/plts
 >>>>>>> 0037a87 (fix: issue on saving plt)
+=======
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
+>>>>>>> 0d90e76 (fix: issue on saving plt)
     - name: Create PLTs
       if: steps.plt_cache.outputs.cache-hit != 'true' && ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
       run: mix dialyzer --plt
@@ -134,10 +138,14 @@ jobs:
           plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-${{ hashFiles('**/mix.lock') }}
         path: |
 <<<<<<< HEAD
+<<<<<<< HEAD
           ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
 =======
           ${{ github.workspace }}/${{ inputs.working-directory }}/priv/plts    
 >>>>>>> 0037a87 (fix: issue on saving plt)
+=======
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
+>>>>>>> 0d90e76 (fix: issue on saving plt)
     - name: Check by dialyzer (Ubuntu)
       id: dialyzer
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
