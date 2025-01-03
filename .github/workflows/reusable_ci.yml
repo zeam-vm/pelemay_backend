@@ -108,27 +108,33 @@ jobs:
     - name: Check by credo (Ubuntu)
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
       run: mix credo
-    - name: Restore dialyzer cache (Ubuntu)
-      if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
-      uses: actions/cache@v4
+    - name: Restore PLT cache
+      id: plt_cache
+      uses: actions/cache/restore@v4
       with:
+        key: |
+          plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-
         path: |
-          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
-          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt*
-        key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-Elixir-${{ matrix.elixir-version }}-OTP-${{ matrix.otp-version }}-repo-${{ inputs.working-directory }}-plt
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
+    - name: Create PLTs
+      if: steps.plt_cache.outputs.cache-hit != 'true' && ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
+      run: mix dialyzer --plt
+    - name: Save PLT cache
+      id: plt_cache_save
+      uses: actions/cache/save@v4
+      if: steps.plt_cache.outputs.cache-hit != 'true' && ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
+      with:
+        key: |
+          plt-${{ runner.os }}-${{ steps.system-info.outputs.release }}-${{ matrix.otp-version }}-${{ matrix.elixir-version }}-${{ inputs.working-directory }}-${{ hashFiles('**/mix.lock') }}
+        path: |
+          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt
     - name: Check by dialyzer (Ubuntu)
       id: dialyzer
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
       continue-on-error: true
-      run: mix dialyzer
-    - name: Recover if fail dialyzer
-      if: steps.dialyzer.outcome == 'failure'
-      run: rm -rf |
-          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/dev/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-dev.plt*
-          ${{ github.workspace }}/${{ inputs.working-directory }}/_build/test/dialyxir_erlang-${{ matrix.otp-version }}_elixir-${{ matrix.elixir-version }}_deps-test.plt*
-    - name: Check by dialyzer, again (Ubuntu)
-      if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') && steps.dialyzer.outcome == 'failure' }}
-      run: mix dialyzer
+      run: mix dialyzer --format github
     - name: Run tests
       if: ${{ !inputs.perform-check }}
       run: mix test
