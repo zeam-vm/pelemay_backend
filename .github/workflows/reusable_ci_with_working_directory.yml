@@ -100,7 +100,7 @@ jobs:
       if: ${{ inputs.perform-check }}
       run: mix compile --warnings-as-errors
     - name: Check formatting (Ubuntu, macOS)
-      if: ${{ inputs.perform-check && !startsWith(runner.os, 'windows') && startsWith(matrix.elixir-version, '1.15') && startsWith(matrix.otp-version, '26') }}
+      if: ${{ inputs.perform-check && !startsWith(runner.os, 'windows') }}
       run: mix format --check-formatted
     - name: Check by credo (Ubuntu)
       if: ${{ inputs.perform-check && startsWith(runner.os, 'linux') }}
