@@ -8,7 +8,7 @@ name: Elixir CI (NodeActivator)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "develop" ]
+    branches: [ "develop", "check_by_SHR" ]
     paths:
       - 'utilities/node_activator/**'
       - '!utilities/spawn_co_elixir/**'
@@ -99,6 +99,15 @@ jobs:
       os: ubuntu-22.04
       matrix: ${{ needs.constants.outputs.matrix-test }}
       perform-check: false
+  test_ubuntu_24_node_activator:
+    name: Test NodeActivator (Ubuntu 24.04)
+    needs: [constants, check_node_activator]
+    uses: ./.github/workflows/reusable_ci.yml
+    with:
+      working-directory: utilities/node_activator
+      os: ubuntu-24.04
+      matrix: ${{ needs.constants.outputs.matrix-test }}
+      perform-check: false
   test_ubuntu_22_spawn_co_elixir:
     name: Test SpawnCoElixir (Ubuntu 22.04)
     needs: [constants, test_ubuntu_22_node_activator]
@@ -108,6 +117,15 @@ jobs:
       os: ubuntu-22.04
       matrix: ${{ needs.constants.outputs.matrix-test }}
       perform-check: false
+  test_ubuntu_24_spawn_co_elixir:
+    name: Test SpawnCoElixir (Ubuntu 24.04)
+    needs: [constants, test_ubuntu_24_node_activator]
+    uses: ./.github/workflows/reusable_ci.yml
+    with:
+      working-directory: utilities/spawn_co_elixir
+      os: ubuntu-24.04
+      matrix: ${{ needs.constants.outputs.matrix-test }}
+      perform-check: false
   test_ubuntu_22_distribued_computing_bench:
     name: Test DistributedComputingBench (Ubuntu 22.04)
     needs: [constants, test_ubuntu_22_node_activator]
@@ -115,5 +133,14 @@ jobs:
     with:
       working-directory: benchmarks/distributed_computing_bench
       os: ubuntu-22.04
+      matrix: ${{ needs.constants.outputs.matrix-test }}
+      perform-check: false
+  test_ubuntu_24_distribued_computing_bench:
+    name: Test DistributedComputingBench (Ubuntu 24.04)
+    needs: [constants, test_ubuntu_24_node_activator]
+    uses: ./.github/workflows/reusable_ci.yml
+    with:
+      working-directory: benchmarks/distributed_computing_bench
+      os: ubuntu-24.04
       matrix: ${{ needs.constants.outputs.matrix-test }}
       perform-check: false
