@@ -8,7 +8,7 @@ name: Elixir CI (PelemayBackend)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: ["develop", "check_by_SHR"]
+    branches: ["develop"]
     paths:
       - "backends/pelemay_backend/**"
       - "!benchmarks/onnx_to_axon_bench/**"

@@ -8,7 +8,7 @@ name: Elixir CI (NodeActivator)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "develop", "check_by_SHR" ]
+    branches: [ "develop" ]
     paths:
       - 'utilities/node_activator/**'
       - '!utilities/spawn_co_elixir/**'
