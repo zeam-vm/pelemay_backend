@@ -22,7 +22,6 @@ Utilities:
 
 Benchmarks:
 
-* [`OnnxToAxonBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/onnx_to_axon_bench#readme) [![Elixir CI (OnnxToAxonBench) status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_onnx_to_axon_bench.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_onnx_to_axon_bench.yml/badge.svg) - A benchmark program of loading ONNX to Axon. The results deny the hope to use ResNet, which is one of popular models that perform image classification, for embedded systems due to too much memory consumption. This fact supports the concept of the Pelemay Backend.
 * [`DistributedComputingBench`](https://github.com/zeam-vm/pelemay_backend/blob/main/benchmarks/distributed_computing_bench#readme) [![Elixir CI (DistributedComputingBench) status](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_distributed_computing_bench.yml/badge.svg)](https://github.com/zeam-vm/pelemay_backend/actions/workflows/ci_distributed_computing_bench.yml/badge.svg)
 
 Each has their own README, which you can access above to learn more.
