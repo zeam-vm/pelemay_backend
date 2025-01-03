@@ -8,7 +8,7 @@ name: Elixir CI (HttpDownloader)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "main", "develop", "check_by_SHR" ]
+    branches: [ "develop", "check_by_SHR" ]
     paths:
       - 'utilities/http_downloader/**'
       - '!benchmarks/onnx_to_axon_bench/**'
