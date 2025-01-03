@@ -8,7 +8,7 @@ name: Elixir CI (SpawnCoElixir)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "main", "develop", "check_by_SHR" ]
+    branches: [ "develop", "check_by_SHR" ]
     paths:
       - 'utilities/spawn_co_elixir/**'
       - '!benchmarks/distributed_computing_bench/**'

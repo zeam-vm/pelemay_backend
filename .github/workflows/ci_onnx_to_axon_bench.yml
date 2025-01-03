@@ -8,7 +8,7 @@ name: Elixir CI (OnnxToAxonBench)
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [ "main", "develop", "check_by_SHR" ]
+    branches: [ "develop", "check_by_SHR" ]
     paths:
       - 'benchmarks/onnx_to_axon_bench/**'
       - '!.github/workflows/*'
